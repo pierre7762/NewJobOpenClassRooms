@@ -15,6 +15,7 @@
 		8F34035D2788891C00FF8E66 /* ThisWeekCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F34035C2788891C00FF8E66 /* ThisWeekCard.swift */; };
 		8F34035F2788986600FF8E66 /* SquareCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F34035E2788986600FF8E66 /* SquareCard.swift */; };
 		8F3403622788B1C700FF8E66 /* UserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F3403612788B1C700FF8E66 /* UserView.swift */; };
+		8F643391278DF9570099DC74 /* PoleEmploiAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F643390278DF9570099DC74 /* PoleEmploiAPI.swift */; };
 		8F9CA01F2788B87900C11E94 /* SearchJobView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F9CA01E2788B87900C11E94 /* SearchJobView.swift */; };
 		8F9CA0212788BA4800C11E94 /* RelaunchContactView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F9CA0202788BA4800C11E94 /* RelaunchContactView.swift */; };
 		8F9CA0232788BA8900C11E94 /* FavoriteJobOfferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F9CA0222788BA8900C11E94 /* FavoriteJobOfferView.swift */; };
@@ -34,6 +35,7 @@
 		8F34035C2788891C00FF8E66 /* ThisWeekCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThisWeekCard.swift; sourceTree = "<group>"; };
 		8F34035E2788986600FF8E66 /* SquareCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquareCard.swift; sourceTree = "<group>"; };
 		8F3403612788B1C700FF8E66 /* UserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserView.swift; sourceTree = "<group>"; };
+		8F643390278DF9570099DC74 /* PoleEmploiAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoleEmploiAPI.swift; sourceTree = "<group>"; };
 		8F9CA01E2788B87900C11E94 /* SearchJobView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchJobView.swift; sourceTree = "<group>"; };
 		8F9CA0202788BA4800C11E94 /* RelaunchContactView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelaunchContactView.swift; sourceTree = "<group>"; };
 		8F9CA0222788BA8900C11E94 /* FavoriteJobOfferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteJobOfferView.swift; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 		8F64338E278DF6D60099DC74 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				8F643390278DF9570099DC74 /* PoleEmploiAPI.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -212,6 +215,7 @@
 			files = (
 				8F34035A27886CE900FF8E66 /* RoundedImage.swift in Sources */,
 				8F9CA02A2788C46100C11E94 /* SearchJobParameter.swift in Sources */,
+				8F643391278DF9570099DC74 /* PoleEmploiAPI.swift in Sources */,
 				8F3403622788B1C700FF8E66 /* UserView.swift in Sources */,
 				8F9CA0272788C41700C11E94 /* SearchJobTextFieldView.swift in Sources */,
 				8F9CA0232788BA8900C11E94 /* FavoriteJobOfferView.swift in Sources */,
