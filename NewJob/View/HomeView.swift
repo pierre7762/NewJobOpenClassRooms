@@ -20,7 +20,7 @@ struct HomeView: View {
                         Spacer()
                         ThisWeekCard()
                         Spacer()
-                        Divider()
+//                        Divider()
                         HStack () {
                             NavigationLink(
                                 destination: SearchJobView(),
@@ -52,7 +52,6 @@ struct HomeView: View {
                         }
 
                         Spacer()
-           
                     }
                 }
                 
@@ -71,11 +70,8 @@ struct HomeView: View {
                 }
             }
         }
-
-        
-
-            
     }
+    
 }
 
 struct ContentView_Previews: PreviewProvider {

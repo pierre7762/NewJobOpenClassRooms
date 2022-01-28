@@ -27,7 +27,7 @@ struct CustomTabView: View {
                     }
             )
             
-        }
+        }.background(Color.white)
     }
 }
 
