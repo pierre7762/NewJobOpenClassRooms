@@ -8,6 +8,6 @@
 import Foundation
 
 struct PoleEmploiOffers {
-    var offersList: [Resultat] = []
+    var offersList: [Job] = []
     
 }

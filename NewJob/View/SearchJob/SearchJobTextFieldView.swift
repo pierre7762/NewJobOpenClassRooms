@@ -35,11 +35,17 @@ struct SearchJobTextFieldView: View {
                     .ignoresSafeArea()
                 VStack {
                     
+//                    Text("Texte entré : \(text)")
                     Text("Texte entré : \(text)")
                                 TextField("Entrez du Texte", text: $text)
                                     .textFieldStyle(RoundedBorderTextFieldStyle())
                                     .padding()
-                    Button("Sign In", action: test )
+                    Button("Rechercher", action: test )
+                        .frame(width: 100, height: 50, alignment: .center)
+                        .background()
+                        .cornerRadius(12)
+                    
+                    Spacer()
                     
                     
                 }

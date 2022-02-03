@@ -23,7 +23,7 @@ struct PoleEmploiToken: Codable {
 
 // MARK: - PoleEmploiResponse
 struct PoleEmploiResponse: Decodable {
-    let resultats: [Resultat]
+    let resultats: [Job]
     let filtresPossibles: [FiltresPossible]
 }
 
@@ -40,7 +40,7 @@ struct Agregation: Decodable {
 }
 
 // MARK: - Resultat
-struct Resultat: Decodable, Identifiable {
+struct Job: Decodable, Identifiable {
     let id, intitule, resultatDescription, dateCreation: String
     let dateActualisation: String
     let lieuTravail: LieuTravail

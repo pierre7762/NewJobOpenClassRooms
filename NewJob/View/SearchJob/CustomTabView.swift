@@ -6,9 +6,14 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct CustomTabView: View {
     @State var selection = 1
+    
+    init() {
+        UITabBar.appearance().barTintColor = .white
+    }
     
     var body: some View {
         HStack{
@@ -25,9 +30,9 @@ struct CustomTabView: View {
                                 Image(systemName: "magnifyingglass")
                             }.tag(2)
                     }
-            )
+            ).background(Color.white)
             
-        }.background(Color.white)
+        }
     }
 }
 

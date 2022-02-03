@@ -12,7 +12,7 @@ class SearchJobParameterViewModel: ObservableObject {
     private var poleEmploiToken = ""
     let offers = PoleEmploiOffers()
     @Published var name = "test"
-    @Published var jobs: [Resultat] = []
+    @Published var jobs: [Job] = []
     
     // MARK: Internal functions
     func getOffersOnPoleEmploi() {
@@ -37,7 +37,7 @@ class SearchJobParameterViewModel: ObservableObject {
                         DispatchQueue.main.async {
                             switch result {
                             case .success(let jobsObject):
-//                                print(jobsObject.resultats[0])
+//                                print(jobsObject.resultats[3])
                                 self.jobs = jobsObject.resultats
                                 
 
