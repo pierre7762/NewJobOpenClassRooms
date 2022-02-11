@@ -71,7 +71,7 @@ final class PoleEmploiService {
         request.httpMethod = "GET"
         request.addValue("Bearer " + activeToken, forHTTPHeaderField: "Authorization")
         session.dataTask(with: request) { data, response, error in
-        
+//        print(response)
             guard let data = data else {
                 callback(.failure(.noData))
                 return

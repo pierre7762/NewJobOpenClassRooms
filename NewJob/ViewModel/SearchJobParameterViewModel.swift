@@ -27,17 +27,15 @@ class SearchJobParameterViewModel: ObservableObject {
     // MARK: Private functions
     func fetchPoleEmploiJobs() {
         poleEmploiService.getPoleEmploiToken { result in
-            print("result.publisher")
             DispatchQueue.main.async {
                 switch result {
                 case .success(let tokenObject):
                     self.poleEmploiToken = tokenObject.accessToken
-                    print(tokenObject.accessToken)
                     self.poleEmploiService.getPoleEmploiJobs(activeToken: tokenObject.accessToken ){ result in
                         DispatchQueue.main.async {
                             switch result {
                             case .success(let jobsObject):
-//                                print(jobsObject.resultats[3])
+                                print(jobsObject)
                                 self.jobs = jobsObject.resultats
                                 
 

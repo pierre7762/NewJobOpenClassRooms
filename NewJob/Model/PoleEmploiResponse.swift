@@ -21,26 +21,33 @@ struct PoleEmploiToken: Codable {
 }
 
 
+// This file was generated from JSON Schema using quicktype, do not modify it directly.
+// To parse the JSON, add this file to your project and do:
+//
+//   let poleEmploiResponse = try? newJSONDecoder().decode(PoleEmploiResponse.self, from: jsonData)
+
+import Foundation
+
 // MARK: - PoleEmploiResponse
-struct PoleEmploiResponse: Decodable {
+struct PoleEmploiResponse: Codable {
     let resultats: [Job]
     let filtresPossibles: [FiltresPossible]
 }
 
 // MARK: - FiltresPossible
-struct FiltresPossible: Decodable {
+struct FiltresPossible: Codable {
     let filtre: String
     let agregation: [Agregation]
 }
 
 // MARK: - Agregation
-struct Agregation: Decodable {
+struct Agregation: Codable {
     let valeurPossible: String
     let nbResultats: Int
 }
 
 // MARK: - Resultat
-struct Job: Decodable, Identifiable {
+struct Job: Codable, Identifiable {
     let id, intitule, resultatDescription, dateCreation: String
     let dateActualisation: String
     let lieuTravail: LieuTravail
@@ -52,88 +59,95 @@ struct Job: Decodable, Identifiable {
     let experienceExige: ExperienceExige
     let experienceLibelle: ExperienceLibelle
     let salaire: Salaire
-    let dureeTravailLibelle, dureeTravailLibelleConverti: String?
     let alternance: Bool
     let nombrePostes: Int
     let accessibleTH: Bool
-    let qualificationCode, qualificationLibelle: String
-    let origineOffre: OrigineOffre
+    let qualificationCode: String
+    let qualificationLibelle: QualificationLibelle
     let secteurActivite, secteurActiviteLibelle: String?
+    let origineOffre: OrigineOffre
+    let dureeTravailLibelle, dureeTravailLibelleConverti: String?
 
     enum CodingKeys: String, CodingKey {
         case id, intitule
         case resultatDescription = "description"
-        case dateCreation, dateActualisation, lieuTravail, romeCode, romeLibelle, appellationlibelle, entreprise, typeContrat, typeContratLibelle, natureContrat, experienceExige, experienceLibelle, salaire, dureeTravailLibelle, dureeTravailLibelleConverti, alternance, nombrePostes, accessibleTH, qualificationCode, qualificationLibelle, origineOffre, secteurActivite, secteurActiviteLibelle
+        case dateCreation, dateActualisation, lieuTravail, romeCode, romeLibelle, appellationlibelle, entreprise, typeContrat, typeContratLibelle, natureContrat, experienceExige, experienceLibelle, salaire, alternance, nombrePostes, accessibleTH, qualificationCode, qualificationLibelle, secteurActivite, secteurActiviteLibelle, origineOffre, dureeTravailLibelle, dureeTravailLibelleConverti
     }
 }
 
 // MARK: - Entreprise
-struct Entreprise: Decodable {
-    let nom, entrepriseDescription: String?
+struct Entreprise: Codable {
+    let entrepriseDescription: String?
     let entrepriseAdaptee: Bool
+    let nom: String?
 
     enum CodingKeys: String, CodingKey {
-        case nom
         case entrepriseDescription = "description"
-        case entrepriseAdaptee
+        case entrepriseAdaptee, nom
     }
 }
 
-enum ExperienceExige: String, Decodable {
+enum ExperienceExige: String, Codable {
     case d = "D"
     case e = "E"
 }
 
-enum ExperienceLibelle: String, Decodable {
+enum ExperienceLibelle: String, Codable {
     case débutantAccepté = "Débutant accepté"
     case expérienceExigée = "Expérience exigée"
-    case expérienceExigéeDe1AnS = "Expérience exigée de 1 An(s)"
     case expérienceExigéeDe2AnS = "Expérience exigée de 2 An(s)"
 }
 
 // MARK: - LieuTravail
-struct LieuTravail: Decodable {
+struct LieuTravail: Codable {
     let libelle: String
     let latitude, longitude: Double
     let commune: String
 }
 
-enum NatureContrat: String, Decodable {
+enum NatureContrat: String, Codable {
     case contratTravail = "Contrat travail"
 }
 
 // MARK: - OrigineOffre
-struct OrigineOffre: Decodable {
+struct OrigineOffre: Codable {
     let origine: String
     let urlOrigine: String
     let partenaires: [Partenaire]
 }
 
 // MARK: - Partenaire
-struct Partenaire: Decodable {
+struct Partenaire: Codable {
     let nom: Nom
     let url: String
     let logo: String
 }
 
-enum Nom: String, Decodable {
+enum Nom: String, Codable {
     case apec = "APEC"
     case beetween = "BEETWEEN"
+    case careerbuilder = "CAREERBUILDER"
     case jobijoba = "JOBIJOBA"
+    case meteojob = "METEOJOB"
+}
+
+enum QualificationLibelle: String, Codable {
+    case agentDeMaîtrise = "Agent de maîtrise"
+    case employéNonQualifié = "Employé non qualifié"
+    case employéQualifié = "Employé qualifié"
+    case ouvrierQualifiéP1P2 = "Ouvrier qualifié (P1,P2)"
+    case technicien = "Technicien"
 }
 
 // MARK: - Salaire
-struct Salaire: Decodable {
+struct Salaire: Codable {
     let libelle, commentaire: String?
 }
 
-enum TypeContrat: String, Decodable {
-    case cdd = "CDD"
+enum TypeContrat: String, Codable {
     case cdi = "CDI"
 }
 
-enum TypeContratLibelle: String, Decodable {
-    case contratÀDuréeDéterminée4Mois = "Contrat à durée déterminée - 4 Mois"
-    case contratÀDuréeDéterminée6Mois = "Contrat à durée déterminée - 6 Mois"
+enum TypeContratLibelle: String, Codable {
     case contratÀDuréeIndéterminée = "Contrat à durée indéterminée"
 }
