@@ -19,17 +19,17 @@ final class ApiGouvService {
     }
 
     // MARK: - Methods
-    func fetchCityName(cityName: String, callback: @escaping (Result<CityGeoAPIResponseElement, NetworkErrors>) -> Void) {
+    func fetchCityCode(cityName: String, callback: @escaping (Result<CityGeoAPIResponse, NetworkErrors>) -> Void) {
         guard let baseURL: URL = .init(string: apiConstant.geoApiGouv + "/communes?") else { return }
         let url : URL = encode(with: baseURL, and: [
             ("nom",cityName),
-            ("fields", "nom,code,codesPostaux"),
+            ("fields", "nom,code,codeDepartement"),
             ("format", "json"),
         ])
         
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        print(request)
+//        print(request)
         session.dataTask(with: request) { data, response, error in
         
             guard let data = data else {
@@ -38,7 +38,7 @@ final class ApiGouvService {
             }
 //            print("data : ")
 //            print(data)
-            guard let dataDecoded = try? JSONDecoder().decode(CityGeoAPIResponseElement.self, from: data) else {
+            guard let dataDecoded = try? JSONDecoder().decode(CityGeoAPIResponse.self, from: data) else {
                 callback(.failure(.undecodableData))
                 return
             }

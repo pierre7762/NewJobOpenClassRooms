@@ -11,6 +11,7 @@ struct Search {
     var jobTitle: String = ""
 //    var jobsNameArray: [String] = []
     var city: String = ""
+    var cityCode: String = ""
     var experience: Int?
     var qualification: Int?
     var contract: Int?

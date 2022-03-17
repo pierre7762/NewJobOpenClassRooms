@@ -14,6 +14,7 @@ final class PoleEmploiService {
 
     private let session: URLSession
     private let apiConstant = ApiAccessInfo()
+    private let apiGouv = ApiGouvService()
     var token = "";
 
     // MARK: - Initializer
@@ -61,7 +62,7 @@ final class PoleEmploiService {
         let url : URL = encode(with: baseURL, and: [
             ("qualification", ""),
             ("motsCles", search.jobTitle),
-            ("commune", ""),
+            ("commune", search.cityCode),
             ("origineOffre", 2 ),
         ])
         print(url)

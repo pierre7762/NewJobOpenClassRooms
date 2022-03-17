@@ -30,16 +30,41 @@ struct NewSearchJob: View {
                             Spacer()
                         }
                         
-                        TextField("Entrez un poste", text: $newSearchJob.search.jobTitle, onCommit: {
-                            //Action quand le clavier rentre (fin d'édition)
-                            
-                            print("Commit")
-                        })
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .submitLabel(.done)
-                        
-                        TextField("Ville ", text: $newSearchJob.search.city)
+                        HStack() {
+                            TextField("Entrez un poste", text: $newSearchJob.search.jobTitle, onCommit: {
+                                //Action quand le clavier rentre (fin d'édition)
+                                
+                                print("Commit")
+                            })
                             .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .submitLabel(.done)
+                                                        
+                            Button("x", action: {
+                                newSearchJob.search.jobTitle = ""
+                            })
+                        }
+                        
+                        HStack() {
+                            TextField("Ville ", text: $newSearchJob.search.city, onCommit: {
+                                // Action a faire quand l'édition change (début ou fin)
+                                newSearchJob.fetchCityCodeFromCityName()
+                            })
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                                        
+                            Button("x", action: {
+                                newSearchJob.search.city = ""
+                            })
+                        }
+                        if newSearchJob.showCitys {
+                            VStack(alignment: .leading) {
+                                ForEach(newSearchJob.citys) { city in
+                                    Button("\(city.name)(\(city.deptCode))", action: {
+                                        newSearchJob.updateCodeInsee(codeInsee: city.codeInsee, name: city.name)
+                                    })
+                                        .padding()
+                                }
+                            }
+                        }
                         
                         HStack {
                             Text("Expérience : ")
@@ -83,11 +108,6 @@ struct NewSearchJob: View {
                                 }
                                 
                             )
-//                            Button("Rechercher", action: newSearchJob.getOffersOnPoleEmploi )
-//                                .frame(width: 100, height: 50, alignment: .center)
-//                                .background()
-//                                .cornerRadius(12)
-                            
                             Spacer()
                         }
                     }
@@ -101,6 +121,10 @@ struct NewSearchJob: View {
                 
             }
         }
+        .onChange(of:newSearchJob.search.city , perform: { _ in
+            newSearchJob.fetchCityCodeFromCityName()
+            
+        })
         .navigationBarTitle(Text("Nouvelle recherche"), displayMode:.inline)
     }
 }
