@@ -19,4 +19,8 @@ struct PoleEmploiAccess {
     let jobsBaseURL: String = "https://api.emploi-store.fr/partenaire/offresdemploi/v2/offres/search?"
 }
 
+struct ApiGouvAcess {
+    let geoApiGouv: String = "https://geo.api.gouv.fr"
+}
+
 

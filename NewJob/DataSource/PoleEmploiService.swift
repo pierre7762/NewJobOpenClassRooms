@@ -6,14 +6,13 @@
 //
 
 import Foundation
+import SwiftUI
 
 final class PoleEmploiService {
 
     // MARK: - Properties
 
     private let session: URLSession
-//    private let tokenBaseURL: String = "https://entreprise.pole-emploi.fr/connexion/oauth2/access_token?"
-//    private let jobsBaseURL: String = "https://api.emploi-store.fr/partenaire/offresdemploi/v2/offres/search?"
     private let apiConstant = ApiAccessInfo()
     var token = "";
 
@@ -46,8 +45,8 @@ final class PoleEmploiService {
                 callback(.failure(.noData))
                 return
             }
-            print("data : ")
-            print(data)
+//            print("data : ")
+//            print(data)
             guard let dataDecoded = try? JSONDecoder().decode(PoleEmploiToken.self, from: data) else {
                 callback(.failure(.undecodableData))
                 return
@@ -57,26 +56,26 @@ final class PoleEmploiService {
         .resume()
     }
     
-    func getPoleEmploiJobs(activeToken: String,callback: @escaping (Result<PoleEmploiResponse, NetworkErrors>) -> Void) {
+    func getPoleEmploiJobs(search: Search,activeToken: String,callback: @escaping (Result<PoleEmploiResponse, NetworkErrors>) -> Void) {
         guard let baseURL: URL = .init(string: apiConstant.PoleEmploi.jobsBaseURL) else { return }
         let url : URL = encode(with: baseURL, and: [
-            ("qualification", 0),
-            ("motsCles", "informatique"),
-            ("commune", "51069,76322,46083,12172,28117"),
+            ("qualification", ""),
+            ("motsCles", search.jobTitle),
+            ("commune", ""),
             ("origineOffre", 2 ),
         ])
-        
+        print(url)
         var request = URLRequest(url: url)
         print("token : \(activeToken)")
         request.httpMethod = "GET"
         request.addValue("Bearer " + activeToken, forHTTPHeaderField: "Authorization")
         session.dataTask(with: request) { data, response, error in
-//        print(response)
             guard let data = data else {
                 callback(.failure(.noData))
                 return
             }
             guard let dataDecoded = try? JSONDecoder().decode(PoleEmploiResponse.self, from: data) else {
+//                print(data)
                 callback(.failure(.undecodableData))
                 return
             }
@@ -84,9 +83,21 @@ final class PoleEmploiService {
         }
         .resume()
     }
-
     
-
+    private func convertArrayStringToString(array: [String]) -> String {
+        var text = ""
+        
+        for (index, item) in array.enumerated() {
+            text += item
+            if index < array.count - 1 {
+                text += ","
+            }
+        }
+        print("all job search : ", text)
+        
+        return text
+    }
+    
 }
 
 extension PoleEmploiService: URLEncodable {}

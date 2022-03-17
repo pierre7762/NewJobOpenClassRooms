@@ -20,7 +20,7 @@ class JobDetailsViewModel: ObservableObject {
         showAllDescription = !showAllDescription
     }
     
-    func openMapForPlace(coordinates: CLLocationCoordinate2D) {
+    func openMapForPlace(coordinates: CLLocationCoordinate2D, name: String) {
         
 //        let lat1 : NSString = self.venueLat
 //        let lng1 : NSString = self.venueLng
@@ -37,7 +37,7 @@ class JobDetailsViewModel: ObservableObject {
         ]
         let placemark = MKPlacemark(coordinate: coordinates, addressDictionary: nil)
         let mapItem = MKMapItem(placemark: placemark)
-        mapItem.name = "test"
+        mapItem.name = name
         mapItem.openInMaps(launchOptions: options)
         
     }

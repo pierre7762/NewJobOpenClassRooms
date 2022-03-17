@@ -19,16 +19,16 @@ struct CustomTabView: View {
         HStack{
             TabView(selection: $selection,
                     content:  {
-                        SearchJobParameter()
+                        LastSearchJob()
                             .tabItem {
                                 Text("Recherche \n enregistrée")
                                 Image(systemName: "arrow.clockwise")
-                            }.tag(1)
-                        SearchJobTextFieldView()
+                            }.tag(2)
+                        NewSearchJob()
                             .tabItem {
                                 Text("Nouvelle recherche")
                                 Image(systemName: "magnifyingglass")
-                            }.tag(2)
+                            }.tag(1)
                     }
             ).background(Color.white)
             

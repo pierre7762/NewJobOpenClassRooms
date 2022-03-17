@@ -55,17 +55,17 @@ struct HomeView: View {
                     }
                 }
                 
-                .navigationBarTitle(Text("Accueil"), displayMode:.large)
+//                .navigationBarTitle(Text("Accueil"), displayMode:.large)
                 .toolbar {
                     ToolbarItem(placement:.navigationBarTrailing) {
-                        NavigationLink(
-                            destination: UserView(),
-                            label: {
-                                Label("", systemImage: "person.circle")
-                                    .foregroundColor(.white)
-                                    .font(.title)
-                            }
-                        )
+//                        NavigationLink(
+//                            destination: UserView(),
+//                            label: {
+//                                Label("", systemImage: "person.circle")
+//                                    .foregroundColor(.white)
+//                                    .font(.title)
+//                            }
+//                        )
                     }
                 }
             }
