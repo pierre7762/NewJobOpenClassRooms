@@ -19,7 +19,33 @@ struct NewSearchJob: View {
             ZStack {
                 LinearGradient(gradient: Gradient(colors: [.indigo,.cyan,.mint, .green]), startPoint: .topTrailing, endPoint: .bottomLeading)
                 
-                FormNewSearchJob(width: geometry.size.width, height: geometry.size.height, newSearchJob: newSearchJob)
+                VStack {
+
+                    VStack (alignment: .leading) {
+                        FormNewSearchJob(newSearchJob: newSearchJob)
+                        
+                        Spacer()
+                        
+                        HStack {
+                            Spacer()
+                            
+                            NavigationLink(destination: ResultNewSearch(newSearch: newSearchJob), isActive: $newSearchJob.showResult) { EmptyView() }
+                            if newSearchJob.requestInProgress {
+                                ProgressView()
+                            } else {
+                                Button("Rechercher", action: newSearchJob.getOffersOnPoleEmploi)
+                            }
+                            
+                            Spacer()
+                        }
+                    }
+                    .padding()
+                    .frame(width: geometry.size.width * 0.9 , height: geometry.size.height * 0.85 , alignment: .leading)
+                    .background(Color.white)
+                    .cornerRadius(20)
+                    
+                }
+                .padding()
                 
             }
         }
