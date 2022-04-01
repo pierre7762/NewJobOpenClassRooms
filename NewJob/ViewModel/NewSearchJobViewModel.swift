@@ -18,11 +18,14 @@ class NewSearchJobViewModel: ObservableObject {
     @Published var jobs: [Resultat] = []
     @Published var search = Search()
     @Published var showResult = false
+    @Published var showAlert = false
+    @Published var requestInProgress = false
 //    @Published var citysArrayFromApiGouv: CityGeoAPIResponse?
 //    @Published var citysArrayFromApiGouv: [CityGeoAPIResponseElement] = []
     
     // MARK: Internal functions
     func getOffersOnPoleEmploi() {
+        requestInProgress.toggle()
         fetchPoleEmploiJobs()
         print(poleEmploiToken)
 //        showResult = true
@@ -56,9 +59,12 @@ class NewSearchJobViewModel: ObservableObject {
                             for item in cityDatas {
                                 self.citys.append(City(name: item.nom, codeInsee: item.code, postCode: "", deptCode: item.codeDepartement))
                             }
-                        } 
+                        }
                     case .failure(let error):
                         print(error)
+                        print("non")
+                        self.requestInProgress.toggle()
+                        self.showAlert = true
                     }
                 }
             }
@@ -86,6 +92,7 @@ class NewSearchJobViewModel: ObservableObject {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let tokenObject):
+                    self.requestInProgress.toggle()
                     self.poleEmploiToken = tokenObject.accessToken
                     self.poleEmploiService.getPoleEmploiJobs(search: self.search, activeToken: tokenObject.accessToken ){ result in
                         DispatchQueue.main.async {
@@ -98,11 +105,13 @@ class NewSearchJobViewModel: ObservableObject {
 
                             case .failure(let error):
                                 print(error)
+                                self.showAlert = true
                             }
                         }
                     }
 
                 case .failure(let error):
+                    self.requestInProgress.toggle()
                     print(error)
                 }
             }

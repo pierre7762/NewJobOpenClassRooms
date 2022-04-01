@@ -59,18 +59,24 @@ final class PoleEmploiService {
     
     func getPoleEmploiJobs(search: Search,activeToken: String,callback: @escaping (Result<PoleEmploiResponse, NetworkErrors>) -> Void) {
         guard let baseURL: URL = .init(string: apiConstant.PoleEmploi.jobsBaseURL) else { return }
+        
         let url : URL = encode(with: baseURL, and: [
-            ("qualification", ""),
+            ("qualification", search.qualification),
             ("motsCles", search.jobTitle),
             ("commune", search.cityCode),
             ("origineOffre", 2 ),
+            ("experience", search.experience),
         ])
         print(url)
         var request = URLRequest(url: url)
         print("token : \(activeToken)")
         request.httpMethod = "GET"
         request.addValue("Bearer " + activeToken, forHTTPHeaderField: "Authorization")
+        
         session.dataTask(with: request) { data, response, error in
+            if let httpResponse = response as? HTTPURLResponse {
+                print("error !!! \(httpResponse.statusCode)")
+            }
             guard let data = data else {
                 callback(.failure(.noData))
                 return
@@ -98,6 +104,10 @@ final class PoleEmploiService {
         
         return text
     }
+    
+//    private func getQualificationInString(qualification: QualificationEnum) {
+//        
+//    }
     
 }
 

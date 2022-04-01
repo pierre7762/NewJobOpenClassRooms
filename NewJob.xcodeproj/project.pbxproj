@@ -22,6 +22,9 @@
 		8F484652279ADAC6006AE1A9 /* PoleEmploiOffers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F484651279ADAC6006AE1A9 /* PoleEmploiOffers.swift */; };
 		8F643391278DF9570099DC74 /* PoleEmploiResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F643390278DF9570099DC74 /* PoleEmploiResponse.swift */; };
 		8F73728C27ABFB01008E2BE7 /* JobDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F73728B27ABFB01008E2BE7 /* JobDetailsViewModel.swift */; };
+		8F7EC82D27F705CA00CA5F0E /* CustomTextFieldWithDeleteCross.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7EC82C27F705CA00CA5F0E /* CustomTextFieldWithDeleteCross.swift */; };
+		8F7EC82F27F70BFE00CA5F0E /* SearchJobPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7EC82E27F70BFE00CA5F0E /* SearchJobPicker.swift */; };
+		8F7EC83127F70DC000CA5F0E /* FormNewSearchJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7EC83027F70DC000CA5F0E /* FormNewSearchJob.swift */; };
 		8F8A0B0B27E37F3C00E4BDC7 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F8A0B0A27E37F3C00E4BDC7 /* City.swift */; };
 		8F8A0B0D27E3A26700E4BDC7 /* TextfieldWithDeleteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F8A0B0C27E3A26700E4BDC7 /* TextfieldWithDeleteButton.swift */; };
 		8F8ECDAE27C774E700BE9662 /* WrappingStack in Frameworks */ = {isa = PBXBuildFile; productRef = 8F8ECDAD27C774E700BE9662 /* WrappingStack */; };
@@ -61,6 +64,9 @@
 		8F484651279ADAC6006AE1A9 /* PoleEmploiOffers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoleEmploiOffers.swift; sourceTree = "<group>"; };
 		8F643390278DF9570099DC74 /* PoleEmploiResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoleEmploiResponse.swift; sourceTree = "<group>"; };
 		8F73728B27ABFB01008E2BE7 /* JobDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobDetailsViewModel.swift; sourceTree = "<group>"; };
+		8F7EC82C27F705CA00CA5F0E /* CustomTextFieldWithDeleteCross.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextFieldWithDeleteCross.swift; sourceTree = "<group>"; };
+		8F7EC82E27F70BFE00CA5F0E /* SearchJobPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchJobPicker.swift; sourceTree = "<group>"; };
+		8F7EC83027F70DC000CA5F0E /* FormNewSearchJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormNewSearchJob.swift; sourceTree = "<group>"; };
 		8F8A0B0A27E37F3C00E4BDC7 /* City.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
 		8F8A0B0C27E3A26700E4BDC7 /* TextfieldWithDeleteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextfieldWithDeleteButton.swift; sourceTree = "<group>"; };
 		8F9CA01E2788B87900C11E94 /* SearchJobView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchJobView.swift; sourceTree = "<group>"; };
@@ -140,6 +146,8 @@
 				8F34035E2788986600FF8E66 /* SquareCard.swift */,
 				8F0F953327A429A000FCD917 /* JobListCard.swift */,
 				8F8A0B0C27E3A26700E4BDC7 /* TextfieldWithDeleteButton.swift */,
+				8F7EC82C27F705CA00CA5F0E /* CustomTextFieldWithDeleteCross.swift */,
+				8F7EC82E27F70BFE00CA5F0E /* SearchJobPicker.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -194,6 +202,7 @@
 				8FD45BC927DB46DC001DEAFE /* ResultNewSearch.swift */,
 				8F0F953527A45CF700FCD917 /* JobDetails.swift */,
 				8FD45BC727DB3926001DEAFE /* CustomCardListJob.swift */,
+				8F7EC83027F70DC000CA5F0E /* FormNewSearchJob.swift */,
 			);
 			path = SearchJob;
 			sourceTree = "<group>";
@@ -297,6 +306,7 @@
 				8FBB0FC327BFFC6800D13743 /* ApiGouvService.swift in Sources */,
 				8F34034E27885C9100FF8E66 /* HomeView.swift in Sources */,
 				8FF658C627C6224D0045D325 /* Search.swift in Sources */,
+				8F7EC82D27F705CA00CA5F0E /* CustomTextFieldWithDeleteCross.swift in Sources */,
 				8F8A0B0D27E3A26700E4BDC7 /* TextfieldWithDeleteButton.swift in Sources */,
 				8FC2374B27916CE60039869E /* ApiAccessInfo.swift in Sources */,
 				8F34034C27885C9100FF8E66 /* NewJobApp.swift in Sources */,
@@ -309,10 +319,12 @@
 				8F8A0B0B27E37F3C00E4BDC7 /* City.swift in Sources */,
 				8F73728C27ABFB01008E2BE7 /* JobDetailsViewModel.swift in Sources */,
 				8F34035D2788891C00FF8E66 /* ThisWeekCard.swift in Sources */,
+				8F7EC83127F70DC000CA5F0E /* FormNewSearchJob.swift in Sources */,
 				8F9CA0212788BA4800C11E94 /* RelaunchContactView.swift in Sources */,
 				8F07884727BD0C33005BD159 /* NewSearchJobViewModel.swift in Sources */,
 				8F0F953427A429A000FCD917 /* JobListCard.swift in Sources */,
 				8F484652279ADAC6006AE1A9 /* PoleEmploiOffers.swift in Sources */,
+				8F7EC82F27F70BFE00CA5F0E /* SearchJobPicker.swift in Sources */,
 				8F0F953627A45CF700FCD917 /* JobDetails.swift in Sources */,
 				8F9CA01F2788B87900C11E94 /* SearchJobView.swift in Sources */,
 			);

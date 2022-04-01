@@ -9,18 +9,14 @@ import Foundation
 
 struct Search {
     var jobTitle: String = ""
-//    var jobsNameArray: [String] = []
     var city: String = ""
     var cityCode: String = ""
-    var experience: Int?
-    var qualification: Int?
+    var experience: String = ""
+    var qualification: String = "X"
     var contract: Int?
     var distance: Int?
 
-    
-//    mutating func addJobName() {
-//        self.jobsNameArray.append(text.lowercased())
-//        self.jobTitle = ""
-//    }
 }
+
+
 

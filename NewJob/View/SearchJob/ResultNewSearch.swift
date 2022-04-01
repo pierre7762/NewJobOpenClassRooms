@@ -14,17 +14,12 @@ struct ResultNewSearch: View {
         GeometryReader { geometry in
             ZStack {
                 LinearGradient(gradient: Gradient(colors: [.indigo,.cyan,.mint, .green]), startPoint: .topTrailing, endPoint: .bottomLeading)
-                if newSearch.showResult {
-                    CustomCardListJob(jobs: newSearch.jobs, width: geometry.size.width)
-                } else {
-                    VStack {
-                        ProgressView()
-                    }
-                }
+                CustomCardListJob(jobs: newSearch.jobs, width: geometry.size.width)
             }
             .navigationBarTitle(Text("Dernière recherche"), displayMode:.inline)
-            .onAppear {
-                newSearch.getOffersOnPoleEmploi()
+            .onDisappear{
+                newSearch.jobs = []
+                newSearch.showResult = false
             }
         }
     }
