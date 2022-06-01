@@ -9,10 +9,12 @@ import SwiftUI
 
 @main
 struct NewJobApp: App {
-    //test
+//    @StateObject private var dataController = DataController()
+    let myController = PersistenceManager.shared
     var body: some Scene {
         WindowGroup {
             HomeView()
+//                .environment(\.managedObjectContext, dataController.container.viewContext)
                 .preferredColorScheme(.light)
         }
     }

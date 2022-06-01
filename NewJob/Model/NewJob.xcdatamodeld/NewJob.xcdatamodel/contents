@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21F79" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Candidacy" representedClassName="Candidacy" syncable="YES" codeGenerationType="class">
+        <attribute name="candidacyDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="candidacyMeans" optional="YES" attributeType="String"/>
+        <attribute name="comment" optional="YES" attributeType="String"/>
+        <relationship name="contact" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Contact" inverseName="candidacy" inverseEntity="Contact"/>
+        <relationship name="relaunch" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Relaunch" inverseName="candidacy" inverseEntity="Relaunch"/>
+        <relationship name="selectedJob" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SelectedJob" inverseName="candidacy" inverseEntity="SelectedJob"/>
+    </entity>
+    <entity name="Company" representedClassName="Company" syncable="YES" codeGenerationType="class">
+        <attribute name="adaptedCompany" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="descriptionCompany" optional="YES" attributeType="String"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="newRelationship" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SelectedJob" inverseName="company" inverseEntity="SelectedJob"/>
+    </entity>
+    <entity name="Contact" representedClassName="Contact" syncable="YES" codeGenerationType="class">
+        <attribute name="compagny" attributeType="String"/>
+        <attribute name="email" optional="YES" attributeType="String"/>
+        <attribute name="functionInCompany" attributeType="String"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="phoneNumber" optional="YES" attributeType="String" customClassName="[String : String]"/>
+        <relationship name="candidacy" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Candidacy" inverseName="contact" inverseEntity="Candidacy"/>
+        <relationship name="relaunch" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Relaunch" inverseName="contact" inverseEntity="Relaunch"/>
+    </entity>
+    <entity name="OriginOffers" representedClassName="OriginOffers" syncable="YES" codeGenerationType="class">
+        <attribute name="origin" attributeType="String"/>
+        <attribute name="partnerLogo" optional="YES" attributeType="String"/>
+        <attribute name="partnerName" optional="YES" attributeType="String"/>
+        <attribute name="partnerUrl" optional="YES" attributeType="String"/>
+        <attribute name="urlOrigin" attributeType="String"/>
+        <relationship name="newRelationship" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SelectedJob" inverseName="originOffers" inverseEntity="SelectedJob"/>
+    </entity>
+    <entity name="Relaunch" representedClassName="Relaunch" syncable="YES" codeGenerationType="class">
+        <attribute name="comment" attributeType="String"/>
+        <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="means" attributeType="String"/>
+        <relationship name="candidacy" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Candidacy" inverseName="relaunch" inverseEntity="Candidacy"/>
+        <relationship name="contact" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="relaunch" inverseEntity="Contact"/>
+    </entity>
+    <entity name="Salary" representedClassName="Salary" syncable="YES" codeGenerationType="class">
+        <attribute name="comment" optional="YES" attributeType="String"/>
+        <attribute name="firstComplement" optional="YES" attributeType="String"/>
+        <attribute name="libelle" optional="YES" attributeType="String"/>
+        <attribute name="secondComplement" optional="YES" attributeType="String"/>
+        <relationship name="newRelationship" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SelectedJob" inverseName="salary" inverseEntity="SelectedJob"/>
+    </entity>
+    <entity name="SelectedJob" representedClassName="SelectedJob" syncable="YES" codeGenerationType="class">
+        <attribute name="appelationWording" optional="YES" attributeType="String"/>
+        <attribute name="creationDate" attributeType="String"/>
+        <attribute name="entitled" attributeType="String"/>
+        <attribute name="id" attributeType="String"/>
+        <attribute name="jobDescription" attributeType="String"/>
+        <relationship name="candidacy" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Candidacy" inverseName="selectedJob" inverseEntity="Candidacy"/>
+        <relationship name="company" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Company" inverseName="newRelationship" inverseEntity="Company"/>
+        <relationship name="originOffers" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="OriginOffers" inverseName="newRelationship" inverseEntity="OriginOffers"/>
+        <relationship name="salary" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Salary" inverseName="newRelationship" inverseEntity="Salary"/>
+        <relationship name="workplace" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Workplace" inverseName="newRelationship" inverseEntity="Workplace"/>
+    </entity>
+    <entity name="Workplace" representedClassName="Workplace" syncable="YES" codeGenerationType="class">
+        <attribute name="city" optional="YES" attributeType="String"/>
+        <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="libelle" optional="YES" attributeType="String"/>
+        <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="posteCode" optional="YES" attributeType="String"/>
+        <relationship name="newRelationship" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SelectedJob" inverseName="workplace" inverseEntity="SelectedJob"/>
+    </entity>
+    <elements>
+        <element name="Candidacy" positionX="-68.4561767578125" positionY="-148.6433410644531" width="128" height="119"/>
+        <element name="Company" positionX="334.8153076171875" positionY="-468.5732727050781" width="128" height="89"/>
+        <element name="Contact" positionX="-327.3381958007813" positionY="7.45770263671875" width="128" height="134"/>
+        <element name="OriginOffers" positionX="362.3392333984375" positionY="-226.6152038574219" width="128" height="119"/>
+        <element name="Relaunch" positionX="259.623046875" positionY="24.14027404785156" width="128" height="119"/>
+        <element name="Salary" positionX="-344.3107299804688" positionY="-322.1608734130859" width="128" height="104"/>
+        <element name="SelectedJob" positionX="80.81005859375" positionY="-423.84326171875" width="128" height="179"/>
+        <element name="Workplace" positionX="-380.8273315429687" positionY="-536.5852661132812" width="128" height="119"/>
+    </elements>
+</model>

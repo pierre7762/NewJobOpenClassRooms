@@ -17,10 +17,6 @@ struct ResultNewSearch: View {
                 CustomCardListJob(jobs: newSearch.jobs, width: geometry.size.width)
             }
             .navigationBarTitle(Text("Dernière recherche"), displayMode:.inline)
-            .onDisappear{
-                newSearch.jobs = []
-                newSearch.showResult = false
-            }
         }
     }
 }

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreData
 
 // MARK: - PoleEmploiToken
 struct PoleEmploiToken: Codable {
@@ -94,3 +95,5 @@ struct Partenaire: Codable {
 struct Salaire: Codable {
     let libelle, commentaire, complement1, complement2: String?
 }
+
+

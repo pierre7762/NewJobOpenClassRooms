@@ -9,7 +9,7 @@ import WrappingStack
 import SwiftUI
 
 struct NewSearchJob: View {
-    @ObservedObject private var newSearchJob = NewSearchJobViewModel()
+    @ObservedObject private var viewModel = NewSearchJobViewModel()
     @State private var qualificationState = 0
     
     private let poleEmploiService = PoleEmploiService()
@@ -22,38 +22,38 @@ struct NewSearchJob: View {
                 VStack {
 
                     VStack (alignment: .leading) {
-                        FormNewSearchJob(newSearchJob: newSearchJob)
+                        FormNewSearchJob(viewModel: viewModel)
                         
                         Spacer()
                         
                         HStack {
                             Spacer()
                             
-                            NavigationLink(destination: ResultNewSearch(newSearch: newSearchJob), isActive: $newSearchJob.showResult) { EmptyView() }
-                            if newSearchJob.requestInProgress {
+                            NavigationLink(destination: ResultNewSearch(newSearch: viewModel), isActive: $viewModel.showResult) { EmptyView() }
+                            if viewModel.requestInProgress {
                                 ProgressView()
                             } else {
-                                Button("Rechercher", action: newSearchJob.getOffersOnPoleEmploi)
+                                Button("Rechercher", action: viewModel.getOffersOnPoleEmploi)
                             }
                             
                             Spacer()
                         }
                     }
-                    .padding()
-                    .frame(width: geometry.size.width * 0.9 , height: geometry.size.height * 0.85 , alignment: .leading)
-                    .background(Color.white)
-                    .cornerRadius(20)
+//                    .padding()
+//                    .frame(width: geometry.size.width * 0.9 , height: geometry.size.height * 0.85 , alignment: .leading)
+//                    .background(Color.white)
+//                    .cornerRadius(20)
                     
                 }
                 .padding()
                 
             }
         }
-        .onChange(of:newSearchJob.search.city , perform: { _ in
-            newSearchJob.fetchCityCodeFromCityName()
+        .onChange(of:viewModel.search.city , perform: { _ in
+            viewModel.fetchCityCodeFromCityName()
         })
         .navigationBarTitle(Text("Nouvelle recherche"), displayMode:.inline)
-        .alert("Une erreur est survenue. \n Veuillez vérifier les informations saisies.", isPresented: $newSearchJob.showAlert) {
+        .alert("Une erreur est survenue. \n Veuillez vérifier les informations saisies.", isPresented: $viewModel.showAlert) {
                     Button("OK", role: .cancel) { }
                 }
     }

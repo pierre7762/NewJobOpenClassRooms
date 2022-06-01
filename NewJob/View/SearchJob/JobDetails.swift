@@ -7,14 +7,20 @@
 
 import MapKit
 import SwiftUI
+import WebKit
 
 
 struct JobDetails: View {
-    @ObservedObject private var jobDetailsViewModel = JobDetailsViewModel()
+    @ObservedObject private var viewModel = JobDetailsViewModel()
     var job: Resultat
+    var index: Int
+    @State private var coordinate = CLLocationCoordinate2D(latitude: 48.855045, longitude: 2.342524)
     @State private var mapRegion = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 48.855045 , longitude: 2.342524), span: MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2))
     @State var showAction = false
     @State var font: Font = Font.system(.title)
+    @State private var showWebView = false
+//    @Environment(\.managedObjectContext) var moc
+    
     var body: some View {
         GeometryReader { geometry in
             ZStack {
@@ -40,30 +46,40 @@ struct JobDetails: View {
                                                title: Text("Voulez-vous obtenir un itinéraire ?"),
                                                buttons: [
                                                    .default(Text("Allons-y !"), action: {
-                                                       jobDetailsViewModel.openMapForPlace(coordinates: CLLocationCoordinate2D(latitude: job.lieuTravail.latitude! , longitude: job.lieuTravail.longitude!), name: job.entreprise.nom ?? "Localisation du poste")
+                                                       viewModel.openMapForPlace(coordinates: CLLocationCoordinate2D(latitude: job.lieuTravail.latitude! , longitude: job.lieuTravail.longitude!), name: job.entreprise.nom ?? "Localisation du poste")
                                                    }),
                                                    .cancel()
                                                ]
                                            )
                                        }
+                            } else {
+                                Text("Erreur coordonnées")
                             }
-
                         }
                         Text(job.intitule.capitalized)
                             .padding(.init(top: 10, leading: 20, bottom: 5, trailing: 20))
                             .font(.title2)
                             .foregroundColor(.blue)
 
-
-
-
                         Divider()
 
+                        Button {
+                            showWebView.toggle()
+                        } label: {
+                            Text("Lien vers l'annonce")
+                                .underline()
+                        }
+                        .sheet(isPresented: $showWebView) {
+                            WebView(url: URL(string: job.origineOffre.urlOrigine)!)
+                        }
+                        
+                        JobDetailsInfo(jobDetailsViewModel: viewModel, job: job)
+                        
                         Text("Description")
                             .font(.title3)
                             .fontWeight(.semibold)
                             .padding(.init(top: 10, leading: 20, bottom: 0, trailing: 20))
-                        if jobDetailsViewModel.showAllDescription {
+                        if viewModel.showAllDescription {
                             ScrollView() {
 
 
@@ -85,9 +101,9 @@ struct JobDetails: View {
                         HStack() {
                             Spacer()
                             Button(action: {
-                                jobDetailsViewModel.modifyShowAllDescription()
+                                viewModel.modifyShowAllDescription()
                                     }, label: {
-                                        if jobDetailsViewModel.showAllDescription {
+                                        if viewModel.showAllDescription {
                                             Label("Reduire", systemImage: "arrow.up.circle")
                                         } else {
                                             Label("Voir tout", systemImage: "arrow.down.circle")
@@ -107,8 +123,28 @@ struct JobDetails: View {
 
             }
             .navigationBarTitle(Text("Détail"), displayMode:.inline)
+            .toolbar{
+                ToolbarItem(placement: .automatic) {
+                    Button {
+                        if viewModel.isFavorite {
+                            viewModel.deleteThisFavorite(index: index)
+                        } else {
+                            viewModel.prepareSaveJob(job: job)
+                        }
+                    } label: {
+                        if viewModel.isFavorite {
+                            Image(systemName: "heart.fill")
+                        } else {
+                            Image(systemName: "heart")
+                        }
+                    }
+                            }
+            }
             .onAppear {
-//                mapRegion = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: job.lieuTravail.latitude , longitude: job.lieuTravail.longitude), span: MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2))
+                print(job)
+                viewModel.checkIfIsFavorite(job: job)
+                mapRegion = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: job.lieuTravail.latitude ?? 48.855045 , longitude: job.lieuTravail.longitude ?? 2.342524), span: MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2))
+               
             }
         }
     }
@@ -164,6 +200,9 @@ struct JobDetails_Previews: PreviewProvider {
                     url: "https://www.lesjeudis.com/jobs/J3W7MS6BQ2NNYFP05D7?siteid=int_FRpoleemploi&utm_source=pole_emploi&utm_medium=aggregator&utm_campaign=organic",
                     logo: "https://www.pole-emploi.fr/static/img/partenaires/careerbuilder80.png"
                 )
+//                Partenaire(
+//                    from: Decoder as! Decoder
+//                )
             ]
         )
 //        dureeTravailLibelle: "",
@@ -171,7 +210,7 @@ struct JobDetails_Previews: PreviewProvider {
     )
     
     static var previews: some View {
-        JobDetails(job: job )
+        JobDetails(job: job, index: 0 )
         
     }
 }

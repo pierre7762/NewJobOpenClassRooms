@@ -20,23 +20,33 @@ struct CustomTextFieldWithDeleteCross: View {
                     
                     print("Commit")
                 })
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .submitLabel(.done)
+//                .textFieldStyle(RoundedBorderTextFieldStyle())
+//                .submitLabel(.done)
                                             
-                Button("x", action: {
-                    newSearch.search.jobTitle = ""
-                })
+//                Button(
+//                    action: {
+//                        newSearch.search.jobTitle = ""
+//                    },
+//                    label: {
+//                        Image(systemName: "delete.left")
+//                    }
+//                )
                 
             case .city:
                 TextField("Ville ", text: $newSearch.search.city, onCommit: {
                     // Action a faire quand l'édition change (début ou fin)
                     newSearch.fetchCityCodeFromCityName()
                 })
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
+//                    .textFieldStyle(RoundedBorderTextFieldStyle())
                                             
-                Button("x", action: {
-                    newSearch.search.city = ""
-                })
+//                Button(
+//                    action: {
+//                        newSearch.search.city = ""
+//                    },
+//                    label: {
+//                        Image(systemName: "delete.left")
+//                    }
+//                )
             }
             
         }

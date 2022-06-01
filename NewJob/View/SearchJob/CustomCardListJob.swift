@@ -13,39 +13,35 @@ struct CustomCardListJob: View {
     
     var body: some View {
         VStack {
-            ScrollView(.vertical, showsIndicators: true) {
-                VStack {
-                    ForEach(jobs) { job in
-                        NavigationLink(
-                            destination: JobDetails(job: job),
-                            label: {
-                                VStack(alignment: .leading) {
-                                    HStack(alignment: .lastTextBaseline) {
-                                        Text(job.appellationlibelle ?? "")
-                                            .fontWeight(.bold)
-                                            .font(.footnote)
-                                    }
-                                    Text(job.entreprise.nom ?? "")
-                                        .font(.footnote)
-                                        .foregroundColor(.gray)
-                                    Text(job.lieuTravail.libelle ?? "")
-                                        .font(.footnote)
-                                        .foregroundColor(.gray)
-                                    Spacer()
-                                    Text(job.salaire.commentaire ?? "")
+            List {
+                ForEach(jobs) { job in
+                    NavigationLink(
+                        destination: JobDetails(job: job, index: 0),
+                        label: {
+                            VStack(alignment: .leading) {
+                                HStack(alignment: .lastTextBaseline) {
+                                    Text(job.appellationlibelle ?? "")
+                                        .fontWeight(.bold)
                                         .font(.footnote)
                                 }
-                                .frame(width: width * 0.8, alignment: .leading)
-                                .padding()
-                                .background(Color(white: 1.0))
+                                Text(job.entreprise.nom ?? "")
+                                    .font(.footnote)
+                                    .foregroundColor(.gray)
+                                Text(job.lieuTravail.libelle ?? "")
+                                    .font(.footnote)
+                                    .foregroundColor(.gray)
+                                Spacer()
+                                Text(job.salaire.commentaire ?? "")
+                                    .font(.footnote)
                             }
-                        )
-                            .cornerRadius(12)
-                    }
+                            .frame(width: width * 0.8, alignment: .leading)
+
+                            .background(Color(white: 1.0))
+                        }
+                    )
                 }
             }
         }
-        .padding(.init(top: 5, leading: 10, bottom: 5, trailing: 10))
     }
 }
 
@@ -93,11 +89,11 @@ struct CustomCardListJob_Previews: PreviewProvider {
             origine: "2",
             urlOrigine: "https://candidat.pole-emploi.fr/offres/recherche/detail/8815294",
             partenaires: [
-                Partenaire(
-                    nom: "careerbuilder",
-                    url: "https://www.lesjeudis.com/jobs/J3W7MS6BQ2NNYFP05D7?siteid=int_FRpoleemploi&utm_source=pole_emploi&utm_medium=aggregator&utm_campaign=organic",
-                    logo: "https://www.pole-emploi.fr/static/img/partenaires/careerbuilder80.png"
-                )
+//                Partenaire(
+//                    nom: "careerbuilder",
+//                    url: "https://www.lesjeudis.com/jobs/J3W7MS6BQ2NNYFP05D7?siteid=int_FRpoleemploi&utm_source=pole_emploi&utm_medium=aggregator&utm_campaign=organic",
+//                    logo: "https://www.pole-emploi.fr/static/img/partenaires/careerbuilder80.png"
+//                )
             ]
         )
 //        dureeTravailLibelle: "",

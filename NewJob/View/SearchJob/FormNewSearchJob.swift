@@ -8,38 +8,48 @@
 import SwiftUI
 
 struct FormNewSearchJob: View {
-    @State var newSearchJob: NewSearchJobViewModel
+    @State var viewModel: NewSearchJobViewModel
     
     var body: some View {
-        HStack() {
+        VStack {
             Text("Poste recherché ")
                 .fontWeight(.bold)
                 .font(.title)
-            
-            Spacer()
-        }
-        
-        CustomTextFieldWithDeleteCross(customTextfieldCase: .jobTitle, newSearch: newSearchJob)
-        CustomTextFieldWithDeleteCross(customTextfieldCase: .city, newSearch: newSearchJob)
-        
-        if newSearchJob.showCitys {
-            VStack(alignment: .leading) {
-                ForEach(newSearchJob.citys) { city in
-                    Button("\(city.name)(\(city.deptCode))", action: {
-                        newSearchJob.updateCodeInsee(codeInsee: city.codeInsee, name: city.name)
-                    })
-                        .padding()
+                .foregroundColor(.white)
+                .background(Color( white: 1.0, opacity: 0))
+//                        .padding()
+            Form {
+
+                Section(header: Text("Intitulé du poste"))  {
+                    TextField("Entrez un poste", text: $viewModel.search.jobTitle)
+                    CustomTextFieldWithDeleteCross(customTextfieldCase: .city, newSearch: viewModel)
+                    
+                }
+//                if viewModel.showCitys {
+//                    VStack(alignment: .leading) {
+//                        ForEach(viewModel.citys) { city in
+//                            Button("\(city.name)(\(city.deptCode))", action: {
+//                                viewModel.updateCodeInsee(codeInsee: city.codeInsee, name: city.name)
+//                            })
+//                                .padding()
+//                        }
+//                    }
+//                }
+
+                
+                
+                Section(header: Text("Infos"))  {
+                    SearchJobPicker(searchJobPickerType: .experience, newSearchJob: viewModel)
+                    SearchJobPicker(searchJobPickerType: .qualifcations, newSearchJob: viewModel)
+                    
                 }
             }
-        }
-        
-        SearchJobPicker(searchJobPickerType: .experience, newSearchJob: newSearchJob)
-        SearchJobPicker(searchJobPickerType: .qualifcations, newSearchJob: newSearchJob)
+
     }
 }
 
 struct FormNewSearchJob_Previews: PreviewProvider {
     static var previews: some View {
-        FormNewSearchJob(newSearchJob: NewSearchJobViewModel())
+        FormNewSearchJob(viewModel: NewSearchJobViewModel())
     }
-}
+}}

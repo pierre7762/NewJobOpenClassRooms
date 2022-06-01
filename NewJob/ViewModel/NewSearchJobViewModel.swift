@@ -20,8 +20,6 @@ class NewSearchJobViewModel: ObservableObject {
     @Published var showResult = false
     @Published var showAlert = false
     @Published var requestInProgress = false
-//    @Published var citysArrayFromApiGouv: CityGeoAPIResponse?
-//    @Published var citysArrayFromApiGouv: [CityGeoAPIResponseElement] = []
     
     // MARK: Internal functions
     func getOffersOnPoleEmploi() {
@@ -37,8 +35,7 @@ class NewSearchJobViewModel: ObservableObject {
     private let apiGouvService = ApiGouvService()
     
     // MARK: Private functions
-    
-    func fetchCityCodeFromCityName() {
+        func fetchCityCodeFromCityName() {
         citys = []
 //        if search.city.count > 2 {
             print(search.city.count)
