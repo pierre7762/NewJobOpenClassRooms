@@ -34,8 +34,9 @@ class FavoriteJobViewModel: ObservableObject {
         request.sortDescriptors = [sortByCreationDate]
         do {
             self.jobs = try memoryManager.viewContext.fetch(request)
-            print("save job count : ", self.jobs.count)
+//            print("save job count : ", self.jobs.count)
 //            print(self.jobs[0].candidacyMake)
+            print(self.jobs)
 
         } catch {
             print(error.localizedDescription)

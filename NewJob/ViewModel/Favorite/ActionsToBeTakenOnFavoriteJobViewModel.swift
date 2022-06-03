@@ -27,11 +27,17 @@ class ActionsToBeTakenOnFavoriteJobViewModel: ObservableObject {
     func createRemoveCandidady(isCreated: Bool, job: SelectedJob) {
         switch isCreated {
         case true:
+//            print("create new candidacy")
             let newCandidacy = Candidacy(context: memoryManager.viewContext)
             newCandidacy.candidacyMeans = ""
             newCandidacy.candidacyDate = Date()
             newCandidacy.comment = "test"
-            job.candidacy?.adding(newCandidacy)
+//            favoriteJob!.candidacy?.adding(newCandidacy)
+            newCandidacy.selectedJob = favoriteJob
+            print("favoriteJob!.candidacy?.count : ", favoriteJob!.candidacy?.count)
+            save()
+//            print("new candidacy is created : ", favoriteJob?.candidacy)
+//            print("candidacy count : ", favoriteJob?.candidacy?.count)
             
         case false:
             print("remove")
@@ -45,7 +51,16 @@ class ActionsToBeTakenOnFavoriteJobViewModel: ObservableObject {
     }
     
     func updateCandidacyDate(newDate: Date) {
-//        let sortedCandidacy = favoriteJob!.candidacy!.sorted{$0.candidacyDate > $1.candidacydate}
+        print(favoriteJob?.candidacy?.count)
+//        favoriteJob?.sortedCandidacy[0].candidacyDate = newDate
+//        var data : Set<Candidacy> = []
+//        for cand in favoriteJob!.sortedCandidacy {
+//            data.insert(cand)
+//        }
+//        favoriteJob?.candidacy = data as NSSet
+//        save()
+//
+//        print("after update : ", favoriteJob?.sortedCandidacy)
     }
     
     

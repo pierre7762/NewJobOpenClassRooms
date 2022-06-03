@@ -49,7 +49,10 @@ struct ActionsToBeTakenOnFavoriteJob: View {
                                             Text("Envoyée le :")
                                         }
                             .onChange(of: applicationSentOn) { newValue in
+//                                print("job : ", viewModel.favoriteJob)
 //                                print("newValue : ", newValue)
+                                viewModel.updateCandidacyDate(newDate: newValue)
+//                                viewModel.favoriteJob?
 //                                viewModel.favoriteJob?.candidacy!.candidacyDate[0] = newValue
 //                                viewModel.favoriteJob.candidacy.updateCandidacyDate(newValue)
 //                                viewModel.memoryManager.saveData()
