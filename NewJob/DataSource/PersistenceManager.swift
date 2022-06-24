@@ -45,6 +45,30 @@ struct PersistenceManager {
         }
     }
     
+    func fetchSelectedJobs() -> [SelectedJob] {
+        var jobs: [SelectedJob] = []
+        let request = NSFetchRequest<SelectedJob>(entityName: "SelectedJob")
+        let sortByCreationDate  = NSSortDescriptor(keyPath: \SelectedJob.creationDate, ascending: true)
+        request.sortDescriptors = [sortByCreationDate]
+        do {
+            jobs = try viewContext.fetch(request)
+        } catch {
+            print(error.localizedDescription)
+        }
+        return jobs
+    }
+    
+    func fetchSelectedJobWhoHaveCandidacyMake(jobs: [SelectedJob]) -> [SelectedJob]{
+        var selectedJobWhoHaveCandidacyMake: [SelectedJob] = []
+        jobs.forEach { job in
+            if job.candidacy != nil {
+                selectedJobWhoHaveCandidacyMake.append(job)
+            }
+        }
+        
+        return selectedJobWhoHaveCandidacyMake
+    }
+    
 }
 
 

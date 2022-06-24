@@ -9,6 +9,8 @@ import SwiftUI
 
 struct HomeView: View {
     @State var showUserView = false
+    @StateObject private var viewModel = HomeViewModel()
+    
     var body: some View {
         GeometryReader { geometry in
             NavigationView {
@@ -18,7 +20,8 @@ struct HomeView: View {
                     VStack {
 //                        RoundedImage(imageName: "alternanceImage", height: geometry.size.height / 6, width: geometry.size.width / 3)
                         Spacer()
-                        ThisWeekCard()
+                        ThisWeekCard(selectedJobCount: viewModel.jobsCount, candidacySending: viewModel.jobsWithCandidacyMakeCount)
+                            .environmentObject(viewModel)
                         Spacer()
 //                        Divider()
                         HStack () {
@@ -68,10 +71,15 @@ struct HomeView: View {
 //                        )
                     }
                 }
+                .onAppear(){
+                    viewModel.updateData()
+                    print("on appear")
+                }
             }
+           
         }
+        
     }
-    
 }
 
 struct ContentView_Previews: PreviewProvider {

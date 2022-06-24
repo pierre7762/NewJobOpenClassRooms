@@ -14,6 +14,7 @@ struct ActionsToBeTakenOnFavoriteJob: View {
     @State private var showAddRelaunch = false
     @State private var test = false
     @State private var destinataire = ""
+//    @State private var showingDestinataireSheet = false
     @ObservedObject var viewModel: ActionsToBeTakenOnFavoriteJobViewModel = ActionsToBeTakenOnFavoriteJobViewModel()
     
     
@@ -25,6 +26,7 @@ struct ActionsToBeTakenOnFavoriteJob: View {
 
     
     var body: some View {
+        let _ = print(viewModel.favoriteJob?.candidacy)
         GeometryReader { geometry in
             ZStack {
 
@@ -35,34 +37,28 @@ struct ActionsToBeTakenOnFavoriteJob: View {
                         Section()  {
                             Toggle("J'ai postulé", isOn: $viewModel.createCandidacyToggle)
                                 .onChange(of: viewModel.createCandidacyToggle) { change in
-                                    viewModel.createRemoveCandidady(isCreated: change, job: job)
-                                    viewModel.favoriteJob?.candidacy?.forEach({ cand in
-                                        print(cand)
-                                    })
+//                                    viewModel.createRemoveCandidady(isCreated: change, job: job)
+//                                    viewModel.favoriteJob?.candidacy?.forEach({ cand in
+//                                        print(cand)
+//                                    })
                                                                   }
                         }
                     
 
                     if viewModel.createCandidacyToggle {
                         Section(header: Text("Candidature")) {
-                            DatePicker(selection: $applicationSentOn, in: ...Date(), displayedComponents: .date) {
+                            DatePicker(selection: $viewModel.createDateCandidacy, in: ...Date(), displayedComponents: .date) {
                                             Text("Envoyée le :")
                                         }
                             .onChange(of: applicationSentOn) { newValue in
-//                                print("job : ", viewModel.favoriteJob)
-//                                print("newValue : ", newValue)
-                                viewModel.updateCandidacyDate(newDate: newValue)
-//                                viewModel.favoriteJob?
-//                                viewModel.favoriteJob?.candidacy!.candidacyDate[0] = newValue
-//                                viewModel.favoriteJob.candidacy.updateCandidacyDate(newValue)
-//                                viewModel.memoryManager.saveData()
-//                                print("candidacy date : ", viewModel.favoriteJob.candidacy!.candidacyDate)
-//                                print(newValue)
+//                                viewModel.updateCandidacyDate(newDate: newValue)
+                                viewModel.createDateCandidacy = newValue
+//
                             }
                             HStack {
                                 Text("Moyen utilisé :")
                                 Spacer()
-                                Picker("contactBy", selection: $test) {
+                                Picker("contactBy", selection: $viewModel.means) {
                                     Text("Non précisé").tag("Non précisé")
                                     Text("Téléphone").tag("Téléphone")
                                     Text("Mail").tag("Mail")
@@ -70,13 +66,51 @@ struct ActionsToBeTakenOnFavoriteJob: View {
                                     Text("Site internet").tag("Site internet")
                                 }
                                 .pickerStyle(.menu)
-//                                        .onChange(of: newSearchJob.search.experience) { newValue in
-//                                            newSearchJob.search.experience = newValue
-//                                        }
+                                
+                                
                             }
-                            TextField("Destinataire", text: $destinataire)
+                            VStack {
+                                HStack{
+                                    Text("Destinataire :")
+                                    if job.candidacy?.contact?.count == 0 {
+                                        Text("empty")
+                                        Button {
+                                            print("Button was tapped")
+                                            viewModel.showingDestinataireSheet.toggle()
+                                        } label: {
+                                            Image(systemName: "person.crop.circle.fill.badge.plus")
+                                                .font(.system(size: 30))
+                                        }
+                                        .cornerRadius(12)
+                                    } else {
+                                        Text("\((job.candidacy?.contact?.allObjects as! [Contact])[0].name ?? "")")
+                                       
+                                    }
+                                    
+                                    Spacer()
+                                }
+                                .sheet(isPresented: $viewModel.showingDestinataireSheet) {
+                                    AddContactView()
+                                }
+                                
+                            }
+                            
+                            HStack {
+                                Spacer()
+                                Button {
+                                    print("Button was tapped")
+                                    viewModel.createCandidacy()
+                                } label: {
+                                    Text("Enregistrer")
+                                        .padding()
+                                        .foregroundColor(.white)
+                                        .background(.green)
+                                }
+                                .cornerRadius(12)
+                                Spacer()
+                            }
+                            .padding()
             
-
                         }
                         
 //                        Section(header: Text("Relances")) {
@@ -126,6 +160,13 @@ struct ActionsToBeTakenOnFavoriteJob: View {
             viewModel.favoriteJob = job
 //            viewModel.candidacyIsCreated()
 //            testF()
+//            print("selectedJob : ", job)
+//            print("selectedJob.candidacy : ", job.candidacy?.candidacyDate)
+            if job.candidacy != nil {
+                viewModel.createCandidacyToggle = true
+            }
+            viewModel.createDateCandidacy = job.candidacy?.candidacyDate ?? Date()
+            viewModel.means = job.candidacy?.candidacyMeans ?? ""
         }
 
         

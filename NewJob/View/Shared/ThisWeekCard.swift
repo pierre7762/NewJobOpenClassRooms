@@ -17,16 +17,46 @@ struct CardModifier: ViewModifier {
 }
 
 struct ThisWeekCard: View {
+    var selectedJobCount: Int
+    var candidacySending: Int
+    @EnvironmentObject var vm: HomeViewModel
        
        var body: some View {
            HStack(alignment: .firstTextBaseline) {
                VStack(alignment: .leading) {
+                   HStack(alignment: .lastTextBaseline){
+                       Text("Compteur")
+                           .font(.system(size: 26, weight: .bold, design: .default))
+                           .foregroundColor(.black)
+                       Spacer()
+                   }.padding(.trailing, 20)
+                   
+                   HStack {
+                       Text("Candidature envoyées : ")
+                           .font(.system(size: 16, weight: .semibold, design: .default))
+                           .foregroundColor(.black)
+                       Spacer()
+                       Text("\(candidacySending)")
+                           .font(.system(size: 16, weight: .semibold, design: .default))
+                           .foregroundColor(.black)
+                   }
+                   
                    HStack(alignment: .lastTextBaseline){
                        Text("Cette Semaine")
                            .font(.system(size: 26, weight: .bold, design: .default))
                            .foregroundColor(.black)
                        Spacer()
                    }.padding(.trailing, 20)
+                   
+                   HStack {
+                       Text("Entreprises à contacter")
+                           .font(.system(size: 16, weight: .semibold, design: .default))
+                           .foregroundColor(.black)
+                       Spacer()
+                       Text("\(selectedJobCount)")
+                           .font(.system(size: 16, weight: .semibold, design: .default))
+                           .foregroundColor(.black)
+                   }
                    
                    HStack {
                        Text("Entreprises contactées")
@@ -64,7 +94,7 @@ struct ThisWeekCard: View {
 
 struct ThisWeekCard_Previews: PreviewProvider {
     static var previews: some View {
-        ThisWeekCard()
+        ThisWeekCard(selectedJobCount: 5, candidacySending: 2)
             .previewDevice("iPhone 13").previewLayout(.sizeThatFits)
     }
 }

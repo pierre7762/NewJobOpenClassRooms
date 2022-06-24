@@ -52,7 +52,7 @@
         <attribute name="entitled" attributeType="String"/>
         <attribute name="id" attributeType="String"/>
         <attribute name="jobDescription" attributeType="String"/>
-        <relationship name="candidacy" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Candidacy" inverseName="selectedJob" inverseEntity="Candidacy"/>
+        <relationship name="candidacy" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Candidacy" inverseName="selectedJob" inverseEntity="Candidacy"/>
         <relationship name="company" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Company" inverseName="newRelationship" inverseEntity="Company"/>
         <relationship name="originOffers" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="OriginOffers" inverseName="newRelationship" inverseEntity="OriginOffers"/>
         <relationship name="salary" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Salary" inverseName="newRelationship" inverseEntity="Salary"/>
