@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21F79" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21279" systemVersion="21G115" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Candidacy" representedClassName="Candidacy" syncable="YES" codeGenerationType="class">
-        <attribute name="candidacyDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="candidacyMeans" optional="YES" attributeType="String"/>
-        <attribute name="comment" optional="YES" attributeType="String"/>
+        <attribute name="candidacyDate" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="candidacyMeans" attributeType="String"/>
+        <attribute name="comment" attributeType="String"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
         <relationship name="contact" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Contact" inverseName="candidacy" inverseEntity="Contact"/>
         <relationship name="relaunch" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Relaunch" inverseName="candidacy" inverseEntity="Relaunch"/>
-        <relationship name="selectedJob" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SelectedJob" inverseName="candidacy" inverseEntity="SelectedJob"/>
+        <relationship name="selectedJob" maxCount="1" deletionRule="Nullify" destinationEntity="SelectedJob" inverseName="candidacy" inverseEntity="SelectedJob"/>
     </entity>
     <entity name="Company" representedClassName="Company" syncable="YES" codeGenerationType="class">
         <attribute name="adaptedCompany" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
@@ -66,14 +67,4 @@
         <attribute name="posteCode" optional="YES" attributeType="String"/>
         <relationship name="newRelationship" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SelectedJob" inverseName="workplace" inverseEntity="SelectedJob"/>
     </entity>
-    <elements>
-        <element name="Candidacy" positionX="-68.4561767578125" positionY="-148.6433410644531" width="128" height="119"/>
-        <element name="Company" positionX="334.8153076171875" positionY="-468.5732727050781" width="128" height="89"/>
-        <element name="Contact" positionX="-327.3381958007813" positionY="7.45770263671875" width="128" height="134"/>
-        <element name="OriginOffers" positionX="362.3392333984375" positionY="-226.6152038574219" width="128" height="119"/>
-        <element name="Relaunch" positionX="259.623046875" positionY="24.14027404785156" width="128" height="119"/>
-        <element name="Salary" positionX="-344.3107299804688" positionY="-322.1608734130859" width="128" height="104"/>
-        <element name="SelectedJob" positionX="80.81005859375" positionY="-423.84326171875" width="128" height="179"/>
-        <element name="Workplace" positionX="-380.8273315429687" positionY="-536.5852661132812" width="128" height="119"/>
-    </elements>
 </model>

@@ -7,8 +7,6 @@
 
 import CoreLocation
 import MapKit
-import CoreData
-
 
 class SelectedJobDetailsViewModel: ObservableObject  {
     // MARK: Internal var
@@ -16,7 +14,7 @@ class SelectedJobDetailsViewModel: ObservableObject  {
     @Published var isFavorite = false
     @Published var jobLocation: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 48.855045, longitude: 2.342524)
     var favoriteJobList: [SelectedJob] = []
-    var job: SelectedJob = SelectedJob()
+    var job: SelectedJob?
 
     var memoryManager = PersistenceManager()
     
@@ -47,24 +45,13 @@ class SelectedJobDetailsViewModel: ObservableObject  {
     }
     
     func checkIfIsFavorite() {
-        let request = NSFetchRequest<SelectedJob>(entityName: "SelectedJob")
-        do {
-            self.favoriteJobList = try memoryManager.viewContext.fetch(request)
-            print("save job count : ", self.favoriteJobList.count)
-            self.favoriteJobList.forEach {
-                if $0.originOffers?.urlOrigin == self.job.originOffers?.urlOrigin {
-                    isFavorite = true
-                }
-            }
-        } catch {
-            print(error.localizedDescription)
-        }
+        isFavorite = memoryManager.checkIfIsFavoriteSelectedJob(job: job!)
     }
     
     func deleteThisFavorite(index: Int) {
         isFavorite = false
         memoryManager.viewContext.delete(self.favoriteJobList[index])
-        memoryManager.saveData()
+        memoryManager.saveData(from: "selectedJobViewModel deleteThisFavorite() L54")
     }
     
 }

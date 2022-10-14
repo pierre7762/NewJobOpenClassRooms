@@ -25,7 +25,6 @@ class NewSearchJobViewModel: ObservableObject {
     func getOffersOnPoleEmploi() {
         requestInProgress.toggle()
         fetchPoleEmploiJobs()
-        print(poleEmploiToken)
 //        showResult = true
     }
     
@@ -38,7 +37,6 @@ class NewSearchJobViewModel: ObservableObject {
         func fetchCityCodeFromCityName() {
         citys = []
 //        if search.city.count > 2 {
-            print(search.city.count)
             apiGouvService.fetchCityCode(cityName: search.city) { result in
                 DispatchQueue.main.async {
                     switch result {
@@ -59,7 +57,6 @@ class NewSearchJobViewModel: ObservableObject {
                         }
                     case .failure(let error):
                         print(error)
-                        print("non")
                         self.requestInProgress.toggle()
                         self.showAlert = true
                     }
@@ -95,10 +92,8 @@ class NewSearchJobViewModel: ObservableObject {
                         DispatchQueue.main.async {
                             switch result {
                             case .success(let jobsObject):
-//                                print(jobsObject)
                                 self.jobs = jobsObject.resultats
                                 self.showResult = true
-                                print(jobsObject.resultats.count, self.showResult)
 
                             case .failure(let error):
                                 print(error)

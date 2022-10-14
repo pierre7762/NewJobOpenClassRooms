@@ -35,7 +35,6 @@ struct SearchJobPicker: View {
                     Text("Cadre").tag("9")
                 }
                 .onChange(of: newSearchJob.search.qualification) { newValue in
-                    print(newValue)
                     newSearchJob.search.qualification = newValue
                 }
                 .pickerStyle(.menu)

@@ -14,9 +14,13 @@ class HomeViewModel: ObservableObject {
     @Published var jobsWithCandidacyMakeCount = 0
     @Published var jobsCount = 0
     
+    @Published var contacts: [Contact] = []
+    @Published var contactsCount = 0
+    
     func updateData() {
         getJobs()
         getJobsCount()
+        getContacts()
     }
     
     private func getJobs() {
@@ -27,5 +31,11 @@ class HomeViewModel: ObservableObject {
     
     private func getJobsCount() {
         jobsCount = jobs.count
+    }
+    
+    private func getContacts() {
+        contacts = memoryManager.fetchContact()
+        contactsCount = contacts.count
+        jobsCount = contacts.count
     }
 }

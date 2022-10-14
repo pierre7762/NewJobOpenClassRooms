@@ -19,7 +19,7 @@ final class PoleEmploiService {
 
     // MARK: - Initializer
 
-    init(session: URLSession = URLSession(configuration: .default)) {
+    init(session: URLSession = URLSession(configuration: .ephemeral)) {
         self.session = session
     }
 
@@ -39,15 +39,13 @@ final class PoleEmploiService {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-        print(request)
         session.dataTask(with: request) { data, response, error in
         
             guard let data = data else {
                 callback(.failure(.noData))
                 return
             }
-//            print("data : ")
-//            print(data)
+
             guard let dataDecoded = try? JSONDecoder().decode(PoleEmploiToken.self, from: data) else {
                 callback(.failure(.undecodableData))
                 return
@@ -67,9 +65,7 @@ final class PoleEmploiService {
             ("origineOffre", 2 ),
             ("experience", search.experience),
         ])
-        print(url)
         var request = URLRequest(url: url)
-        print("token : \(activeToken)")
         request.httpMethod = "GET"
         request.addValue("Bearer " + activeToken, forHTTPHeaderField: "Authorization")
         
@@ -82,7 +78,6 @@ final class PoleEmploiService {
                 return
             }
             guard let dataDecoded = try? JSONDecoder().decode(PoleEmploiResponse.self, from: data) else {
-//                print(data)
                 callback(.failure(.undecodableData))
                 return
             }
@@ -100,7 +95,6 @@ final class PoleEmploiService {
                 text += ","
             }
         }
-        print("all job search : ", text)
         
         return text
     }

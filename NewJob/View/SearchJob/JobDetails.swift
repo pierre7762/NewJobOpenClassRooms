@@ -141,7 +141,6 @@ struct JobDetails: View {
                             }
             }
             .onAppear {
-                print(job)
                 viewModel.checkIfIsFavorite(job: job)
                 mapRegion = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: job.lieuTravail.latitude ?? 48.855045 , longitude: job.lieuTravail.longitude ?? 2.342524), span: MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2))
                

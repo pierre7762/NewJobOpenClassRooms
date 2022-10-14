@@ -73,7 +73,6 @@ struct HomeView: View {
                 }
                 .onAppear(){
                     viewModel.updateData()
-                    print("on appear")
                 }
             }
            

@@ -30,6 +30,7 @@ struct NewSearchJob: View {
                             Spacer()
                             
                             NavigationLink(destination: ResultNewSearch(newSearch: viewModel), isActive: $viewModel.showResult) { EmptyView() }
+
                             if viewModel.requestInProgress {
                                 ProgressView()
                             } else {

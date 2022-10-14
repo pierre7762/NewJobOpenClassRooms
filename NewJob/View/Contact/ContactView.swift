@@ -8,19 +8,25 @@
 import SwiftUI
 
 struct ContactView: View {
+    @ObservedObject var vm = ContactViewModel()
+    
     var body: some View {
         GeometryReader { geometry in
-            NavigationView {
-                ZStack {
-                    LinearGradient(gradient: Gradient(colors: [.indigo,.cyan,.mint, .green]), startPoint: .topTrailing, endPoint: .bottomLeading)
-                        .ignoresSafeArea()
-                    VStack {
-                       
-          
+            ZStack {
+                LinearGradient(gradient: Gradient(colors: [.indigo,.cyan,.mint,.green]), startPoint: .topTrailing, endPoint: .bottomLeading)
+                    .ignoresSafeArea()
+                List {
+                    ForEach(vm.contacts) { contact in
+                        NavigationLink(destination: ContactDetailsView(contact: ContactDisplayable(contact: contact))) {
+                            ContactRowView(contact: contact)
+                        }
                     }
                 }
-//                .navigationBarTitle("Contact", displayMode: .inline)
+ 
             }
+        }
+        .onAppear() {
+            vm.getContactsList()
         }
     }
 }

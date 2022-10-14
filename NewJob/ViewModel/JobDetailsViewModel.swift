@@ -8,8 +8,6 @@
 import Foundation
 import CoreLocation
 import MapKit
-import CoreData
-
 
 class JobDetailsViewModel: ObservableObject  {
     // MARK: Internal var
@@ -51,25 +49,13 @@ class JobDetailsViewModel: ObservableObject  {
     }
     
     func checkIfIsFavorite(job: Resultat) {
-        let request = NSFetchRequest<SelectedJob>(entityName: "SelectedJob")
-        do {
-//            self.favoriteJobList = try viewContext.fetch(request)
-            self.favoriteJobList = try memoryManager.viewContext.fetch(request)
-            print("save job count : ", self.favoriteJobList.count)
-            self.favoriteJobList.forEach {
-                if $0.originOffers?.urlOrigin == job.origineOffre.urlOrigine {
-                    isFavorite = true
-                }
-            }
-        } catch {
-            print(error.localizedDescription)
-        }
+        isFavorite = memoryManager.checkIfIsFavoriteResultat(job: job)
     }
     
     func deleteThisFavorite(index: Int) {
         memoryManager.viewContext.delete(self.favoriteJobList[index])
 //        saveData()
-        memoryManager.saveData()
+        memoryManager.saveData(from: "jobDetailsViewModel deleteThisFavorite() L58")
         isFavorite = false
     }
     
@@ -121,7 +107,7 @@ class JobDetailsViewModel: ObservableObject  {
 //        selectedJob.candidacy = nil
 //        selectedJob.company = company
 
-        memoryManager.saveData()
+        memoryManager.saveData(from: "jobDetailsViewModel prepareSaveJob() L110")
         checkIfIsFavorite(job: job)
     }
 }

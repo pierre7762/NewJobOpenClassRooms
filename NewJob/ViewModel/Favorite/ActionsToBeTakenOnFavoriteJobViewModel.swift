@@ -6,102 +6,101 @@
 //
 
 import Foundation
-import CoreData
 
 class ActionsToBeTakenOnFavoriteJobViewModel: ObservableObject {
 
     @Published var favoriteJob: SelectedJob?
+    @Published var dataReady: Bool = false
     @Published var createCandidacyToggle = false
     @Published var createDateCandidacy: Date = Date()
-    @Published var means: String = ""
+    @Published var means: String = "" {
+        didSet {
+
+        }
+    }
+    @Published var comment: String = ""
     @Published var showingDestinataireSheet = false
     @Published var contactName = ""
     @Published var contactCompagny = ""
     @Published var contactMail = ""
     @Published var contactPhoneNumber = ""
     @Published var contactFunctionInCompany = ""
+    @Published var contactArray: [Contact] = []
+    @Published var favoriteJobIsInit = false
     
     let memoryManager = PersistenceManager()
     
     func toggleCandidacyMake(trueFalse: Bool) {
 //        favoriteJob.candidacyMake = trueFalse
-        memoryManager.saveData()
+        memoryManager.saveData(from: "ActionsToBeTakenOnFavoriteJobViewModel toggleCAndidacyMake L34")
     }
     
-    func createRemoveCandidady(isCreated: Bool, job: SelectedJob) {
+    func initFavoriteJob(job: SelectedJob) {
+        favoriteJob = job
+        guard let candidacy = job.candidacy else {
+            createDateCandidacy = job.candidacy?.candidacyDate ?? Date()
+            means = job.candidacy?.candidacyMeans ?? ""
+            createCandidacyToggle = false
+            print("else")
+            return
+        }
+        print("candidacy = job.candidacy")
+        createCandidacyToggle = true
+
+        means = candidacy.candidacyMeans!
+        comment = candidacy.comment!
+        createDateCandidacy = job.candidacy!.candidacyDate!
+        favoriteJobIsInit = true
+    }
+    
+    func createRemoveCandidady(isCreated: Bool) {
+        print(" Action vm L 57 => isCreate = ", isCreated)
+        guard let job = favoriteJob else { return }
         switch isCreated {
         case true:
-//            print("create new candidacy")
-            let newCandidacy = Candidacy(context: memoryManager.viewContext)
-            newCandidacy.candidacyMeans = ""
-            newCandidacy.candidacyDate = Date()
-            newCandidacy.comment = "test"
-//            favoriteJob!.candidacy?.adding(newCandidacy)
-            newCandidacy.selectedJob = favoriteJob
-//            print("favoriteJob!.candidacy?.count : ", favoriteJob!.candidacy?.count)
-//            print("favoriteJob!.candidacy : ", favoriteJob!.candidacy)
-            save()
-//            print("new candidacy is created : ", favoriteJob?.candidacy)
-//            print("candidacy count : ", favoriteJob?.candidacy?.count)
+            if(favoriteJob?.candidacy == nil) {
+                print("favoriteJob?.candidacy == nil")
+                memoryManager.createCandidacy(candidacyMeans: means, candidacyDate: createDateCandidacy, comment: "test", favoriteJobId: job.id!)
+            }
             
         case false:
-            print("remove")
-            memoryManager.viewContext.delete(favoriteJob!.candidacy!)
-            
-//            favoriteJob?.candidacy = nil
-            save()
+            memoryManager.removeCandidacy(favoriteJobId: job.id!)
         }
     }
-    
-    func createCandidacy() {
-        let newCandidacy = Candidacy(context: memoryManager.viewContext)
-        newCandidacy.candidacyMeans = means
-        newCandidacy.candidacyDate = createDateCandidacy
-        newCandidacy.comment = "comment"
-        newCandidacy.selectedJob = favoriteJob
-//        print("favoriteJob!.candidacy : ", favoriteJob!.candidacy)
-        save()
-    }
-    
-    func createContact() {
-        let newContact = Contact(context: memoryManager.viewContext)
-        newContact.name = contactName
-        newContact.compagny = contactCompagny
-        newContact.functionInCompany = contactFunctionInCompany
-        newContact.email = contactMail
-        newContact.phoneNumber = contactPhoneNumber
         
-        print("new contact : ", newContact)
-        
-        favoriteJob?.candidacy?.contact?.adding(newContact)
-//        newContact.candidacy?.adding((favoriteJob?.candidacy))
-        showingDestinataireSheet.toggle()
-        save()
-        print("favorite job . candidacy.contact: ", favoriteJob?.candidacy?.contact as Any)
-        
+    func updateCandidacy() {
+        if favoriteJobIsInit {
+            guard let id = favoriteJob?.id else { return }
+            guard let candidacy = favoriteJob?.candidacy else { return }
+            
+            let amendedApplication = checkIfCandidacyFormIsDifferentOfFavoriteJobCandidacy()
+
+            if amendedApplication {
+                candidacy.candidacyDate = createDateCandidacy
+                candidacy.candidacyMeans = means
+                candidacy.comment = comment
+                memoryManager.updateSelectedJobCandidacy(id: id, candidacyUpdated: candidacy)
+
+                favoriteJob = try? memoryManager.getSelectedJobWithId(id: id)
+            }
+        }
     }
-    
-    func save() {
-        memoryManager.saveData()
-    }
-    
-    func updateCandidacyDate(newDate: Date) {
-//        print(favoriteJob?.candidacy?.count)
-//        favoriteJob?.sortedCandidacy[0].candidacyDate = newDate
-//        var data : Set<Candidacy> = []
-//        for cand in favoriteJob!.sortedCandidacy {
-//            data.insert(cand)
-//        }
-//        favoriteJob?.candidacy = data as NSSet
-//        save()
-//
-//        print("after update : ", favoriteJob?.sortedCandidacy)
-        favoriteJob?.candidacy?.candidacyDate = newDate
-        save()
-//        print("candidature ? ", favoriteJob?.candidacy)
+
+    func checkIfCandidacyFormIsDifferentOfFavoriteJobCandidacy() -> Bool {
+        guard let candidacy = favoriteJob?.candidacy else { return true}
         
+        if candidacy.candidacyDate != createDateCandidacy {
+            return true
+        }
+        if candidacy.candidacyMeans != means {
+            return true
+        }
+        if candidacy.comment != comment {
+            return true
+        }
+        
+        return false
     }
-    
     
     func candidacyIsCreated(){
         if favoriteJob!.candidacy != nil {
@@ -111,9 +110,7 @@ class ActionsToBeTakenOnFavoriteJobViewModel: ObservableObject {
         }
     }
     
-    private func deleteCandidacy(candidacy: Candidacy) {
-//        memoryManager.viewContext.delete(favoriteJob.candidacy!)
-//        favoriteJob.removeFromCandidacy(candidacy)
-        memoryManager.saveData()
+    private func convertContactSetToContactArray() {
+        contactArray = favoriteJob!.candidacy!.contact!.allObjects as! [Contact]
     }
 }

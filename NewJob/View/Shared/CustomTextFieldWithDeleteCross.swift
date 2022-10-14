@@ -18,7 +18,6 @@ struct CustomTextFieldWithDeleteCross: View {
                 TextField("Entrez un poste", text: $newSearch.search.jobTitle, onCommit: {
                     //Action quand le clavier rentre (fin d'édition)
                     
-                    print("Commit")
                 })
 //                .textFieldStyle(RoundedBorderTextFieldStyle())
 //                .submitLabel(.done)

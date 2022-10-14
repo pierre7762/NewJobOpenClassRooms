@@ -25,9 +25,6 @@ struct SelectedJobDetailsView: View {
     
     var body: some View {
         GeometryReader { geometry in
-            ZStack {
-
-                LinearGradient(gradient: Gradient(colors: [.indigo,.cyan,.mint, .green]), startPoint: .topTrailing, endPoint: .bottomLeading)
 
 
                 VStack(alignment: .leading) {
@@ -142,7 +139,6 @@ struct SelectedJobDetailsView: View {
             .onAppear {
                 viewModel.job = job
                 viewModel.checkIfIsFavorite()
-                print(job)
             }
             .alert("Supprimer l'annonce de mes favoris ?", isPresented: $showingAlert) {
                 Button("Annuler", role: .cancel) { }
@@ -155,7 +151,7 @@ struct SelectedJobDetailsView: View {
 
                     }
         }
-    }
+    
 }
 
 //struct SelectedJobDetailsView_Previews: PreviewProvider {

@@ -29,15 +29,13 @@ final class ApiGouvService {
         
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-//        print(request)
         session.dataTask(with: request) { data, response, error in
         
             guard let data = data else {
                 callback(.failure(.noData))
                 return
             }
-//            print("data : ")
-//            print(data)
+
             guard let dataDecoded = try? JSONDecoder().decode(CityGeoAPIResponse.self, from: data) else {
                 callback(.failure(.undecodableData))
                 return

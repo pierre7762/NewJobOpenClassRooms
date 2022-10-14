@@ -40,6 +40,15 @@ struct ThisWeekCard: View {
                            .font(.system(size: 16, weight: .semibold, design: .default))
                            .foregroundColor(.black)
                    }
+                   HStack {
+                       Text("Contact : ")
+                           .font(.system(size: 16, weight: .semibold, design: .default))
+                           .foregroundColor(.black)
+                       Spacer()
+                       Text("\(vm.contactsCount)")
+                           .font(.system(size: 16, weight: .semibold, design: .default))
+                           .foregroundColor(.black)
+                   }
                    
                    HStack(alignment: .lastTextBaseline){
                        Text("Cette Semaine")

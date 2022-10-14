@@ -18,7 +18,7 @@ class LastSearchJobViewModel: ObservableObject {
     // MARK: Internal functions
     func getOffersOnPoleEmploi() {
         fetchPoleEmploiJobs()
-        print(poleEmploiToken)
+//        print(poleEmploiToken)
     }
     
     
@@ -36,7 +36,6 @@ class LastSearchJobViewModel: ObservableObject {
                         DispatchQueue.main.async {
                             switch result {
                             case .success(let jobsObject):
-//                                print(jobsObject)
                                 self.jobs = jobsObject.resultats
                                 
 

@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import CoreData
 
 class FavoriteJobViewModel: ObservableObject {
     var memoryManager = PersistenceManager()
@@ -14,33 +13,15 @@ class FavoriteJobViewModel: ObservableObject {
     @Published var jobs: [SelectedJob] = []
     
     init() {
-        fetchSelectedJobs()
+        jobs = memoryManager.fetchSelectedJobs()
     }
     
-    func convertToSelectedJobArray() {
-        
+    func updateJobsList() {
+        jobs = memoryManager.fetchSelectedJobs()
     }
     
     func delete(index: Int) {
         memoryManager.viewContext.delete(jobs[index])
-        memoryManager.saveData()
-        fetchSelectedJobs()
+        memoryManager.saveData(from: "FavoriteJobViewModel delete() L25")
     }
-    
-    func fetchSelectedJobs() {
-        jobs = []
-        let request = NSFetchRequest<SelectedJob>(entityName: "SelectedJob")
-        let sortByCreationDate  = NSSortDescriptor(keyPath: \SelectedJob.creationDate, ascending: true)
-        request.sortDescriptors = [sortByCreationDate]
-        do {
-            self.jobs = try memoryManager.viewContext.fetch(request)
-//            print("save job count : ", self.jobs.count)
-//            print(self.jobs[0].candidacyMake)
-            print(self.jobs)
-
-        } catch {
-            print(error.localizedDescription)
-        }
-    }
-    
 }
