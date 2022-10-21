@@ -41,13 +41,14 @@ struct HomeView: View {
                         }
                         HStack () {
                             NavigationLink(
-                                destination: FavoriteJobOfferView(),
+                                destination: FavoriteJobOfferListView(),
                                 label: {
                                     SquareCard(text: "Mes annonces", image: "heart.circle.fill", size: geometry.size.width / 2.5)
                                 }
                             )
+                            .isDetailLink(false)
                             NavigationLink(
-                                destination: ContactView(),
+                                destination: ContactListView(),
                                 label: {
                                     SquareCard(text: "Contacts", image: "book.circle.fill", size: geometry.size.width / 2.5)
                                 }

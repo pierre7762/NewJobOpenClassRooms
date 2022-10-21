@@ -12,10 +12,10 @@ struct PickerDateView: View {
     var body: some View {
 //        DatePicker(
 //           "Envoyée le :",
-//           selection: $viewModel.createDateCandidacy,
+//           selection: $vm.createDateCandidacy,
 //           displayedComponents: [.date]
 //        )
-//        DatePicker(selection: $viewModel.createDateCandidacy, in: ...Date(), displayedComponents: .date) {
+//        DatePicker(selection: $vm.createDateCandidacy, in: ...Date(), displayedComponents: .date) {
 //           Text("Envoyée le :")
 //        }
         DatePicker(

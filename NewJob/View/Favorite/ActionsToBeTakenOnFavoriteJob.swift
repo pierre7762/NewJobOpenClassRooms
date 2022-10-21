@@ -13,10 +13,8 @@ struct ActionsToBeTakenOnFavoriteJob: View {
     @State private var applicationSentOn = Date()
     @State private var showAddRelaunch = false
     @State private var destinataire = ""
-//    @State private var showingDestinataireSheet = false
-    @ObservedObject var viewModel: ActionsToBeTakenOnFavoriteJobViewModel = ActionsToBeTakenOnFavoriteJobViewModel()
-    
-    
+    @State private var test: String = ""
+    @ObservedObject var vm: ActionsToBeTakenOnFavoriteJobViewModel = ActionsToBeTakenOnFavoriteJobViewModel()
     
     let dateFormatter: DateFormatter = {
             let formatter = DateFormatter()
@@ -24,49 +22,82 @@ struct ActionsToBeTakenOnFavoriteJob: View {
             return formatter
         }()
 
-    
     var body: some View {
         VStack {
             Form {
                 Section()  {
-                    Toggle("J'ai postulé", isOn: $viewModel.createCandidacyToggle)
-                        .onChange(of: viewModel.createCandidacyToggle) { change in
-                            viewModel.createRemoveCandidady(isCreated: change)
+                    Toggle("J'ai postulé", isOn: $vm.createCandidacyToggle)
+                        .onChange(of: vm.createCandidacyToggle) { change in
+                            vm.createRemoveCandidady(isCreated: change)
                         }
-                    }
+                }
                 
-                    if viewModel.createCandidacyToggle {
-                        Section(header: Text("Candidature")) {
-                            PickerDateView(vm: viewModel)
-                            PickerCandidacyMeansView(vm: viewModel)
-                            ContactCandidacyRow(jobId: jobId,job: job, vm: viewModel)
-                            InformationsCandidacyView(vm: viewModel)
+                if vm.createCandidacyToggle {
+                    Section(header: Text("Candidature")) {
+                        PickerDateView(vm: vm)
+                        PickerCandidacyMeansView(vm: vm)
+                        InformationsCandidacyView(vm: vm)
+                    }
+                    
+                    Section {
+                        if vm.favoriteJob?.candidacy?.contact?.count == 0 {
+                            Text("Vous n'avez pas de contacts")
+                        } else {
+                            ContactCandidacyRow(jobId: jobId,job: job, vm: vm)
+                        }
+                    } header: {
+                        HStack{
+                            Text("Contacts")
+                            Spacer()
+                            Button {
+                                vm.showingDestinataireSheet.toggle()
+                            } label: {
+                                Image(systemName: "plus.circle")
+                            }
+                            .sheet(isPresented: $vm.showingDestinataireSheet) {
+                                AddContactView(jobId: vm.favoriteJob?.id)
+                            }
+                        }
+                    }
+                    
+                    Section {
+                        if vm.favoriteJob?.candidacy?.relaunch?.count == 0 {
+                            Text("Vous n'avez pas de relances")
+                        }
+                    } header: {
+                        HStack{
+                            Text("Relances")
+                            Spacer()
+                            Button {
+                                print("todo")
+                            } label: {
+                                Image(systemName: "plus.circle")
+                            }
                         }
                     }
                 }
-                .cornerRadius(12)
-                .onChange(of: viewModel.createDateCandidacy) { newValue in
-//                    if viewModel.favoriteJobIsInit {
-//                        viewModel.updateCandidacy()
-//                    }
-                    viewModel.updateCandidacy()
-                }
-                .onChange(of: viewModel.means) { newValue in
-                    viewModel.updateCandidacy()
-                }
-                .onChange(of: viewModel.comment) { newValue in
-                    viewModel.updateCandidacy()
-                }
+                
+                
             }
-            .onAppear() {
-                viewModel.initFavoriteJob(job: job)
+            .cornerRadius(12)
+            .onChange(of: vm.createDateCandidacy) { newValue in
+                vm.updateCandidacy()
             }
-            .navigationBarTitle(Text(" "), displayMode:.inline)
-            .toolbarBackground(
-                            Color.white,
-                            for: .navigationBar)
-                        .toolbarBackground(.visible, for: .navigationBar)
-  
+            .onChange(of: vm.means) { newValue in
+                vm.updateCandidacy()
+            }
+            .onChange(of: vm.comment) { newValue in
+                vm.updateCandidacy()
+            }
+        }
+        .onAppear() {
+            vm.initFavoriteJob(job: job)
+        }
+        .navigationBarTitle(Text(" "), displayMode:.inline)
+        .toolbarBackground(
+            Color.white,
+            for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
     }
 }
 

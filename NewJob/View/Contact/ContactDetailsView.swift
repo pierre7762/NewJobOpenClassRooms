@@ -9,14 +9,16 @@ import SwiftUI
 
 struct ContactDetailsView: View {
     let contact: ContactDisplayable
+    var mail = ""
+    @ObservedObject var vm: ContactDetailsViewModel = ContactDetailsViewModel()
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @State private var showingAlert = false
     
     var body: some View {
-        GeometryReader { geometry in
             ZStack {
                 LinearGradient(gradient: Gradient(colors: [.indigo,.cyan,.mint,.green]), startPoint: .topTrailing, endPoint: .bottomLeading)
                     .ignoresSafeArea()
                 VStack() {
-//                    Text(contact.name ?? "Pas de nom de contact")
                     Text(contact.name)
                         .foregroundColor(.black)
                         .fontWeight(.bold)
@@ -27,36 +29,67 @@ struct ContactDetailsView: View {
                         .font(.subheadline)
                     List {
                         Section {
-                            ContactInfoLineView(text: contact.phoneNumber, iconName: "phone", clickableType: .phoneNumer)
-                            ContactInfoLineView(text: contact.email, iconName: "mail", clickableType: .email)
-                        }
-                        Section {
                             HStack{
-                                Image(systemName: "phone")
+                                Image(systemName: "phone.fill")
                                     .foregroundColor(.black)
-                                Text("test@test.fr")
-                                    .foregroundColor(.black)
+                                    .font(.system(size: 30))
+                                Link("\(contact.phoneNumber)", destination: URL(string: "tel:\(contact.phoneNumber)")!)
+                            }
+                            if contact.email != ""{
+                                HStack{
+                                    Image(systemName: "mail")
+                                        .foregroundColor(.black)
+                                        .font(.system(size: 30))
+                                    Link("\(contact.email)", destination: URL(string: "mailto:\(contact.email)")!)
+                                }
                             }
                         }
+                        Section (header: Text("Informations")){
+                            Text("Société : \(contact.compagny)")
+                            Text("Poste : \(contact.functionInCompany)")
+                        }
+                        Section (header: Text("Candidatures liées")){
+            
+                        }
                     }
-                    
+                    .cornerRadius(12)
                     
                     Spacer()
                     Spacer()
+                    
+                    Button {
+                        showingAlert.toggle()
+                    } label: {
+                        Text("Supprimer")
+                            .font(.body)
+                            .foregroundColor(.red)
+                    }
+                    .alert("Supprimer le contact ?", isPresented: $showingAlert) {
+                        Button("Supprimer", role: .destructive) {
+                            vm.deleteContact(id: contact.id)
+                            presentationMode.wrappedValue.dismiss()
+                        }
+                        Button("Annuler", role: .cancel) {}
+                    }
                 }
                 .padding()
-//                .frame(width: geometry.size.width - 30, height: 300)
-//                .background().foregroundColor(.white)
-//                .cornerRadius(12)
-                
-                
-                
- 
+            }
+            .toolbarBackground(
+                Color.white,
+                for: .navigationBar
+            )
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbar {
+                Button(action: {print("TODO: make modification contact")}) {
+                    Text("Modifier")
+                }
+                .sheet(isPresented: $vm.showingDestinataireSheet) {
+//                    AddContactView(jobId:)
+                }
             }
             .onAppear() {
-                print(contact.candidacy)
+                print("contact : ", contact.email)
             }
-        }
     }
 }
 

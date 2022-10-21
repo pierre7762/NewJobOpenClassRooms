@@ -8,6 +8,7 @@
 import Foundation
 
 struct ContactDisplayable {
+    var id: UUID
     var name: String
     var email: String
     var phoneNumber: String
@@ -17,8 +18,9 @@ struct ContactDisplayable {
     var relaunch: [Relaunch]
     
     init(contact: Contact) {
+        id = contact.id!
         name = contact.name ?? "Nom de contact"
-        email = contact.email ?? "Email"
+        email = contact.email ?? ""
         phoneNumber = contact.phoneNumber ?? "06.00.00.00.00"
         functionInCompany = contact.functionInCompany ?? "Fonction"
         compagny = contact.compagny ?? "Nom de l'entreprise"

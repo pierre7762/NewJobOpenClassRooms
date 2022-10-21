@@ -28,11 +28,11 @@ class ActionsToBeTakenOnFavoriteJobViewModel: ObservableObject {
     @Published var contactArray: [Contact] = []
     @Published var favoriteJobIsInit = false
     
-    let memoryManager = PersistenceManager()
+    let pm = PersistenceManager()
     
     func toggleCandidacyMake(trueFalse: Bool) {
 //        favoriteJob.candidacyMake = trueFalse
-        memoryManager.saveData(from: "ActionsToBeTakenOnFavoriteJobViewModel toggleCAndidacyMake L34")
+        pm.saveData(from: "ActionsToBeTakenOnFavoriteJobViewModel toggleCAndidacyMake L34")
     }
     
     func initFavoriteJob(job: SelectedJob) {
@@ -60,11 +60,11 @@ class ActionsToBeTakenOnFavoriteJobViewModel: ObservableObject {
         case true:
             if(favoriteJob?.candidacy == nil) {
                 print("favoriteJob?.candidacy == nil")
-                memoryManager.createCandidacy(candidacyMeans: means, candidacyDate: createDateCandidacy, comment: "test", favoriteJobId: job.id!)
+                pm.createCandidacy(candidacyMeans: means, candidacyDate: createDateCandidacy, comment: "test", favoriteJobId: job.id!)
             }
             
         case false:
-            memoryManager.removeCandidacy(favoriteJobId: job.id!)
+            pm.removeCandidacy(favoriteJobId: job.id!)
         }
     }
         
@@ -79,9 +79,9 @@ class ActionsToBeTakenOnFavoriteJobViewModel: ObservableObject {
                 candidacy.candidacyDate = createDateCandidacy
                 candidacy.candidacyMeans = means
                 candidacy.comment = comment
-                memoryManager.updateSelectedJobCandidacy(id: id, candidacyUpdated: candidacy)
+                pm.updateSelectedJobCandidacy(id: id, candidacyUpdated: candidacy)
 
-                favoriteJob = try? memoryManager.getSelectedJobWithId(id: id)
+                favoriteJob = try? pm.getSelectedJobWithId(id: id)
             }
         }
     }

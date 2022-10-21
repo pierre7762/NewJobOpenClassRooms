@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct FavoriteJobOfferView: View {
+struct FavoriteJobOfferListView: View {
     @ObservedObject var viewModel = FavoriteJobViewModel()
     
     init() {
@@ -15,7 +15,6 @@ struct FavoriteJobOfferView: View {
     }
 
     var body: some View {
-        GeometryReader { geometry in
             ZStack {
                 LinearGradient(gradient: Gradient(colors: [.indigo,.cyan,.mint, .green]), startPoint: .topTrailing, endPoint: .bottomLeading)
 
@@ -42,7 +41,7 @@ struct FavoriteJobOfferView: View {
                                     Text(job.salary?.libelle ?? "")
                                         .font(.footnote)
                                 }
-                                .frame(width: geometry.size.width * 0.8, alignment: .leading)
+                                .frame(width: UIScreen.main.bounds.width * 0.8, alignment: .leading)
                                 .background(Color(white: 1.0))
                             }
                         )
@@ -52,24 +51,21 @@ struct FavoriteJobOfferView: View {
                 .background(Color.white.opacity(0.0))
                 .scrollContentBackground(.hidden)
             }
+            .onAppear() {
+                        viewModel.updateJobsList()
+                    }
             .navigationBarTitle(Text("Mes annonces sélectionnées"), displayMode:.inline)
-          
-        }
-        .onAppear() {
-            viewModel.updateJobsList()
-        }
     }
     
     func delete(offsets: IndexSet) {
         for off in offsets {
-//            contactsVM.delete(index: off)
             viewModel.delete(index: off)
         }
     }
 }
 
-struct FavoriteJobOffer_Previews: PreviewProvider {
+struct FavoriteJobOfferListView_Previews: PreviewProvider {
     static var previews: some View {
-        FavoriteJobOfferView()
+        FavoriteJobOfferListView()
     }
 }

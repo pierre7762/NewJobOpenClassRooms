@@ -19,6 +19,7 @@
         <attribute name="compagny" attributeType="String"/>
         <attribute name="email" optional="YES" attributeType="String"/>
         <attribute name="functionInCompany" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="name" attributeType="String"/>
         <attribute name="phoneNumber" optional="YES" attributeType="String" customClassName="[String : String]"/>
         <relationship name="candidacy" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Candidacy" inverseName="contact" inverseEntity="Candidacy"/>

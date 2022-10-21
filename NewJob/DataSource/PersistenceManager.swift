@@ -167,7 +167,6 @@ struct PersistenceManager {
         } catch {
             print(error.localizedDescription)
         }
-        
     }
     
     func updateSelectedJobCandidacy(id: String, candidacyUpdated: Candidacy) {
@@ -200,16 +199,20 @@ struct PersistenceManager {
     
     // marks : Contact
     func createContact(jobId: String, name: String, compagny: String, functionInCompany: String, contactMail: String, contactPhoneNumber: String) {
-        let job = try? getSelectedJobWithId(id: jobId)
+        
         let newContact = Contact(context: viewContext)
         newContact.name = name
+        newContact.id = UUID()
         newContact.compagny = compagny
         newContact.functionInCompany = functionInCompany
         newContact.email = contactMail
         newContact.phoneNumber = contactPhoneNumber
         
-        newContact.addToCandidacy(job!.candidacy!)
-        job!.candidacy?.addToContact(newContact)
+        if jobId != "" {
+            let job = try? getSelectedJobWithId(id: jobId)
+            newContact.addToCandidacy(job!.candidacy!)
+            job!.candidacy?.addToContact(newContact)
+        }
         
         saveData(from: "persistance manager createContact() 200")
     }
@@ -227,6 +230,21 @@ struct PersistenceManager {
         return contacts
     }
     
+    func removeContact(contactId: UUID) {
+        var contacts: [Contact] = []
+        let request = NSFetchRequest<Contact>(entityName: "Contact")
+        request.predicate = NSPredicate(format: "id == %@", contactId as CVarArg)
+        do {
+            contacts = try viewContext.fetch(request)
+            guard let contact = contacts.first else { return }
+            viewContext.delete(contact)
+            saveData(from: "persistance manager removeContact() L241")
+            
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
     func fetchContactWhoStartBy(name: String) -> [Contact]{
         let request = NSFetchRequest<Contact>(entityName: "Contact")
         request.predicate = NSPredicate(format: "name contains[c] %@", name)
@@ -237,7 +255,6 @@ struct PersistenceManager {
             print(error.localizedDescription)
             return []
         }
-
     }
     
 }

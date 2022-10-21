@@ -9,7 +9,9 @@ import Foundation
 
 class AddContactViewModel: ObservableObject {
     @Published var favoriteJob: SelectedJob?
+    @Published var isModification: Bool = false
 
+    @Published var title = ""
     @Published var showingDestinataireSheet = false
     @Published var contactName = ""
     @Published var contactCompagny = ""
@@ -24,13 +26,20 @@ class AddContactViewModel: ObservableObject {
     
     func initFavoriteJob(job: SelectedJob) {
         favoriteJob = job
-//        guard let candidacy = job.candidacy else { return }
-       
+        if isModification {
+            title = "Ajouter votre contact"
+        } else {
+            title = "Modifier votre contact"
+        }
     }
     
     func createContact() {
+        var jobIdChecked = ""
+        if jobId != "" {
+            jobIdChecked = jobId
+        }
         memoryManager.createContact(
-            jobId: jobId,
+            jobId: jobIdChecked,
             name: contactName,
             compagny: contactCompagny,
             functionInCompany: contactFunctionInCompany,

@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct AddContactView: View {
-    var jobId: String
+    var jobId: String?
+    var isModification: Bool?
     @Environment(\.dismiss) var dismiss
-//    @EnvironmentObject var viewModel: ActionsToBeTakenOnFavoriteJobViewModel
     @ObservedObject var viewModel: AddContactViewModel = AddContactViewModel()
     
 
@@ -35,7 +35,7 @@ struct AddContactView: View {
                  
                        Form {
 
-                           Section(header: Text("Ajouter votre contact"))  {
+                           Section(header: Text(viewModel.title))  {
                                TextField("Nom" , text: $viewModel.contactName)
 //                               if viewModel.searchContactPredicat.count > 0 {
 //                                   List {
@@ -51,7 +51,9 @@ struct AddContactView: View {
                                TextField("Entreprise" , text: $viewModel.contactCompagny)
                                TextField("Fonction" , text: $viewModel.contactFunctionInCompany)
                                TextField("Téléphone" , text: $viewModel.contactPhoneNumber)
+                                   .keyboardType(.phonePad)
                                TextField("Mail" , text: $viewModel.contactMail)
+                                   .keyboardType(.emailAddress)
                            }
                            
                            
@@ -92,7 +94,7 @@ struct AddContactView: View {
            
            }
            .onAppear() {
-               viewModel.jobId = jobId
+               viewModel.jobId = jobId ?? ""
            }
        }
         
@@ -100,6 +102,6 @@ struct AddContactView: View {
 
 struct AddContactView_Previews: PreviewProvider {
     static var previews: some View {
-        AddContactView(jobId: "")
+        AddContactView(jobId: "", isModification: false)
     }
 }

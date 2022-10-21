@@ -11,33 +11,18 @@ struct ContactCandidacyRow: View {
     var jobId: String
     @ObservedObject var job: SelectedJob
     @ObservedObject var vm: ActionsToBeTakenOnFavoriteJobViewModel
+    
     var body: some View {
         VStack(alignment: .leading) {
-            HStack {
-                Text("Destinataire :")
-                Spacer()
-
-                Button {
-                    vm.showingDestinataireSheet.toggle()
-                } label: {
-                    Image(systemName: "person.crop.circle.fill.badge.plus")
-                        .font(.system(size: 30))
-                        .foregroundColor(.blue)
-                        .sheet(isPresented: $vm.showingDestinataireSheet) {
-                            AddContactView(jobId: jobId)
-//                                                    .environmentObject(viewModel)
-                        }
-                }
-                .cornerRadius(12)
-
-            }
-            .buttonStyle(PlainButtonStyle())
-
-
             if job.candidacy?.contact?.count != nil {
                 List {
-                    ForEach(job.candidacy?.contact?.allObjects as! [Contact]) { item in
-                        ContactThumbnail(contact: item)
+                    ForEach(job.candidacy?.contact?.allObjects as! [Contact]) { contact in
+                        NavigationLink(destination: ContactDetailsView(contact: ContactDisplayable(contact: contact))) {
+                            Text(contact.name ?? "Inconnu")
+                            if (contact.functionInCompany != nil) && contact.functionInCompany != "" {
+                                Text(" (\(contact.functionInCompany!))")
+                            }
+                        }
                     }
                 }
             }

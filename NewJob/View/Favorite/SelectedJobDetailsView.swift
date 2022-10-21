@@ -24,7 +24,7 @@ struct SelectedJobDetailsView: View {
     
     
     var body: some View {
-        GeometryReader { geometry in
+//        GeometryReader { geometry in
 
 
                 VStack(alignment: .leading) {
@@ -38,7 +38,7 @@ struct SelectedJobDetailsView: View {
                                            showAction.toggle()
                                        }, label: {
                                            Map(coordinateRegion: $mapRegion)
-                                               .frame(width: geometry.size.width * 0.7, height: geometry.size.width * 0.3, alignment: .center)
+                                               .frame(width: UIScreen.main.bounds.width * 0.7, height: UIScreen.main.bounds.width * 0.3, alignment: .center)
                                                .cornerRadius(12)
                                        }).actionSheet(isPresented: $showAction) {
                                            ActionSheet(
@@ -116,40 +116,36 @@ struct SelectedJobDetailsView: View {
                             Spacer()
                         }
                     }
+                    .padding(12)
 
                 }
-                .frame(width: geometry.size.width * 0.95, height: geometry.size.height * 0.95, alignment: .leading)
                 .background(Color(white: 1.0))
                 .cornerRadius(12)
-
-
-            }
-//            .navigationBarTitle(Text(job.entitled?.capitalized ?? ""), displayMode:.inline)
-            .toolbar{
-                ToolbarItem(placement: .automatic) {
-                    Button {
-                        if viewModel.isFavorite {
-                            showingAlert.toggle()
+                .toolbar{
+                    ToolbarItem(placement: .automatic) {
+                        Button {
+                            if viewModel.isFavorite {
+                                showingAlert.toggle()
+                            }
+                        } label: {
+                            Image(systemName: "heart.fill")
                         }
+                    }
+                }
+                .onAppear {
+                    viewModel.job = job
+                    viewModel.checkIfIsFavorite()
+                }
+                .alert("Supprimer l'annonce de mes favoris ?", isPresented: $showingAlert) {
+                    Button("Annuler", role: .cancel) { }
+                    Button {
+                        viewModel.deleteThisFavorite(index: index)
+                        presentationMode.wrappedValue.dismiss()
                     } label: {
-                        Image(systemName: "heart.fill")
+                        Text("Supprimer")
                     }
-                }
-            }
-            .onAppear {
-                viewModel.job = job
-                viewModel.checkIfIsFavorite()
-            }
-            .alert("Supprimer l'annonce de mes favoris ?", isPresented: $showingAlert) {
-                Button("Annuler", role: .cancel) { }
-                Button {
-                    viewModel.deleteThisFavorite(index: index)
-                    presentationMode.wrappedValue.dismiss()
-                } label: {
-                    Text("Supprimer")
-                }
 
-                    }
+                }
         }
     
 }
