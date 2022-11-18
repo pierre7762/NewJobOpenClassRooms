@@ -15,50 +15,54 @@ struct NewSearchJob: View {
     private let poleEmploiService = PoleEmploiService()
     
     var body: some View {
-        GeometryReader { geometry in
             ZStack {
                 LinearGradient(gradient: Gradient(colors: [.indigo,.cyan,.mint, .green]), startPoint: .topTrailing, endPoint: .bottomLeading)
+                    .ignoresSafeArea()
                 
                 VStack {
-
                     VStack (alignment: .leading) {
                         FormNewSearchJob(viewModel: viewModel)
-                        
                         Spacer()
-                        
                         HStack {
                             Spacer()
-                            
                             NavigationLink(destination: ResultNewSearch(newSearch: viewModel), isActive: $viewModel.showResult) { EmptyView() }
-//                            NavigationLink("", isActive: $viewModel.showResult) {
-//                                ResultNewSearch(newSearch: viewModel)
-//                            }
+
                             if viewModel.requestInProgress {
                                 ProgressView()
                             } else {
                                 Button("Rechercher", action: viewModel.getOffersOnPoleEmploi)
+                                    .padding()
+                                    .foregroundColor(.white)
+                                    .background(.green)
+                                    .overlay(
+                                            RoundedRectangle(cornerRadius: 16)
+                                                .stroke(.white, lineWidth: 2)
+                                        )
                             }
                             
                             Spacer()
                         }
+                        Spacer()
                     }
-//                    .padding()
-//                    .frame(width: geometry.size.width * 0.9 , height: geometry.size.height * 0.85 , alignment: .leading)
-//                    .background(Color.white)
-//                    .cornerRadius(20)
-                    
+                    .padding()
                 }
-                .padding()
-                
+                .onChange(of:viewModel.search.city , perform: { _ in
+                    viewModel.fetchCityCodeFromCityName()
+                })
+//                .onChange(of: viewModel.showResult, perform: { newValue in
+////                    NavigationLink("", destination: ResultNewSearch(newSearch: viewModel))
+//                    NavigationLink(destination: ResultNewSearch(newSearch: viewModel), label: {EmptyView()})
+//                })
+                .navigationBarTitle(Text("Nouvelle recherche"), displayMode:.inline)
+                .toolbarBackground(
+                    Color.white,
+                    for: .navigationBar
+                )
+                .toolbarBackground(.visible, for: .navigationBar)
+                .alert("Une erreur est survenue. \n Veuillez vérifier les informations saisies.", isPresented: $viewModel.showAlert) {
+                            Button("OK", role: .cancel) { }
+                        }
             }
-        }
-        .onChange(of:viewModel.search.city , perform: { _ in
-            viewModel.fetchCityCodeFromCityName()
-        })
-        .navigationBarTitle(Text("Nouvelle recherche"), displayMode:.inline)
-        .alert("Une erreur est survenue. \n Veuillez vérifier les informations saisies.", isPresented: $viewModel.showAlert) {
-                    Button("OK", role: .cancel) { }
-                }
     }
 }
 

@@ -8,27 +8,39 @@
 import SwiftUI
 
 struct PickerDateView: View {
+    @State var typeOfView: TypeOfView
     @State var vm: ActionsToBeTakenOnFavoriteJobViewModel
     var body: some View {
+        switch typeOfView{
+        case .candidacy:
+            DatePicker(
+                    "Envoyée le :",
+                    selection: $vm.createDateCandidacy,
+                    displayedComponents: [.date]
+                )
+            .datePickerStyle(.compact)
+            
+        case .interview:
+            DatePicker(
+                    "Du :",
+                    selection: $vm.createDateInterview,
+                    displayedComponents: [.date]
+                )
+            .datePickerStyle(.compact)
+            
+        }
 //        DatePicker(
-//           "Envoyée le :",
-//           selection: $vm.createDateCandidacy,
-//           displayedComponents: [.date]
-//        )
-//        DatePicker(selection: $vm.createDateCandidacy, in: ...Date(), displayedComponents: .date) {
-//           Text("Envoyée le :")
-//        }
-        DatePicker(
-                "Envoyée le :",
-                selection: $vm.createDateCandidacy,
-                displayedComponents: [.date]
-            )
-        .datePickerStyle(.compact)
+//                "Envoyée le :",
+//                selection: $vm.createDateCandidacy,
+//                displayedComponents: [.date]
+//            )
+//        .datePickerStyle(.compact)
     }
 }
 
 struct PickerDateView_Previews: PreviewProvider {
     static var previews: some View {
-        PickerDateView(vm: ActionsToBeTakenOnFavoriteJobViewModel())
+        PickerDateView(typeOfView: .candidacy, vm: ActionsToBeTakenOnFavoriteJobViewModel())
     }
 }
+

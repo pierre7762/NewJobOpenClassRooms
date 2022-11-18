@@ -27,7 +27,7 @@ struct SelectedJobMenuView: View {
                         .padding()
             switch segmentationSelection {
             case .actionView:
-                ActionsToBeTakenOnFavoriteJob(job: job, jobId: jobId)
+                ActionsToBeTakenOnFavoriteJobView(job: job, jobId: jobId)
                 
             case .jobView:
                 SelectedJobDetailsView(job: job, index: 0)

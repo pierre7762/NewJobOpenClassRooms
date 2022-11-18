@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ActionsToBeTakenOnFavoriteJob: View {
+struct ActionsToBeTakenOnFavoriteJobView: View {
     var job: SelectedJob
     var jobId: String
     @State private var applicationSentOn = Date()
@@ -34,7 +34,7 @@ struct ActionsToBeTakenOnFavoriteJob: View {
                 
                 if vm.createCandidacyToggle {
                     Section(header: Text("Candidature")) {
-                        PickerDateView(vm: vm)
+                        PickerDateView(typeOfView: .candidacy, vm: vm)
                         PickerCandidacyMeansView(vm: vm)
                         InformationsCandidacyView(vm: vm)
                     }
@@ -63,18 +63,60 @@ struct ActionsToBeTakenOnFavoriteJob: View {
                     Section {
                         if vm.favoriteJob?.candidacy?.relaunch?.count == 0 {
                             Text("Vous n'avez pas de relances")
+                        } else {
+                            if job.candidacy?.relaunch?.count != nil {
+                                List {
+                                    ForEach(job.candidacy?.relaunch?.allObjects as! [Relaunch]) { relaunch in
+                                        NavigationLink(destination: RelaunchDetailsView(relaunch: relaunch)) {
+                                            Text("Du \(vm.converteDateToString(date: relaunch.date!))")
+                                        }
+                                    }
+                                }
+                            }
                         }
                     } header: {
                         HStack{
                             Text("Relances")
                             Spacer()
                             Button {
-                                print("todo")
+                                vm.showingRelaunchSheet.toggle()
                             } label: {
                                 Image(systemName: "plus.circle")
                             }
+                            .sheet(isPresented: $vm.showingRelaunchSheet) {
+                                AddRelaunchView(isCreateOrModify: .create, candidacy: vm.favoriteJob?.candidacy)
+                            }
                         }
                     }
+                    Section {
+                        if vm.favoriteJob?.candidacy?.interview?.count == 0 {
+                            Text("Vous n'avez pas de d'entretiens")
+                        } else {
+                            if job.candidacy?.interview?.count != nil {
+                                List {
+                                    ForEach(job.candidacy?.interview?.allObjects as! [Interview]) { interview in
+                                        NavigationLink(destination: InterviewDetailsView(interview: interview, vm: vm)) {
+                                            Text("Du \(vm.converteDateToString(date: interview.date!))")
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } header: {
+                        HStack{
+                            Text("Entretiens")
+                            Spacer()
+                            Button {
+                                vm.showingInterviewSheet.toggle()
+                            } label: {
+                                Image(systemName: "plus.circle")
+                            }
+                            .sheet(isPresented: $vm.showingInterviewSheet) {
+                                AddInterviewView(vm: vm)
+                            }
+                        }
+                    }
+
                 }
                 
                 
@@ -92,6 +134,7 @@ struct ActionsToBeTakenOnFavoriteJob: View {
         }
         .onAppear() {
             vm.initFavoriteJob(job: job)
+            vm.fetchRelaunches()
         }
         .navigationBarTitle(Text(" "), displayMode:.inline)
         .toolbarBackground(
@@ -103,6 +146,6 @@ struct ActionsToBeTakenOnFavoriteJob: View {
 
 struct ActionsToBeTakenOnFavoriteJob_Previews: PreviewProvider {
     static var previews: some View {
-        ActionsToBeTakenOnFavoriteJob(job: SelectedJob(), jobId: "")
+        ActionsToBeTakenOnFavoriteJobView(job: SelectedJob(), jobId: "")
     }
 }

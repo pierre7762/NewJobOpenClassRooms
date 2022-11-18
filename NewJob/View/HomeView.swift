@@ -13,7 +13,7 @@ struct HomeView: View {
     
     var body: some View {
         GeometryReader { geometry in
-            NavigationView {
+            NavigationStack {
                 ZStack {
                     LinearGradient(gradient: Gradient(colors: [.indigo,.cyan,.mint, .green]), startPoint: .topTrailing, endPoint: .bottomLeading)
                         .ignoresSafeArea()
@@ -26,16 +26,16 @@ struct HomeView: View {
 //                        Divider()
                         HStack () {
                             NavigationLink(
-                                destination: SearchJobView(),
+                                destination: NewSearchJob(),
                                 label: {
                                     SquareCard(text: "Chercher", image: "magnifyingglass.circle.fill", size: geometry.size.width / 2.5)
                                 }
                                 
                             )
                             NavigationLink(
-                                destination: RelaunchContactView(),
+                                destination: ActionToBeTakenView(),
                                 label: {
-                                    SquareCard(text: "Relancer", image: "paperplane.circle.fill", size: geometry.size.width / 2.5)
+                                    SquareCard(text: "Actions à réaliser", image: "square.and.pencil.circle.fill", size: geometry.size.width / 2.5)
                                 }
                             )
                         }

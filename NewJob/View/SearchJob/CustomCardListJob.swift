@@ -41,6 +41,9 @@ struct CustomCardListJob: View {
                     )
                 }
             }
+            .background(Color.white.opacity(0.0))
+            .scrollContentBackground(.hidden)
+            Spacer()
         }
     }
 }

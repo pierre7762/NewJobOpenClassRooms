@@ -29,18 +29,20 @@ struct ContactDetailsView: View {
                         .font(.subheadline)
                     List {
                         Section {
-                            HStack{
-                                Image(systemName: "phone.fill")
-                                    .foregroundColor(.black)
-                                    .font(.system(size: 30))
-                                Link("\(contact.phoneNumber)", destination: URL(string: "tel:\(contact.phoneNumber)")!)
+                            if contact.phoneNumber != "" {
+                                HStack{
+                                    Image(systemName: "phone.fill")
+                                        .foregroundColor(.black)
+                                        .font(.system(size: 30))
+                                    Link("\(contact.phoneNumber)", destination: URL(string: "tel:\(contact.phoneNumber)")!)
+                                }
                             }
-                            if contact.email != ""{
+                            if contact.mailUnwrapped != ""{
                                 HStack{
                                     Image(systemName: "mail")
                                         .foregroundColor(.black)
                                         .font(.system(size: 30))
-                                    Link("\(contact.email)", destination: URL(string: "mailto:\(contact.email)")!)
+                                    Link("\(contact.mailUnwrapped)", destination: URL(string: "mailto:\(contact.mailUnwrapped)")!)
                                 }
                             }
                         }
@@ -49,7 +51,18 @@ struct ContactDetailsView: View {
                             Text("Poste : \(contact.functionInCompany)")
                         }
                         Section (header: Text("Candidatures liées")){
-            
+                            List {
+                                ForEach(vm.candidacyArray) { candidacy in
+                                    Text(candidacy.selectedJob?.entitled ?? "rien")
+                                }
+                            }
+                            .scrollContentBackground(.hidden)
+                            
+//                            List {
+//                                ForEach($vm.candidacy.allObjects as! [Candidacy]) { cand in
+//                                    Text((cand.selectedJob?.entitled)!)
+//                                }
+//                            }
                         }
                     }
                     .cornerRadius(12)
@@ -57,13 +70,15 @@ struct ContactDetailsView: View {
                     Spacer()
                     Spacer()
                     
-                    Button {
-                        showingAlert.toggle()
-                    } label: {
-                        Text("Supprimer")
-                            .font(.body)
-                            .foregroundColor(.red)
-                    }
+                    Button("Supprimer", action: {showingAlert.toggle()})
+                        .padding()
+                        .foregroundColor(.white)
+                        .background(.red)
+                        .cornerRadius(12)
+                        .overlay(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .stroke(.white, lineWidth: 2)
+                            )
                     .alert("Supprimer le contact ?", isPresented: $showingAlert) {
                         Button("Supprimer", role: .destructive) {
                             vm.deleteContact(id: contact.id)
@@ -80,15 +95,15 @@ struct ContactDetailsView: View {
             )
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbar {
-                Button(action: {print("TODO: make modification contact")}) {
+                Button(action: {vm.showingUpdateSheet.toggle()}) {
                     Text("Modifier")
                 }
-                .sheet(isPresented: $vm.showingDestinataireSheet) {
-//                    AddContactView(jobId:)
+                .sheet(isPresented: $vm.showingUpdateSheet) {
+                    ContactDetailUpdateView(contact: contact)
                 }
             }
-            .onAppear() {
-                print("contact : ", contact.email)
+            .onAppear(){
+                vm.fetchCandidaciesWhoAreConnectedAtThisContact(contactID: contact.id)
             }
     }
 }

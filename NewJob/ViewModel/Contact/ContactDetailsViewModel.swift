@@ -8,11 +8,25 @@
 import Foundation
 
 class ContactDetailsViewModel: ObservableObject {
-    @Published var showingDestinataireSheet = false
+    @Published var showingUpdateSheet = false
+    @Published var candidacyArray: [Candidacy] = []
+
     private let pm = PersistenceManager()
+    
     
     func deleteContact(id: UUID) {
         pm.removeContact(contactId: id)
     }
+    
+    func fetchCandidaciesWhoAreConnectedAtThisContact(contactID: UUID) {
+        candidacyArray = pm.fetchAllCandidaciesOfContact(contactId: contactID)
+        print("candidacy array : ", candidacyArray)
+        
+        candidacyArray.forEach { candidacy in
+            print(candidacy.selectedJob?.entitled)
+        }
+    }
+    
+    
     
 }

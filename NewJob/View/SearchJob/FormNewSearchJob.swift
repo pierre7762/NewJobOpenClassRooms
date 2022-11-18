@@ -44,9 +44,8 @@ struct FormNewSearchJob: View {
                     
                 }
             }
-
+            .cornerRadius(12)
     }
-        .cornerRadius(12)
 }
 
 struct FormNewSearchJob_Previews: PreviewProvider {

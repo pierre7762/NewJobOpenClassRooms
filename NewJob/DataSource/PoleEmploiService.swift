@@ -99,10 +99,6 @@ final class PoleEmploiService {
         return text
     }
     
-//    private func getQualificationInString(qualification: QualificationEnum) {
-//        
-//    }
-    
 }
 
 extension PoleEmploiService: URLEncodable {}

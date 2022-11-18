@@ -17,6 +17,7 @@ struct FavoriteJobOfferListView: View {
     var body: some View {
             ZStack {
                 LinearGradient(gradient: Gradient(colors: [.indigo,.cyan,.mint, .green]), startPoint: .topTrailing, endPoint: .bottomLeading)
+                    .ignoresSafeArea()
 
                 List {
                     ForEach(viewModel.jobs, id: \.self) { job in
@@ -50,11 +51,17 @@ struct FavoriteJobOfferListView: View {
                 }
                 .background(Color.white.opacity(0.0))
                 .scrollContentBackground(.hidden)
+                
             }
             .onAppear() {
-                        viewModel.updateJobsList()
-                    }
+                viewModel.updateJobsList()
+            }
             .navigationBarTitle(Text("Mes annonces sélectionnées"), displayMode:.inline)
+            .toolbarBackground(
+                Color.white,
+                for: .navigationBar
+            )
+            .toolbarBackground(.visible, for: .navigationBar)
     }
     
     func delete(offsets: IndexSet) {

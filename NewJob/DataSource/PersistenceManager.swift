@@ -71,7 +71,7 @@ struct PersistenceManager {
             print(error.localizedDescription)
             throw error
         }
-
+        
     }
     
     func checkIfIsFavoriteResultat(job: Resultat) -> Bool {
@@ -137,21 +137,12 @@ struct PersistenceManager {
             candidacy.comment = comment
             candidacy.selectedJob = favoriteJob
             candidacy.id = UUID()
-
+            
             saveData(from: "persistance manager createCandidacy() L142")
             
         } catch {
             print(error.localizedDescription)
         }
-
-//        let candidacy = Candidacy(context: viewContext)
-//        candidacy.candidacyMeans = candidacyMeans
-//        candidacy.candidacyDate = candidacyDate
-//        candidacy.comment = comment
-//        candidacy.selectedJob = favoriteJob
-//        candidacy.id = UUID()
-//
-//        saveData(from: "persistance manager createCandidacy() L136")
     }
     
     func removeCandidacy(favoriteJobId: String) {
@@ -178,7 +169,7 @@ struct PersistenceManager {
             guard let job = jobs.first else { return }
             job.candidacy = candidacyUpdated
             
-
+            
             saveData(from: "persistance manager updateSelectedJobCandidacy() L169")
             
         } catch {
@@ -230,6 +221,19 @@ struct PersistenceManager {
         return contacts
     }
     
+    func fetchContactById(id: UUID) throws -> Contact {
+        var contacts: [Contact] = []
+        let request = NSFetchRequest<Contact>(entityName: "Contact")
+        request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+        do {
+            contacts = try viewContext.fetch(request)
+            return contacts.first!
+        } catch {
+            print(error.localizedDescription)
+            throw error
+        }
+    }
+    
     func removeContact(contactId: UUID) {
         var contacts: [Contact] = []
         let request = NSFetchRequest<Contact>(entityName: "Contact")
@@ -238,6 +242,21 @@ struct PersistenceManager {
             contacts = try viewContext.fetch(request)
             guard let contact = contacts.first else { return }
             viewContext.delete(contact)
+            saveData(from: "persistance manager removeContact() L241")
+            
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    func updateContact(contactId: UUID, name: String) {
+        var contacts: [Contact] = []
+        let request = NSFetchRequest<Contact>(entityName: "Contact")
+        request.predicate = NSPredicate(format: "id == %@", contactId as CVarArg)
+        do {
+            contacts = try viewContext.fetch(request)
+            guard let contact = contacts.first else { return }
+            contact.name = name
             saveData(from: "persistance manager removeContact() L241")
             
         } catch {
@@ -257,8 +276,174 @@ struct PersistenceManager {
         }
     }
     
+    func fetchContactByName(name: String) throws -> Contact{
+        let request = NSFetchRequest<Contact>(entityName: "Contact")
+        request.predicate = NSPredicate(format: "name == %@", name)
+        do {
+            let contacts = try viewContext.fetch(request)
+            return contacts.first!
+        } catch {
+            print(error.localizedDescription)
+            throw error
+        }
+    }
+    
+    func fetchCandidacyContactsList(candidacyID: UUID) throws -> [Contact]{
+        var candidacies: [Candidacy] = []
+        let request = NSFetchRequest<Candidacy>(entityName: "Candidacy")
+        request.predicate = NSPredicate(format: "id == %@", candidacyID as CVarArg)
+        do {
+            candidacies = try viewContext.fetch(request)
+            let candidacy = candidacies.first
+            return candidacy?.contact?.allObjects as! [Contact]
+        } catch {
+            print(error.localizedDescription)
+            throw error
+        }
+    }
+    
+    func fetchAllCandidaciesOfContact(contactId: UUID) -> [Candidacy]{
+        var contacts: [Contact] = []
+        let request = NSFetchRequest<Contact>(entityName: "Contact")
+        request.predicate = NSPredicate(format: "id == %@", contactId as CVarArg)
+        
+        do {
+            contacts = try viewContext.fetch(request)
+            let contact = contacts.first
+            
+            //            return candidacy?.relaunch?.allObjects as! [Relaunch]
+            return contact?.candidacy?.allObjects as! [Candidacy]
+        } catch  {
+            print(error.localizedDescription)
+            return []
+        }
+    }
+    
+    // marks : Relaunch
+    func createRelaunch(candidacyID: UUID, contact: Contact?, date: Date, comment: String, means: String) {
+        var candidacies: [Candidacy] = []
+        let request = NSFetchRequest<Candidacy>(entityName: "Candidacy")
+        request.predicate = NSPredicate(format: "id == %@", candidacyID as CVarArg)
+        do {
+            candidacies = try viewContext.fetch(request)
+            let candidacy = candidacies.first
+            
+            let relaunch = Relaunch(context: viewContext)
+            relaunch.id = UUID()
+            relaunch.contact = contact
+            relaunch.date = date
+            relaunch.comment = comment
+            relaunch.means = means
+            relaunch.candidacy = candidacy
+            
+            saveData(from: "persistance manager createRelaunch() ")
+            
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    func fetchAllRelaunchesfromCandidacyId(candidacyId: UUID, ascendingDate: Bool) -> [Relaunch] {
+        let request = NSFetchRequest<Relaunch>(entityName: "Relaunch")
+        request.predicate = NSPredicate(format: "candidacy.id == %@", candidacyId as CVarArg)
+        let sortDescriptor = NSSortDescriptor(key: #keyPath(Relaunch.date), ascending: ascendingDate)
+        request.sortDescriptors = [sortDescriptor]
+        
+        do {
+            let relaunches = try viewContext.fetch(request)
+            return relaunches
+        } catch  {
+            print(error.localizedDescription)
+            return []
+        }
+    }
+    
+    func removeRelaunch(relaunchId: UUID) {
+        var relaunches: [Relaunch] = []
+        let request = NSFetchRequest<Relaunch>(entityName: "Relaunch")
+        request.predicate = NSPredicate(format: "id == %@", relaunchId as CVarArg)
+        do {
+            relaunches = try viewContext.fetch(request)
+            guard let relaunch = relaunches.first else { return }
+            viewContext.delete(relaunch)
+            saveData(from: "persistance manager removeRelaunch()")
+            
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    // marks : Interview
+    func createInterview(candidacyID: UUID, date: Date, comment: String) {
+        var candidacies: [Candidacy] = []
+        let request = NSFetchRequest<Candidacy>(entityName: "Candidacy")
+        request.predicate = NSPredicate(format: "id == %@", candidacyID as CVarArg)
+        do {
+            candidacies = try viewContext.fetch(request)
+            let candidacy = candidacies.first
+            
+            let interview = Interview(context: viewContext)
+            interview.id = UUID()
+            interview.date = date
+            interview.comment = comment
+            interview.candidacy = candidacy
+            
+            saveData(from: "persistance manager createInterview()")
+            
+            print("interview created")
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    
+//    func fetchAllInterviewsfromCandidacyId(candidacyId: UUID) -> [Interview]{
+//        var candidacies: [Candidacy] = []
+//        let request = NSFetchRequest<Candidacy>(entityName: "Candidacy")
+//        request.predicate = NSPredicate(format: "id == %@", candidacyId as CVarArg)
+//        
+//        do {
+//            candidacies = try viewContext.fetch(request)
+//            let candidacy = candidacies.first
+//            
+//            return candidacy?.interview?.allObjects as! [Interview]
+//        } catch  {
+//            print(error.localizedDescription)
+//            return []
+//        }
+//    }
+    
+    func removeInterview(interviewId: UUID) {
+        var interviews: [Interview] = []
+        let request = NSFetchRequest<Interview>(entityName: "Interview")
+        request.predicate = NSPredicate(format: "id == %@", interviewId as CVarArg)
+        do {
+            interviews = try viewContext.fetch(request)
+            guard let interview = interviews.first else { return }
+            viewContext.delete(interview)
+            saveData(from: "persistance manager removeInterview()")
+            
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    // marks : ActionsToBeTaken
+    func fetchAllInterviewFromCandidacyId(candidacyId: UUID, ascendingDate: Bool) -> [Interview] {
+        let request = NSFetchRequest<Interview>(entityName: "Interview")
+        request.predicate = NSPredicate(format: "candidacy.id == %@", candidacyId as CVarArg)
+        let sortDescriptor = NSSortDescriptor(key: #keyPath(Interview.date), ascending: ascendingDate)
+        request.sortDescriptors = [sortDescriptor]
+        
+        do {
+            let interviews = try viewContext.fetch(request)
+            return interviews
+        } catch  {
+            print(error.localizedDescription)
+            return []
+        }
+    }
 }
-
 
 public extension NSManagedObject {
 

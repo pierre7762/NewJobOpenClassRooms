@@ -11,13 +11,17 @@ struct ResultNewSearch: View {
     @ObservedObject var newSearch: NewSearchJobViewModel
     
     var body: some View {
-        GeometryReader { geometry in
-            ZStack {
-                LinearGradient(gradient: Gradient(colors: [.indigo,.cyan,.mint, .green]), startPoint: .topTrailing, endPoint: .bottomLeading)
-                CustomCardListJob(jobs: newSearch.jobs, width: geometry.size.width)
-            }
-            .navigationBarTitle(Text("Dernière recherche"), displayMode:.inline)
+        ZStack {
+            LinearGradient(gradient: Gradient(colors: [.indigo,.cyan,.mint, .green]), startPoint: .topTrailing, endPoint: .bottomLeading)
+                .ignoresSafeArea()
+            CustomCardListJob(jobs: newSearch.jobs, width: UIScreen.main.bounds.width)
         }
+        .navigationBarTitle(Text("Dernière recherche"), displayMode:.inline)
+        .toolbarBackground(
+            Color.white,
+            for: .navigationBar
+        )
+        .toolbarBackground(.visible, for: .navigationBar)
     }
 }
 

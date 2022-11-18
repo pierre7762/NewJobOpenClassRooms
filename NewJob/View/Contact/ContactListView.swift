@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContactListView: View {
-    @ObservedObject var vm = ContactViewModel()
+    @ObservedObject var vm = ContactListViewModel()
     
     func delete(offsets: IndexSet) {
         for off in offsets {
@@ -34,20 +34,16 @@ struct ContactListView: View {
             }
             .scrollContentBackground(.hidden)
         }
+        .navigationBarTitle(Text("Contacts"), displayMode:.inline)
         .toolbarBackground(
             Color.white,
             for: .navigationBar
         )
         .toolbarBackground(.visible, for: .navigationBar)
-        .toolbar {
-            Button(action: {vm.showingDestinataireSheet.toggle()}) {
-                Image(systemName: "person.crop.circle.badge.plus")
-            }
-        }
-        .sheet(isPresented: $vm.showingDestinataireSheet) {
-            AddContactView()
-        }
         .onAppear() {
+            vm.getContactsList()
+        }
+        .onChange(of: vm.showingDestinataireSheet) { newValue in
             vm.getContactsList()
         }
     }

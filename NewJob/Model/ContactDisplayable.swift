@@ -10,7 +10,11 @@ import Foundation
 struct ContactDisplayable {
     var id: UUID
     var name: String
-    var email: String
+    var email: String?
+    var mailUnwrapped: String {
+        guard let mail = email else { return "" }
+        return mail
+    }
     var phoneNumber: String
     var functionInCompany: String
     var compagny: String
@@ -24,8 +28,8 @@ struct ContactDisplayable {
         phoneNumber = contact.phoneNumber ?? "06.00.00.00.00"
         functionInCompany = contact.functionInCompany ?? "Fonction"
         compagny = contact.compagny ?? "Nom de l'entreprise"
-        candidacy = []
-        relaunch = []
+        candidacy = contact.candidacy?.allObjects as! [Candidacy]
+        relaunch = contact.relaunch?.allObjects as! [Relaunch]
         
     }
 }
