@@ -9,7 +9,6 @@ import SwiftUI
 
 struct RelaunchPickerDateView: View {
     @State var vm: AddRelaunchViewModel
-    @State var isCreateOrModify: CreateOrModify
     var body: some View {
         DatePicker(
                 "Envoyée le :",
@@ -22,6 +21,6 @@ struct RelaunchPickerDateView: View {
 
 struct RelaunchPickerDateView_Previews: PreviewProvider {
     static var previews: some View {
-        RelaunchPickerDateView(vm: AddRelaunchViewModel(isCreateOrModify: .create, relaunch: Relaunch()), isCreateOrModify: .create)
+        RelaunchPickerDateView(vm: AddRelaunchViewModel())
     }
 }

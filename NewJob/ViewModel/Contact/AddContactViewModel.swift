@@ -9,9 +9,7 @@ import Foundation
 
 class AddContactViewModel: ObservableObject {
     @Published var favoriteJob: SelectedJob?
-    @Published var isModification: Bool = false
-
-    @Published var title = ""
+    @Published var title = "Ajouter votre contact"
     @Published var showingDestinataireSheet = false
     @Published var contactName = ""
     @Published var contactCompagny = ""
@@ -19,18 +17,12 @@ class AddContactViewModel: ObservableObject {
     @Published var contactPhoneNumber = ""
     @Published var contactFunctionInCompany = ""
     @Published var contactArray: [Contact] = []
-    @Published var searchContactPredicat: [Contact] = []
     var jobId = ""
     
-    let memoryManager = PersistenceManager()
+    var pm = PersistenceManager(coreDataStack: CoreDataStack(modelName: "NewJob"))
     
     func initFavoriteJob(job: SelectedJob) {
         favoriteJob = job
-        if isModification {
-            title = "Ajouter votre contact"
-        } else {
-            title = "Modifier votre contact"
-        }
     }
     
     func createContact() {
@@ -38,7 +30,7 @@ class AddContactViewModel: ObservableObject {
         if jobId != "" {
             jobIdChecked = jobId
         }
-        memoryManager.createContact(
+        pm.createContact(
             jobId: jobIdChecked,
             name: contactName,
             compagny: contactCompagny,
@@ -47,21 +39,5 @@ class AddContactViewModel: ObservableObject {
             contactPhoneNumber: contactPhoneNumber
         )
         showingDestinataireSheet.toggle()
-    }
-    
-    func searchCompatibleContactName(name: String) {
-        searchContactPredicat = memoryManager.fetchContactWhoStartBy(name: name)
-        print("searchContactPredicat : ", searchContactPredicat)
-    }
-    
-    func affectResultSearchContactInForm(contact: Contact) {
-        guard let n = contact.name else { return }
-        contactName = n
-        
-        searchContactPredicat = []
-    }
-    
-    private func convertContactSetToContactArray() {
-        contactArray = favoriteJob!.candidacy!.contact!.allObjects as! [Contact]
     }
 }

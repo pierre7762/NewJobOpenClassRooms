@@ -11,7 +11,7 @@ class ContactDetailsViewModel: ObservableObject {
     @Published var showingUpdateSheet = false
     @Published var candidacyArray: [Candidacy] = []
 
-    private let pm = PersistenceManager()
+    var pm = PersistenceManager(coreDataStack: CoreDataStack(modelName: "NewJob"))
     
     
     func deleteContact(id: UUID) {
@@ -20,11 +20,6 @@ class ContactDetailsViewModel: ObservableObject {
     
     func fetchCandidaciesWhoAreConnectedAtThisContact(contactID: UUID) {
         candidacyArray = pm.fetchAllCandidaciesOfContact(contactId: contactID)
-        print("candidacy array : ", candidacyArray)
-        
-        candidacyArray.forEach { candidacy in
-            print(candidacy.selectedJob?.entitled)
-        }
     }
     
     

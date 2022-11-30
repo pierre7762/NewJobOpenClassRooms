@@ -12,7 +12,7 @@ class ActionToBeTakenViewModel: ObservableObject {
     @Published var relaunchToBeRelanch: [SelectedJobWithnumberOfDaysFromCandidacy] = []
     @Published var interviewsToBeRelaunch: [SelectedJobWithnumberOfDaysFromCandidacy] = []
     
-    var pm = PersistenceManager()
+    var pm = PersistenceManager(coreDataStack: CoreDataStack(modelName: "NewJob"))
     
     func getCandidacyToBeRelaunch(numberOfDayFrom: Int) {
         candidaciesToBeRelanch = []
@@ -28,11 +28,11 @@ class ActionToBeTakenViewModel: ObservableObject {
                 guard let candidacyDate = job.candidacy?.candidacyDate else { return }
                 let calendar = Calendar(identifier: .gregorian)
                 let now = calendar.startOfDay(for: Date.now)
-                
+
                 if (job.candidacy?.relaunch?.allObjects.count)! < 1 {
                     let date = calendar.startOfDay(for: candidacyDate)
                     let components = calendar.dateComponents([.day], from: date, to: now)
-                    
+
                     guard let days = components.day else { return }
                     if components.day! > numberOfDayFrom {
                         let job = SelectedJobWithnumberOfDaysFromCandidacy(selectedJob: job, numberOfDaysFromCandidacy: days)
@@ -59,7 +59,7 @@ class ActionToBeTakenViewModel: ObservableObject {
                         iToBeRelaunch.append(job)
                     }
                 }
-                    
+
             }
         }
         candidaciesToBeRelanch = jobsWithCandidacyToBeRelaunch

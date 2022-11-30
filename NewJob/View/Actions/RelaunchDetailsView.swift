@@ -71,9 +71,6 @@ struct RelaunchDetailsView: View {
             Color.white,
             for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
-        .onAppear(){
-            print(relaunch)
-        }
     }
 }
 

@@ -24,9 +24,6 @@ struct SelectedJobDetailsView: View {
     
     
     var body: some View {
-//        GeometryReader { geometry in
-
-
                 VStack(alignment: .leading) {
                     ScrollView() {
                         VStack {
@@ -74,8 +71,6 @@ struct SelectedJobDetailsView: View {
                                 WebView(url: URL(string: job.originOffers!.urlOrigin!)!)
                             }
                         }
-                        
-//                        JobDetailsInfo(jobDetailsViewModel: jobDetailsViewModel, job: job)
                         
                         Text("Description")
                             .font(.title3)
@@ -139,7 +134,7 @@ struct SelectedJobDetailsView: View {
                 .alert("Supprimer l'annonce de mes favoris ?", isPresented: $showingAlert) {
                     Button("Annuler", role: .cancel) { }
                     Button {
-                        viewModel.deleteThisFavorite(index: index)
+                        viewModel.deleteThisFavorite(selectedJobId: job.id!)
                         presentationMode.wrappedValue.dismiss()
                     } label: {
                         Text("Supprimer")

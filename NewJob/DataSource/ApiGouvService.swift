@@ -10,7 +10,7 @@ import Foundation
 final class ApiGouvService {
     // MARK: - Properties
 
-    private let session: URLSession
+    var session: URLSession
     private let apiConstant = ApiGouvAcess()
 
     // MARK: - Initializer
@@ -29,6 +29,7 @@ final class ApiGouvService {
         
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
+        print("request : ", request)
         session.dataTask(with: request) { data, response, error in
         
             guard let data = data else {

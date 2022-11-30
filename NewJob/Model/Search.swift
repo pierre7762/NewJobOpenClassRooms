@@ -11,10 +11,11 @@ struct Search {
     var jobTitle: String = ""
     var city: String = ""
     var cityCode: String = ""
-    var experience: String = ""
-    var qualification: String = "X"
+    var codeInsee: String = ""
+    var experience: String = "Non précisé"
+    var qualification: String = "x"
     var contract: Int?
-    var distance: Int?
+    var distance: Int = 50
 
 }
 

@@ -21,31 +21,32 @@ class NewSearchJobViewModel: ObservableObject {
     @Published var showAlert = false
     @Published var requestInProgress = false
     
+    
     // MARK: Internal functions
     func getOffersOnPoleEmploi() {
         requestInProgress.toggle()
         fetchPoleEmploiJobs()
-//        showResult = true
+        showResult = true
     }
     
     
-    // MARK: Private var
-    private let poleEmploiService = PoleEmploiService()
-    private let apiGouvService = ApiGouvService()
+    // MARK: var
+    let poleEmploiService = PoleEmploiService()
+    let apiGouvService = ApiGouvService()
     
-    // MARK: Private functions
-        func fetchCityCodeFromCityName() {
+    // MARK: functions
+    func fetchCityCodeFromCityName(cityName: String) {
         citys = []
-//        if search.city.count > 2 {
-            apiGouvService.fetchCityCode(cityName: search.city) { result in
+            apiGouvService.fetchCityCode(cityName: cityName) { result in
                 DispatchQueue.main.async {
                     switch result {
                     case .success(let cityDatas):
+//                        print(result)
                         if cityDatas.count > 4 {
                             for i in 0...3 {
                                 self.citys.append(City(name: cityDatas[i].nom, codeInsee: cityDatas[i].code, postCode: "", deptCode: cityDatas[i].codeDepartement))
                             }
-                            if self.citySelected.elementsEqual(self.search.city) {
+                            if self.citySelected.elementsEqual(cityName) {
                                 self.showCitys = false
                             } else {
                                 self.showCitys = true
@@ -62,7 +63,6 @@ class NewSearchJobViewModel: ObservableObject {
                     }
                 }
             }
-//        }
         
     }
     

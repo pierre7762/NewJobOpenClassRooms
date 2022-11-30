@@ -5,6 +5,7 @@
         <attribute name="candidacyMeans" attributeType="String"/>
         <attribute name="comment" attributeType="String"/>
         <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="result" attributeType="String" customClassName="CandidacyResultType"/>
         <relationship name="contact" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Contact" inverseName="candidacy" inverseEntity="Contact"/>
         <relationship name="interview" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Interview" inverseName="candidacy" inverseEntity="Interview"/>
         <relationship name="relaunch" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Relaunch" inverseName="candidacy" inverseEntity="Relaunch"/>

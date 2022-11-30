@@ -9,36 +9,44 @@ import Foundation
 import CoreData
 
 struct PersistenceManager {
-    
-    static let shared = PersistenceManager()
-    var viewContext: NSManagedObjectContext {
-        return PersistenceManager.shared.container.viewContext
+    // MARK: Properties
+    private let coreDataStack: CoreDataStack
+    private let viewContext: NSManagedObjectContext
+    // MARK: Initializer
+
+    init(coreDataStack: CoreDataStack) {
+        self.coreDataStack = coreDataStack
+        self.viewContext = coreDataStack.mainContext
     }
     
-    let appName = "NewJob"
-    let urlPath = "/dev/null"
-    let container: NSPersistentContainer
+//    static let shared = PersistenceManager()
+//    var viewContext: NSManagedObjectContext {
+//        return PersistenceManager.shared.container.viewContext
+//    }
+//    
+//    let appName = "NewJob"
+//    let urlPath = "/dev/null"
+//    let container: NSPersistentContainer
+//    
+//    init(inMemory: Bool = false) {
+//        container = NSPersistentContainer(name: appName)
+//        if inMemory {
+//            let stores = container.persistentStoreDescriptions
+//            if let first = stores.first {
+//                first.url = URL(fileURLWithPath: urlPath)
+//            }
+//        }
+//        container.viewContext.automaticallyMergesChangesFromParent = true
+//        container.loadPersistentStores(completionHandler: loadCompletion)
+//    }
+//    
+//    func loadCompletion(store: NSPersistentStoreDescription, error: Error?) {
+//        if let e = error {
+//            print(e.localizedDescription)
+//        }
+//    }
     
-    init(inMemory: Bool = false) {
-        container = NSPersistentContainer(name: appName)
-        if inMemory {
-            let stores = container.persistentStoreDescriptions
-            if let first = stores.first {
-                first.url = URL(fileURLWithPath: urlPath)
-            }
-        }
-        container.viewContext.automaticallyMergesChangesFromParent = true
-        container.loadPersistentStores(completionHandler: loadCompletion)
-    }
-    
-    func loadCompletion(store: NSPersistentStoreDescription, error: Error?) {
-        if let e = error {
-            print(e.localizedDescription)
-        }
-    }
-    
-    func saveData(from: String) {
-        print("saveData from : ", from)
+    func saveData() {
         do {
             try viewContext.save()
         } catch let error {
@@ -47,6 +55,41 @@ struct PersistenceManager {
     }
     
     // marks : SelectedJob
+    func createSelectedJob(job: Resultat) {
+        
+        let selectedJob = SelectedJob(context: viewContext)
+        let workplace = Workplace(context: viewContext)
+        workplace.city = job.lieuTravail.commune
+        workplace.posteCode = job.lieuTravail.codepostal
+        workplace.libelle = job.lieuTravail.libelle
+        workplace.longitude = job.lieuTravail.longitude ?? 0.0
+        workplace.latitude = job.lieuTravail.latitude ?? 0.0
+        
+        let originOffers = OriginOffers(context: viewContext)
+        originOffers.origin = job.origineOffre.origine
+        originOffers.urlOrigin = job.origineOffre.urlOrigine
+        originOffers.partnerName = job.origineOffre.partenaires[0].nom
+        originOffers.partnerLogo = job.origineOffre.partenaires[0].logo
+        originOffers.partnerUrl = job.origineOffre.partenaires[0].url
+        
+        let salary = Salary(context: viewContext)
+        salary.comment = job.salaire.commentaire
+        salary.firstComplement = job.salaire.complement1
+        salary.secondComplement = job.salaire.complement2
+        salary.libelle = job.salaire.libelle
+        
+        selectedJob.id = job.id
+        selectedJob.creationDate = job.dateCreation
+        selectedJob.appelationWording = job.appellationlibelle
+        selectedJob.entitled = job.intitule
+        selectedJob.jobDescription = job.resultatDescription
+        selectedJob.workplace = workplace
+        selectedJob.originOffers = originOffers
+        selectedJob.salary = salary
+        
+        saveData()
+    }
+    
     func fetchSelectedJobs() -> [SelectedJob] {
         var jobs: [SelectedJob] = []
         let request = NSFetchRequest<SelectedJob>(entityName: "SelectedJob")
@@ -108,21 +151,35 @@ struct PersistenceManager {
         return favorite
     }
     
-    // marks : Candidacy
-    func updateSelectedJobCandidacyDate(id: String, date: Date) {
+    func removeSelectedJob(selectedJobId: String) {
         var jobs: [SelectedJob] = []
         let request = NSFetchRequest<SelectedJob>(entityName: "SelectedJob")
-        request.predicate = NSPredicate(format: "id == %@", id)
+        request.predicate = NSPredicate(format: "id == %@", selectedJobId)
         do {
             jobs = try viewContext.fetch(request)
             guard let job = jobs.first else { return }
-            job.candidacy?.candidacyDate = date
-            saveData(from: "persistance manager updateSelectedJobCandidacyDate() L119")
-            
+            viewContext.delete(job)
+            saveData()
         } catch {
             print(error.localizedDescription)
         }
     }
+    
+    // marks : Candidacy
+//    func updateSelectedJobCandidacyDate(id: String, date: Date) {
+//        var jobs: [SelectedJob] = []
+//        let request = NSFetchRequest<SelectedJob>(entityName: "SelectedJob")
+//        request.predicate = NSPredicate(format: "id == %@", id)
+//        do {
+//            jobs = try viewContext.fetch(request)
+//            guard let job = jobs.first else { return }
+//            job.candidacy?.candidacyDate = date
+//            saveData()
+//            
+//        } catch {
+//            print(error.localizedDescription)
+//        }
+//    }
     
     func createCandidacy(candidacyMeans: String, candidacyDate: Date, comment: String, favoriteJobId: String) {
         var jobs: [SelectedJob] = []
@@ -137,8 +194,9 @@ struct PersistenceManager {
             candidacy.comment = comment
             candidacy.selectedJob = favoriteJob
             candidacy.id = UUID()
+            candidacy.result = "En cours"
             
-            saveData(from: "persistance manager createCandidacy() L142")
+            saveData()
             
         } catch {
             print(error.localizedDescription)
@@ -153,27 +211,41 @@ struct PersistenceManager {
             jobs = try viewContext.fetch(request)
             guard let job = jobs.first else { return }
             viewContext.delete(job.candidacy!)
-            saveData(from: "persistance manager updateSelectedJobCandidacyDate() L147")
+            saveData()
             
         } catch {
             print(error.localizedDescription)
         }
     }
     
-    func updateSelectedJobCandidacy(id: String, candidacyUpdated: Candidacy) {
+    func updateSelectedJobCandidacy(jobId: String, candidacyDate: Date?, candidacyMeans: String?, comment: String?, result: String? ) {
         var jobs: [SelectedJob] = []
         let request = NSFetchRequest<SelectedJob>(entityName: "SelectedJob")
-        request.predicate = NSPredicate(format: "id == %@", id)
+        request.predicate = NSPredicate(format: "id == %@", jobId)
         do {
             jobs = try viewContext.fetch(request)
             guard let job = jobs.first else { return }
-            job.candidacy = candidacyUpdated
+            job.candidacy?.candidacyDate = candidacyDate ?? job.candidacy?.candidacyDate
+            job.candidacy?.candidacyMeans = candidacyMeans ?? job.candidacy?.candidacyMeans
+            job.candidacy?.comment = comment ?? job.candidacy?.comment
+            job.candidacy?.result = result ?? job.candidacy?.result
             
-            
-            saveData(from: "persistance manager updateSelectedJobCandidacy() L169")
+            saveData()
             
         } catch {
             print(error.localizedDescription)
+        }
+    }
+    
+    func fetchAllCandidacies() -> [Candidacy] {
+        var candidacies: [Candidacy] = []
+        let request = NSFetchRequest<Candidacy>(entityName: "Candidacy")
+        do {
+            candidacies = try viewContext.fetch(request)
+            return candidacies
+        } catch {
+            print(error.localizedDescription)
+            return []
         }
     }
     
@@ -205,7 +277,7 @@ struct PersistenceManager {
             job!.candidacy?.addToContact(newContact)
         }
         
-        saveData(from: "persistance manager createContact() 200")
+        saveData()
     }
     
     func fetchContact() -> [Contact] {
@@ -221,10 +293,10 @@ struct PersistenceManager {
         return contacts
     }
     
-    func fetchContactById(id: UUID) throws -> Contact {
+    func fetchContactById(contactId: UUID) throws -> Contact {
         var contacts: [Contact] = []
         let request = NSFetchRequest<Contact>(entityName: "Contact")
-        request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+        request.predicate = NSPredicate(format: "id == %@", contactId as CVarArg)
         do {
             contacts = try viewContext.fetch(request)
             return contacts.first!
@@ -242,27 +314,27 @@ struct PersistenceManager {
             contacts = try viewContext.fetch(request)
             guard let contact = contacts.first else { return }
             viewContext.delete(contact)
-            saveData(from: "persistance manager removeContact() L241")
+            saveData()
             
         } catch {
             print(error.localizedDescription)
         }
     }
     
-    func updateContact(contactId: UUID, name: String) {
-        var contacts: [Contact] = []
-        let request = NSFetchRequest<Contact>(entityName: "Contact")
-        request.predicate = NSPredicate(format: "id == %@", contactId as CVarArg)
-        do {
-            contacts = try viewContext.fetch(request)
-            guard let contact = contacts.first else { return }
-            contact.name = name
-            saveData(from: "persistance manager removeContact() L241")
-            
-        } catch {
-            print(error.localizedDescription)
-        }
-    }
+//    func updateContact(contactId: UUID, name: String) {
+//        var contacts: [Contact] = []
+//        let request = NSFetchRequest<Contact>(entityName: "Contact")
+//        request.predicate = NSPredicate(format: "id == %@", contactId as CVarArg)
+//        do {
+//            contacts = try viewContext.fetch(request)
+//            guard let contact = contacts.first else { return }
+//            contact.name = name
+//            saveData()
+//
+//        } catch {
+//            print(error.localizedDescription)
+//        }
+//    }
     
     func fetchContactWhoStartBy(name: String) -> [Contact]{
         let request = NSFetchRequest<Contact>(entityName: "Contact")
@@ -281,6 +353,7 @@ struct PersistenceManager {
         request.predicate = NSPredicate(format: "name == %@", name)
         do {
             let contacts = try viewContext.fetch(request)
+            print("contacts.first! : ", contacts.first!)
             return contacts.first!
         } catch {
             print(error.localizedDescription)
@@ -336,7 +409,7 @@ struct PersistenceManager {
             relaunch.means = means
             relaunch.candidacy = candidacy
             
-            saveData(from: "persistance manager createRelaunch() ")
+            saveData()
             
         } catch {
             print(error.localizedDescription)
@@ -366,7 +439,7 @@ struct PersistenceManager {
             relaunches = try viewContext.fetch(request)
             guard let relaunch = relaunches.first else { return }
             viewContext.delete(relaunch)
-            saveData(from: "persistance manager removeRelaunch()")
+            saveData()
             
         } catch {
             print(error.localizedDescription)
@@ -388,30 +461,23 @@ struct PersistenceManager {
             interview.comment = comment
             interview.candidacy = candidacy
             
-            saveData(from: "persistance manager createInterview()")
-            
-            print("interview created")
+            saveData()
         } catch {
             print(error.localizedDescription)
         }
     }
     
-    
-//    func fetchAllInterviewsfromCandidacyId(candidacyId: UUID) -> [Interview]{
-//        var candidacies: [Candidacy] = []
-//        let request = NSFetchRequest<Candidacy>(entityName: "Candidacy")
-//        request.predicate = NSPredicate(format: "id == %@", candidacyId as CVarArg)
-//        
-//        do {
-//            candidacies = try viewContext.fetch(request)
-//            let candidacy = candidacies.first
-//            
-//            return candidacy?.interview?.allObjects as! [Interview]
-//        } catch  {
-//            print(error.localizedDescription)
-//            return []
-//        }
-//    }
+    func fetchAllInterviews() -> [Interview] {
+        var interviews: [Interview] = []
+        let request = NSFetchRequest<Interview>(entityName: "Interview")
+        do {
+            interviews = try viewContext.fetch(request)
+            return interviews
+        } catch {
+            print(error.localizedDescription)
+            return []
+        }
+    }
     
     func removeInterview(interviewId: UUID) {
         var interviews: [Interview] = []
@@ -421,7 +487,7 @@ struct PersistenceManager {
             interviews = try viewContext.fetch(request)
             guard let interview = interviews.first else { return }
             viewContext.delete(interview)
-            saveData(from: "persistance manager removeInterview()")
+            saveData()
             
         } catch {
             print(error.localizedDescription)
@@ -446,7 +512,7 @@ struct PersistenceManager {
 }
 
 public extension NSManagedObject {
-
+    
     //remove issue Multiple NSEntityDescriptions claim the NSManagedObject subclass
     // find on : https://github.com/drewmccormack/ensembles/issues/275
     convenience init(context: NSManagedObjectContext) {
@@ -454,5 +520,5 @@ public extension NSManagedObject {
         let entity = NSEntityDescription.entity(forEntityName: name, in: context)!
         self.init(entity: entity, insertInto: context)
     }
-
+    
 }

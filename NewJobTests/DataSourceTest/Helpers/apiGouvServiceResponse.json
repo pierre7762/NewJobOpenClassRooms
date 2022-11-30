@@ -1,0 +1,26 @@
+[
+    {
+        "nom": "Arras",
+        "code": "62041",
+        "codeDepartement": "62",
+        "_score": 0.7047428224771289
+    },
+    {
+        "nom": "Arras-sur-Rhône",
+        "code": "07015",
+        "codeDepartement": "07",
+        "_score": 0.5219586305381044
+    },
+    {
+        "nom": "Arrast-Larrebieu",
+        "code": "64050",
+        "codeDepartement": "64",
+        "_score": 0.5016660015224124
+    },
+    {
+        "nom": "Arras-en-Lavedan",
+        "code": "65029",
+        "codeDepartement": "65",
+        "_score": 0.4758625871110349
+    }
+]

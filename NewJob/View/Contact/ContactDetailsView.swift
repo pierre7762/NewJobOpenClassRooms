@@ -94,14 +94,6 @@ struct ContactDetailsView: View {
                 for: .navigationBar
             )
             .toolbarBackground(.visible, for: .navigationBar)
-            .toolbar {
-                Button(action: {vm.showingUpdateSheet.toggle()}) {
-                    Text("Modifier")
-                }
-                .sheet(isPresented: $vm.showingUpdateSheet) {
-                    ContactDetailUpdateView(contact: contact)
-                }
-            }
             .onAppear(){
                 vm.fetchCandidaciesWhoAreConnectedAtThisContact(contactID: contact.id)
             }

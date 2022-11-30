@@ -15,14 +15,7 @@ class AddRelaunchViewModel: ObservableObject{
     @Published var contactList: [Contact] = []
     @Published var contactSelected: String = "Non précisé"
     
-    let pm = PersistenceManager()
-    
-    init(isCreateOrModify: CreateOrModify, relaunch: Relaunch?) {
-        if relaunch != nil {
-            self.createDateRelaunch = (relaunch?.date)!
-            self.means = (relaunch?.means)!
-        }
-    }
+    var pm = PersistenceManager(coreDataStack: CoreDataStack(modelName: "NewJob"))
     
     func fetchCandidacyContactList(candidacyId: UUID) {
         var contacts: [Contact] = []
@@ -40,7 +33,6 @@ class AddRelaunchViewModel: ObservableObject{
                 cont = nil
             }
         }
-        
         pm.createRelaunch(candidacyID: candidacyID, contact: cont, date: createDateRelaunch, comment: comment, means: means)
     }
 }

@@ -9,60 +9,59 @@ import WrappingStack
 import SwiftUI
 
 struct NewSearchJob: View {
-    @ObservedObject private var viewModel = NewSearchJobViewModel()
+    @ObservedObject private var vm = NewSearchJobViewModel()
     @State private var qualificationState = 0
     
     private let poleEmploiService = PoleEmploiService()
     
     var body: some View {
-            ZStack {
-                LinearGradient(gradient: Gradient(colors: [.indigo,.cyan,.mint, .green]), startPoint: .topTrailing, endPoint: .bottomLeading)
-                    .ignoresSafeArea()
-                
-                VStack {
-                    VStack (alignment: .leading) {
-                        FormNewSearchJob(viewModel: viewModel)
+        ZStack {
+            LinearGradient(gradient: Gradient(colors: [.indigo,.cyan,.mint, .green]), startPoint: .topTrailing, endPoint: .bottomLeading)
+                .ignoresSafeArea()
+            
+            VStack {
+                VStack (alignment: .leading) {
+                    FormNewSearchJob(vm: vm)
+                    Spacer()
+                    HStack {
                         Spacer()
-                        HStack {
-                            Spacer()
-                            NavigationLink(destination: ResultNewSearch(newSearch: viewModel), isActive: $viewModel.showResult) { EmptyView() }
-
-                            if viewModel.requestInProgress {
-                                ProgressView()
-                            } else {
-                                Button("Rechercher", action: viewModel.getOffersOnPoleEmploi)
-                                    .padding()
-                                    .foregroundColor(.white)
-                                    .background(.green)
-                                    .overlay(
+                        if vm.requestInProgress {
+                            ProgressView()
+                        } else {
+                            NavigationLink(
+                                destination: ResultNewSearch(vm: vm),
+                                label: {
+                                    Text("Rechercher")
+                                        .padding()
+                                        .foregroundColor(.white)
+                                        .background(.green)
+                                        .overlay(
                                             RoundedRectangle(cornerRadius: 16)
                                                 .stroke(.white, lineWidth: 2)
                                         )
-                            }
-                            
-                            Spacer()
+                                }
+                            )
                         }
+                        
                         Spacer()
                     }
-                    .padding()
+                    Spacer()
                 }
-                .onChange(of:viewModel.search.city , perform: { _ in
-                    viewModel.fetchCityCodeFromCityName()
-                })
-//                .onChange(of: viewModel.showResult, perform: { newValue in
-////                    NavigationLink("", destination: ResultNewSearch(newSearch: viewModel))
-//                    NavigationLink(destination: ResultNewSearch(newSearch: viewModel), label: {EmptyView()})
-//                })
-                .navigationBarTitle(Text("Nouvelle recherche"), displayMode:.inline)
-                .toolbarBackground(
-                    Color.white,
-                    for: .navigationBar
-                )
-                .toolbarBackground(.visible, for: .navigationBar)
-                .alert("Une erreur est survenue. \n Veuillez vérifier les informations saisies.", isPresented: $viewModel.showAlert) {
-                            Button("OK", role: .cancel) { }
-                        }
+                .padding()
             }
+            .onAppear() {
+                vm.showResult = false
+            }
+            .navigationBarTitle(Text("Nouvelle recherche"), displayMode:.inline)
+            .toolbarBackground(
+                Color.white,
+                for: .navigationBar
+            )
+            .toolbarBackground(.visible, for: .navigationBar)
+            .alert("Une erreur est survenue. \n Veuillez vérifier les informations saisies.", isPresented: $vm.showAlert) {
+                Button("OK", role: .cancel) { }
+            }
+        }
     }
 }
 
@@ -74,7 +73,7 @@ struct NewSearchJob_Previews: PreviewProvider {
 
 struct SheetParametersView: View {
     @Environment(\.dismiss) var dismiss
-
+    
     var body: some View {
         Button("Press to dismiss") {
             dismiss()

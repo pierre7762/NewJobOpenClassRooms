@@ -14,6 +14,8 @@ struct ActionsToBeTakenOnFavoriteJobView: View {
     @State private var showAddRelaunch = false
     @State private var destinataire = ""
     @State private var test: String = ""
+    @State private var showingAlert = false
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @ObservedObject var vm: ActionsToBeTakenOnFavoriteJobViewModel = ActionsToBeTakenOnFavoriteJobViewModel()
     
     let dateFormatter: DateFormatter = {
@@ -43,7 +45,19 @@ struct ActionsToBeTakenOnFavoriteJobView: View {
                         if vm.favoriteJob?.candidacy?.contact?.count == 0 {
                             Text("Vous n'avez pas de contacts")
                         } else {
-                            ContactCandidacyRow(jobId: jobId,job: job, vm: vm)
+//                            ContactCandidacyRow(jobId: jobId,job: job, vm: vm)
+                            if job.candidacy?.contact?.count != nil {
+                                List {
+                                    ForEach(job.candidacy?.contact?.allObjects as! [Contact]) { contact in
+                                        NavigationLink(destination: ContactDetailsView(contact: ContactDisplayable(contact: contact))) {
+                                            Text(contact.name ?? "Inconnu")
+                                            if (contact.functionInCompany != nil) && contact.functionInCompany != "" {
+                                                Text(" (\(contact.functionInCompany!))")
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     } header: {
                         HStack{
@@ -84,7 +98,7 @@ struct ActionsToBeTakenOnFavoriteJobView: View {
                                 Image(systemName: "plus.circle")
                             }
                             .sheet(isPresented: $vm.showingRelaunchSheet) {
-                                AddRelaunchView(isCreateOrModify: .create, candidacy: vm.favoriteJob?.candidacy)
+                                AddRelaunchView(candidacy: vm.favoriteJob?.candidacy)
                             }
                         }
                     }
@@ -116,13 +130,41 @@ struct ActionsToBeTakenOnFavoriteJobView: View {
                             }
                         }
                     }
+                    
+                    Section {
+                        Picker("Candidature : ", selection: $vm.textCandidacyState) {
+                            Text("En cours").tag("En cours")
+                            Text("Validée").tag("Validée")
+                            Text("Rejetée").tag("Rejeté")
+                        }
+                        .pickerStyle(.menu)
+                    } header: {
+                        HStack{
+                            Text("État de la candidature")
+                            Spacer()
+                        }
+                    }
+                    
+                    
 
                 }
                 
                 
             }
+            .background(Color(white: 1.0))
+            .cornerRadius(12)
+            .toolbar{
+                ToolbarItem(placement: .automatic) {
+                    Button {
+                        showingAlert.toggle()
+                    } label: {
+                        Image(systemName: "heart.fill")
+                    }
+                }
+            }
             .cornerRadius(12)
             .onChange(of: vm.createDateCandidacy) { newValue in
+                print("createDateCandidacy update")
                 vm.updateCandidacy()
             }
             .onChange(of: vm.means) { newValue in
@@ -131,9 +173,26 @@ struct ActionsToBeTakenOnFavoriteJobView: View {
             .onChange(of: vm.comment) { newValue in
                 vm.updateCandidacy()
             }
+            .onChange(of: vm.textCandidacyState) { newValue in
+                vm.updateCandidacy()
+            }
+            .onChange(of: vm.showingDestinataireSheet) { value in
+                if !value {
+                    vm.initFavoriteJob(jobId: (vm.favoriteJob?.id)! )
+                }
+            }
+            .alert("Supprimer l'annonce de mes favoris ?", isPresented: $showingAlert) {
+                Button("Annuler", role: .cancel) { }
+                Button {
+                    vm.removeSelectedJob(jobId: job.id!)
+                    presentationMode.wrappedValue.dismiss()
+                } label: {
+                    Text("Supprimer")
+                }
+            }
         }
         .onAppear() {
-            vm.initFavoriteJob(job: job)
+            vm.initFavoriteJob(jobId: job.id!)
             vm.fetchRelaunches()
         }
         .navigationBarTitle(Text(" "), displayMode:.inline)

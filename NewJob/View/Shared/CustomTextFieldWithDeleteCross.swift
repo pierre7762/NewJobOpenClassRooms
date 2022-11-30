@@ -17,6 +17,7 @@ struct CustomTextFieldWithDeleteCross: View {
             case .jobTitle:
                 TextField("Entrez un poste", text: $newSearch.search.jobTitle, onCommit: {
                     //Action quand le clavier rentre (fin d'édition)
+
                     
                 })
 //                .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -34,7 +35,7 @@ struct CustomTextFieldWithDeleteCross: View {
             case .city:
                 TextField("Ville ", text: $newSearch.search.city, onCommit: {
                     // Action a faire quand l'édition change (début ou fin)
-                    newSearch.fetchCityCodeFromCityName()
+                    newSearch.fetchCityCodeFromCityName(cityName: "")
                 })
 //                    .textFieldStyle(RoundedBorderTextFieldStyle())
                                             

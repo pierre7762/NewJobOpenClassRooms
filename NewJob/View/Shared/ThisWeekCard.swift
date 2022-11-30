@@ -19,72 +19,22 @@ struct CardModifier: ViewModifier {
 struct ThisWeekCard: View {
     var selectedJobCount: Int
     var candidacySending: Int
-    @EnvironmentObject var vm: HomeViewModel
+    @State var vm: ThisWeekCardViewModel = ThisWeekCardViewModel()
        
        var body: some View {
            HStack(alignment: .firstTextBaseline) {
                VStack(alignment: .leading) {
-                   HStack(alignment: .lastTextBaseline){
-                       Text("Compteur")
-                           .font(.system(size: 26, weight: .bold, design: .default))
-                           .foregroundColor(.black)
-                       Spacer()
-                   }.padding(.trailing, 20)
-                   
-                   HStack {
-                       Text("Candidature envoyées : ")
-                           .font(.system(size: 16, weight: .semibold, design: .default))
-                           .foregroundColor(.black)
-                       Spacer()
-                       Text("\(candidacySending)")
-                           .font(.system(size: 16, weight: .semibold, design: .default))
-                           .foregroundColor(.black)
-                   }
-                   HStack {
-                       Text("Contact : ")
-                           .font(.system(size: 16, weight: .semibold, design: .default))
-                           .foregroundColor(.black)
-                       Spacer()
-                       Text("\(vm.contactsCount)")
-                           .font(.system(size: 16, weight: .semibold, design: .default))
-                           .foregroundColor(.black)
-                   }
-                   
-                   HStack(alignment: .lastTextBaseline){
-                       Text("Cette Semaine")
-                           .font(.system(size: 26, weight: .bold, design: .default))
-                           .foregroundColor(.black)
-                       Spacer()
-                   }.padding(.trailing, 20)
-                   
-                   HStack {
-                       Text("Entreprises à contacter")
-                           .font(.system(size: 16, weight: .semibold, design: .default))
-                           .foregroundColor(.black)
-                       Spacer()
-                       Text("\(selectedJobCount)")
-                           .font(.system(size: 16, weight: .semibold, design: .default))
-                           .foregroundColor(.black)
-                   }
-                   
-                   HStack {
-                       Text("Entreprises contactées")
-                           .font(.system(size: 16, weight: .semibold, design: .default))
-                           .foregroundColor(.black)
-                       Spacer()
-                       Text("1/10")
-                           .font(.system(size: 16, weight: .semibold, design: .default))
-                           .foregroundColor(.black)
-                   }
-                   HStack {
-                       Text("Entreprises Relancées")
-                           .font(.system(size: 16, weight: .semibold, design: .default))
-                           .foregroundColor(.black)
-                       Spacer()
-                       Text("1/10")
-                           .font(.system(size: 16, weight: .semibold, design: .default))
-                           .foregroundColor(.black)
-                   }
+
+                   WeekCardTitle(title: "Compteur total")
+                   WeekCardLigne(title: "Candidadures", value: vm.allCandidacyCount)
+                   WeekCardLigne(title: "Entretiens", value: vm.allInterviewsCount)
+   
+                   WeekCardTitle(title: "Actions de la semaine")
+
+                   WeekCardLigne(title: "Candidatures à relancer", value: vm.candidaciesToBeRelanchThisWeekCount)
+                   WeekCardLigne(title: "Suivi de relances", value: vm.relaunchToBeRelanchThisWeekCount)
+                   WeekCardLigne(title: "Suivi d'entretiens", value: vm.interviewsToBeRelaunchThisWeekCount)
+                  
                }
                .padding(.all, 15)
                
@@ -98,12 +48,15 @@ struct ThisWeekCard: View {
            .background(Color(red: 1, green: 1, blue: 1))
            .modifier(CardModifier())
            .padding(.all, 10)
+           .onAppear(){
+               vm.updateData()
+           }
        }
 }
 
 struct ThisWeekCard_Previews: PreviewProvider {
     static var previews: some View {
-        ThisWeekCard(selectedJobCount: 5, candidacySending: 2)
+        ThisWeekCard(selectedJobCount: 5, candidacySending: 2, vm: ThisWeekCardViewModel())
             .previewDevice("iPhone 13").previewLayout(.sizeThatFits)
     }
 }

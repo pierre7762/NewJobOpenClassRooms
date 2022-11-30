@@ -60,9 +60,7 @@ struct InterviewDetailsView: View {
             Color.white,
             for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
-        .onAppear(){
-            print(interview)
-        }
+        
     }
 }
 

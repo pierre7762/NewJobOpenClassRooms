@@ -16,7 +16,7 @@ struct SquareCard: View {
             Image(systemName: image)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: size / 3)
+                .frame(width: size / 2.5)
                 .padding(.all, 5)
                 .foregroundColor(.black)
             
@@ -24,7 +24,7 @@ struct SquareCard: View {
                 .font(.system(size: 16, weight: .semibold, design: .default))
                 .foregroundColor(.black)
             
-        }.frame(width: size, height: size, alignment: .center)
+        }.frame(width: size * 2, height: size, alignment: .center)
             .background(Color(red: 1, green: 1, blue: 1))
             .cornerRadius(15)
             .padding(.all, 10)

@@ -10,11 +10,10 @@ import SwiftUI
 @main
 struct NewJobApp: App {
 //    @StateObject private var dataController = DataController()
-    let myController = PersistenceManager.shared
+//    let myController = PersistenceManager.shared
     var body: some Scene {
         WindowGroup {
-            HomeView()
-//                .environment(\.managedObjectContext, dataController.container.viewContext)
+            SplashScreenView()
                 .preferredColorScheme(.light)
         }
     }

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct FavoriteJobOfferListView: View {
-    @ObservedObject var viewModel = FavoriteJobViewModel()
+    @ObservedObject var viewModel = FavoriteJobListViewModel()
     
     init() {
         UITableView.appearance().backgroundColor = .init(white: 1.0, alpha: 0.0)
@@ -66,7 +66,7 @@ struct FavoriteJobOfferListView: View {
     
     func delete(offsets: IndexSet) {
         for off in offsets {
-            viewModel.delete(index: off)
+            viewModel.delete(job: viewModel.jobs[off])
         }
     }
 }

@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct AddRelaunchView: View {
-    @State var isCreateOrModify: CreateOrModify
+
     @State var actualRelaunch: Relaunch?
     @State var candidacy: Candidacy?
     @State var showingDestinataireSheet: Bool = false
     @Environment(\.dismiss) var dismiss
-    @ObservedObject var vm: AddRelaunchViewModel = AddRelaunchViewModel(isCreateOrModify: .create, relaunch: nil)
+    @ObservedObject var vm: AddRelaunchViewModel = AddRelaunchViewModel()
     
     var body: some View {
         VStack {
@@ -37,8 +37,8 @@ struct AddRelaunchView: View {
                     
                     Form {
                         Section(header: Text("Relance")) {
-                            RelaunchPickerDateView(vm: vm, isCreateOrModify: .create)
-                            RelaunchPickerMeansView(vm: vm, isCreateOrModify: .create)
+                            RelaunchPickerDateView(vm: vm)
+                            RelaunchPickerMeansView(vm: vm)
                         }
                         
                         Section(header: Text("Contact")) {
@@ -94,6 +94,6 @@ struct AddRelaunchView: View {
 
 struct AddRelaunchView_Previews: PreviewProvider {
     static var previews: some View {
-        AddRelaunchView(isCreateOrModify: .create)
+        AddRelaunchView()
     }
 }

@@ -9,10 +9,8 @@ import SwiftUI
 
 struct AddContactView: View {
     var jobId: String?
-    var isModification: Bool?
     @Environment(\.dismiss) var dismiss
     @ObservedObject var viewModel: AddContactViewModel = AddContactViewModel()
-    
 
        var body: some View {
            VStack {
@@ -37,15 +35,6 @@ struct AddContactView: View {
 
                            Section(header: Text(viewModel.title))  {
                                TextField("Nom" , text: $viewModel.contactName)
-//                               if viewModel.searchContactPredicat.count > 0 {
-//                                   List {
-//                                       ForEach(viewModel.searchContactPredicat) { contact in
-//                                           Button(contact.name ?? ""){
-//                                               viewModel.affectResultSearchContactInForm(contact: contact)
-//                                           }
-//                                       }
-//                                   }
-//                               }
                                TextField("Entreprise" , text: $viewModel.contactCompagny)
                                TextField("Fonction" , text: $viewModel.contactFunctionInCompany)
                                TextField("Téléphone" , text: $viewModel.contactPhoneNumber)
@@ -90,9 +79,9 @@ struct AddContactView: View {
                    Spacer()
 
                }
-               .onChange(of: viewModel.contactName) { newValue in
-                   viewModel.searchCompatibleContactName(name: newValue)
-               }
+//               .onChange(of: viewModel.contactName) { newValue in
+//                   viewModel.searchCompatibleContactName(name: newValue)
+//               }
            }
            .onAppear() {
                viewModel.jobId = jobId ?? ""
@@ -103,6 +92,6 @@ struct AddContactView: View {
 
 struct AddContactView_Previews: PreviewProvider {
     static var previews: some View {
-        AddContactView(jobId: "", isModification: false)
+        AddContactView(jobId: "")
     }
 }

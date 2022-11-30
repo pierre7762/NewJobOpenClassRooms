@@ -8,25 +8,35 @@
 import SwiftUI
 
 struct ResultNewSearch: View {
-    @ObservedObject var newSearch: NewSearchJobViewModel
+    @ObservedObject var vm: NewSearchJobViewModel
     
     var body: some View {
         ZStack {
             LinearGradient(gradient: Gradient(colors: [.indigo,.cyan,.mint, .green]), startPoint: .topTrailing, endPoint: .bottomLeading)
                 .ignoresSafeArea()
-            CustomCardListJob(jobs: newSearch.jobs, width: UIScreen.main.bounds.width)
+            if vm.jobs.count > 0 {
+                CustomCardListJob(jobs: vm.jobs, width: UIScreen.main.bounds.width)
+            } else {
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                    .scaleEffect(2)
+            }
         }
-        .navigationBarTitle(Text("Dernière recherche"), displayMode:.inline)
+        .navigationBarTitle(Text("Résulat"), displayMode:.inline)
         .toolbarBackground(
             Color.white,
             for: .navigationBar
         )
         .toolbarBackground(.visible, for: .navigationBar)
+        .onAppear(){
+            vm.jobs = []
+            vm.getOffersOnPoleEmploi()
+        }
     }
 }
 
 struct ResultNewSearch_Previews: PreviewProvider {
     static var previews: some View {
-        ResultNewSearch(newSearch: NewSearchJobViewModel())
+        ResultNewSearch(vm: NewSearchJobViewModel())
     }
 }

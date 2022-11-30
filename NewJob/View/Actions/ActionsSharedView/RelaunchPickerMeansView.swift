@@ -9,7 +9,6 @@ import SwiftUI
 
 struct RelaunchPickerMeansView: View {
     @ObservedObject  var vm: AddRelaunchViewModel
-    @State var isCreateOrModify: CreateOrModify
     
     var body: some View {
         HStack {
@@ -27,6 +26,6 @@ struct RelaunchPickerMeansView: View {
 
 struct RelaunchPickerMeansView_Previews: PreviewProvider {
     static var previews: some View {
-        RelaunchPickerMeansView(vm: AddRelaunchViewModel(isCreateOrModify: .create, relaunch: nil), isCreateOrModify: .create)
+        RelaunchPickerMeansView(vm: AddRelaunchViewModel())
     }
 }
