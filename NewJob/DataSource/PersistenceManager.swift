@@ -10,41 +10,33 @@ import CoreData
 
 struct PersistenceManager {
     // MARK: Properties
-    private let coreDataStack: CoreDataStack
-    private let viewContext: NSManagedObjectContext
-    // MARK: Initializer
-
-    init(coreDataStack: CoreDataStack) {
-        self.coreDataStack = coreDataStack
-        self.viewContext = coreDataStack.mainContext
+    static let shared = PersistenceManager()
+    var viewContext: NSManagedObjectContext {
+        return PersistenceManager.shared.container.viewContext
     }
     
-//    static let shared = PersistenceManager()
-//    var viewContext: NSManagedObjectContext {
-//        return PersistenceManager.shared.container.viewContext
-//    }
-//    
-//    let appName = "NewJob"
-//    let urlPath = "/dev/null"
-//    let container: NSPersistentContainer
-//    
-//    init(inMemory: Bool = false) {
-//        container = NSPersistentContainer(name: appName)
-//        if inMemory {
-//            let stores = container.persistentStoreDescriptions
-//            if let first = stores.first {
-//                first.url = URL(fileURLWithPath: urlPath)
-//            }
-//        }
-//        container.viewContext.automaticallyMergesChangesFromParent = true
-//        container.loadPersistentStores(completionHandler: loadCompletion)
-//    }
-//    
-//    func loadCompletion(store: NSPersistentStoreDescription, error: Error?) {
-//        if let e = error {
-//            print(e.localizedDescription)
-//        }
-//    }
+    let appName = "NewJob"
+    let urlPath = "/dev/null"
+    let container: NSPersistentContainer
+    
+    // MARK: Initializer
+    init(inMemory: Bool = false) {
+        container = NSPersistentContainer(name: appName)
+        if inMemory {
+            let stores = container.persistentStoreDescriptions
+            if let first = stores.first {
+                first.url = URL(fileURLWithPath: urlPath)
+            }
+        }
+        container.viewContext.automaticallyMergesChangesFromParent = true
+        container.loadPersistentStores(completionHandler: loadCompletion)
+    }
+    
+    func loadCompletion(store: NSPersistentStoreDescription, error: Error?) {
+        if let e = error {
+            print(e.localizedDescription)
+        }
+    }
     
     func saveData() {
         do {
@@ -93,7 +85,49 @@ struct PersistenceManager {
     func fetchSelectedJobs() -> [SelectedJob] {
         var jobs: [SelectedJob] = []
         let request = NSFetchRequest<SelectedJob>(entityName: "SelectedJob")
-        let sortByCreationDate  = NSSortDescriptor(keyPath: \SelectedJob.creationDate, ascending: true)
+        let sortByCreationDate  = NSSortDescriptor(keyPath: \SelectedJob.creationDate, ascending: false)
+        request.sortDescriptors = [sortByCreationDate]
+        do {
+            jobs = try viewContext.fetch(request)
+        } catch {
+            print(error.localizedDescription)
+        }
+        return jobs
+    }
+    
+    func fetchSelectedJobsWithCandidacy() -> [SelectedJob] {
+        var jobs: [SelectedJob] = []
+        let request = NSFetchRequest<SelectedJob>(entityName: "SelectedJob")
+        request.predicate = NSPredicate(format: "candidacy != nil")
+        let sortByCreationDate  = NSSortDescriptor(keyPath: \SelectedJob.creationDate, ascending: false)
+        request.sortDescriptors = [sortByCreationDate]
+        do {
+            jobs = try viewContext.fetch(request)
+        } catch {
+            print(error.localizedDescription)
+        }
+        return jobs
+    }
+
+    func fetchSelectedJobsByState(candidacyState: String) -> [SelectedJob] {
+        var jobs: [SelectedJob] = []
+        let request = NSFetchRequest<SelectedJob>(entityName: "SelectedJob")
+        request.predicate = NSPredicate(format: "candidacy.state == %@", candidacyState)
+        let sortByCreationDate  = NSSortDescriptor(keyPath: \SelectedJob.creationDate, ascending: false)
+        request.sortDescriptors = [sortByCreationDate]
+        do {
+            jobs = try viewContext.fetch(request)
+        } catch {
+            print(error.localizedDescription)
+        }
+        return jobs
+    }
+    
+    func fetchSelectedJobsWhithoutCandidacy() -> [SelectedJob] {
+        var jobs: [SelectedJob] = []
+        let request = NSFetchRequest<SelectedJob>(entityName: "SelectedJob")
+        request.predicate = NSPredicate(format: "candidacy == nil")
+        let sortByCreationDate  = NSSortDescriptor(keyPath: \SelectedJob.creationDate, ascending: false)
         request.sortDescriptors = [sortByCreationDate]
         do {
             jobs = try viewContext.fetch(request)
@@ -114,7 +148,6 @@ struct PersistenceManager {
             print(error.localizedDescription)
             throw error
         }
-        
     }
     
     func checkIfIsFavoriteResultat(job: Resultat) -> Bool {
@@ -194,7 +227,7 @@ struct PersistenceManager {
             candidacy.comment = comment
             candidacy.selectedJob = favoriteJob
             candidacy.id = UUID()
-            candidacy.result = "En cours"
+            candidacy.state = "En cours"
             
             saveData()
             
@@ -218,7 +251,7 @@ struct PersistenceManager {
         }
     }
     
-    func updateSelectedJobCandidacy(jobId: String, candidacyDate: Date?, candidacyMeans: String?, comment: String?, result: String? ) {
+    func updateSelectedJobCandidacy(jobId: String, candidacyDate: Date?, candidacyMeans: String?, comment: String?, state: String? ) {
         var jobs: [SelectedJob] = []
         let request = NSFetchRequest<SelectedJob>(entityName: "SelectedJob")
         request.predicate = NSPredicate(format: "id == %@", jobId)
@@ -228,7 +261,7 @@ struct PersistenceManager {
             job.candidacy?.candidacyDate = candidacyDate ?? job.candidacy?.candidacyDate
             job.candidacy?.candidacyMeans = candidacyMeans ?? job.candidacy?.candidacyMeans
             job.candidacy?.comment = comment ?? job.candidacy?.comment
-            job.candidacy?.result = result ?? job.candidacy?.result
+            job.candidacy?.state = state ?? job.candidacy?.state
             
             saveData()
             
@@ -278,6 +311,7 @@ struct PersistenceManager {
         }
         
         saveData()
+        print("contact creation save")
     }
     
     func fetchContact() -> [Contact] {
@@ -307,11 +341,10 @@ struct PersistenceManager {
     }
     
     func removeContact(contactId: UUID) {
-        var contacts: [Contact] = []
         let request = NSFetchRequest<Contact>(entityName: "Contact")
         request.predicate = NSPredicate(format: "id == %@", contactId as CVarArg)
         do {
-            contacts = try viewContext.fetch(request)
+            let contacts = try viewContext.fetch(request)
             guard let contact = contacts.first else { return }
             viewContext.delete(contact)
             saveData()
@@ -447,7 +480,7 @@ struct PersistenceManager {
     }
     
     // marks : Interview
-    func createInterview(candidacyID: UUID, date: Date, comment: String) {
+    func createInterview(candidacyID: UUID, contact: Contact?, date: Date, comment: String) {
         var candidacies: [Candidacy] = []
         let request = NSFetchRequest<Candidacy>(entityName: "Candidacy")
         request.predicate = NSPredicate(format: "id == %@", candidacyID as CVarArg)
@@ -458,6 +491,7 @@ struct PersistenceManager {
             let interview = Interview(context: viewContext)
             interview.id = UUID()
             interview.date = date
+            interview.contact = contact
             interview.comment = comment
             interview.candidacy = candidacy
             

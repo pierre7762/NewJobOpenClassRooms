@@ -8,65 +8,65 @@
 import SwiftUI
 
 struct FavoriteJobOfferListView: View {
-    @ObservedObject var viewModel = FavoriteJobListViewModel()
+    @ObservedObject var vm = FavoriteJobListViewModel()
     
     init() {
         UITableView.appearance().backgroundColor = .init(white: 1.0, alpha: 0.0)
     }
-
-    var body: some View {
-            ZStack {
-                LinearGradient(gradient: Gradient(colors: [.indigo,.cyan,.mint, .green]), startPoint: .topTrailing, endPoint: .bottomLeading)
-                    .ignoresSafeArea()
-
-                List {
-                    ForEach(viewModel.jobs, id: \.self) { job in
-                        NavigationLink(
-//                            destination:  ActionsToBeTakenOnFavoriteJob(job: job, jobId: job.id!),
-                            destination:  SelectedJobMenuView(job: job, jobId: job.id!),
-                            label: {
-                                VStack(alignment: .leading) {
-                                    HStack(alignment: .lastTextBaseline) {
-                                        Text("")
-                                        Text(job.entitled ?? "")
-                                            .fontWeight(.bold)
-                                            .font(.footnote)
-                                    }
-                                    Text(job.company?.name ?? "")
-                                        .font(.footnote)
-                                        .foregroundColor(.gray)
-                                    Text(job.workplace?.libelle ?? "")
-                                        .font(.footnote)
-                                        .foregroundColor(.gray)
-                                    Spacer()
-                                    Text(job.salary?.libelle ?? "")
-                                        .font(.footnote)
-                                }
-                                .frame(width: UIScreen.main.bounds.width * 0.8, alignment: .leading)
-                                .background(Color(white: 1.0))
-                            }
-                        )
-                    }
-                    .onDelete(perform: delete)
-                }
-                .background(Color.white.opacity(0.0))
-                .scrollContentBackground(.hidden)
-                
-            }
-            .onAppear() {
-                viewModel.updateJobsList()
-            }
-            .navigationBarTitle(Text("Mes annonces sélectionnées"), displayMode:.inline)
-            .toolbarBackground(
-                Color.white,
-                for: .navigationBar
-            )
-            .toolbarBackground(.visible, for: .navigationBar)
-    }
     
-    func delete(offsets: IndexSet) {
-        for off in offsets {
-            viewModel.delete(job: viewModel.jobs[off])
+    var body: some View {
+        ZStack {
+            LinearGradient(gradient: Gradient(colors: [.indigo,.cyan,.mint, .green]), startPoint: .topTrailing, endPoint: .bottomLeading)
+                .ignoresSafeArea()
+            
+            VStack {
+                if vm.showProgressView {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                        .scaleEffect(2)
+                } else {
+                    Form {
+                        if vm.jobsWithoutCandidacy.count > 0 {
+                            Section(header: Text("Sans Candidatures")) {
+                                JobsInList(jobsList: vm.jobsWithoutCandidacy)
+                            }
+                        }
+                        Section(header: Text("Candidatures")) {
+                            if vm.jobsWithCandidacy.count > 0 {
+                                JobsInList(jobsList: vm.jobsWithCandidacy)
+                            } else {
+                                Text("Aucune candidature \(vm.searchOptionSelected.lowercased())")
+                            }
+                        }
+                    }
+                    .background(Color.white.opacity(0.0))
+                    .scrollContentBackground(.hidden)
+                }
+            }
+        }
+        .onAppear() {
+            vm.updateJobsList()
+        }
+        .onChange(of: vm.searchOptionSelected, perform: { _ in
+            vm.updateJobsList()
+        })
+        .navigationBarTitle(Text("Mes annonces"), displayMode:.inline)
+        .toolbarBackground(
+            Color.white,
+            for: .navigationBar
+        )
+        .toolbarBackground(.visible, for: .navigationBar)
+        .toolbar {
+            Picker("", selection: $vm.searchOptionSelected) {
+                ForEach(vm.searchOptions, id: \.self) { option in
+                    Button {
+                        vm.searchOptionSelected = option
+                    } label: {
+                        Text("\(option)")
+                    }
+                }
+            }
+            .pickerStyle(.menu)
         }
     }
 }

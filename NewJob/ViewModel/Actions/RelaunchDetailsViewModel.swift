@@ -10,8 +10,8 @@ import Foundation
 class RelaunchDetailsViewModel: ObservableObject {
     @Published var relaunch: Relaunch?
     
-    var pm = PersistenceManager(coreDataStack: CoreDataStack(modelName: "NewJob"))
-    
+//    var pm = PersistenceManager(coreDataStack: CoreDataStack(modelName: "NewJob"))
+    var pm = PersistenceManager()
     func converteDateToString(date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium

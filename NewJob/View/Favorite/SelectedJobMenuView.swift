@@ -13,18 +13,17 @@ struct SelectedJobMenuView: View {
     enum PageSection : String, CaseIterable {
         case actionView = "Candidature"
         case jobView = "Annonce"
-
     }
     @State var segmentationSelection : PageSection = .actionView
     
     var body: some View {
         VStack {
             Picker("", selection: $segmentationSelection) {
-                        ForEach(PageSection.allCases, id: \.self) { option in
-                            Text(option.rawValue)
-                        }
-                    }.pickerStyle(SegmentedPickerStyle())
-                        .padding()
+                ForEach(PageSection.allCases, id: \.self) { option in
+                    Text(option.rawValue)
+                }
+            }.pickerStyle(SegmentedPickerStyle())
+                .padding()
             switch segmentationSelection {
             case .actionView:
                 ActionsToBeTakenOnFavoriteJobView(job: job, jobId: jobId)
@@ -39,12 +38,10 @@ struct SelectedJobMenuView: View {
         )
         .navigationBarTitle(Text(" "), displayMode:.inline)
         .toolbarBackground(
-                        Color.white,
-                        for: .navigationBar)
-                    .toolbarBackground(.visible, for: .navigationBar)
-
+            Color.white,
+            for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
     }
-
 }
 
 struct SelectedJobMenuView_Previews: PreviewProvider {

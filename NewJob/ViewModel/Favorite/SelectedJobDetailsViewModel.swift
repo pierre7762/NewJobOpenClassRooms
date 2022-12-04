@@ -11,13 +11,13 @@ import MapKit
 class SelectedJobDetailsViewModel: ObservableObject  {
     // MARK: Internal var
     @Published var showAllDescription: Bool = false
-    @Published var isFavorite = false
+    @Published var showingDeleteSheet = false
     @Published var jobLocation: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 48.855045, longitude: 2.342524)
     var favoriteJobList: [SelectedJob] = []
     var job: SelectedJob?
 
-    var pm = PersistenceManager(coreDataStack: CoreDataStack(modelName: "NewJob"))
-    
+//    var pm = PersistenceManager(coreDataStack: CoreDataStack(modelName: "NewJob"))
+    var pm = PersistenceManager()
     func modifyShowAllDescription() {
         showAllDescription = !showAllDescription
     }
@@ -38,13 +38,12 @@ class SelectedJobDetailsViewModel: ObservableObject  {
         
     }
     
-    func checkIfIsFavorite() {
-        isFavorite = pm.checkIfIsFavoriteSelectedJob(job: job!)
-    }
+//    func checkIfIsFavorite() {
+//        isFavorite = pm.checkIfIsFavoriteSelectedJob(job: job!)
+//    }
     
     func deleteThisFavorite(selectedJobId: String) {
         pm.removeSelectedJob(selectedJobId: selectedJobId)
-        isFavorite = false
     }
     
 }

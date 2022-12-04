@@ -5,7 +5,7 @@
         <attribute name="candidacyMeans" attributeType="String"/>
         <attribute name="comment" attributeType="String"/>
         <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="result" attributeType="String" customClassName="CandidacyResultType"/>
+        <attribute name="state" attributeType="String" customClassName="CandidacyResultType"/>
         <relationship name="contact" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Contact" inverseName="candidacy" inverseEntity="Contact"/>
         <relationship name="interview" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Interview" inverseName="candidacy" inverseEntity="Interview"/>
         <relationship name="relaunch" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Relaunch" inverseName="candidacy" inverseEntity="Relaunch"/>
@@ -25,6 +25,7 @@
         <attribute name="name" attributeType="String"/>
         <attribute name="phoneNumber" optional="YES" attributeType="String" customClassName="[String : String]"/>
         <relationship name="candidacy" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Candidacy" inverseName="contact" inverseEntity="Candidacy"/>
+        <relationship name="interview" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Interview" inverseName="contact" inverseEntity="Interview"/>
         <relationship name="relaunch" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Relaunch" inverseName="contact" inverseEntity="Relaunch"/>
     </entity>
     <entity name="Interview" representedClassName="Interview" syncable="YES" codeGenerationType="class">
@@ -32,6 +33,7 @@
         <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
         <relationship name="candidacy" maxCount="1" deletionRule="Nullify" destinationEntity="Candidacy" inverseName="interview" inverseEntity="Candidacy"/>
+        <relationship name="contact" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="interview" inverseEntity="Contact"/>
     </entity>
     <entity name="OriginOffers" representedClassName="OriginOffers" syncable="YES" codeGenerationType="class">
         <attribute name="origin" attributeType="String"/>

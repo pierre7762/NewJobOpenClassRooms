@@ -8,20 +8,22 @@
 import Foundation
 
 class FavoriteJobListViewModel: ObservableObject {
-    var pm = PersistenceManager(coreDataStack: CoreDataStack(modelName: "NewJob"))
+    @Published var searchOptions: [String] = ["En cours", "Toutes","Validée","Rejetée"]
+    @Published var searchOptionSelected = "En cours"
+    var pm = PersistenceManager()
     
-    @Published var jobs: [SelectedJob] = []
-    
-    init() {
-        jobs = pm.fetchSelectedJobs()
-    }
+    @Published var jobsWithCandidacy: [SelectedJob] = []
+    @Published var jobsWithoutCandidacy: [SelectedJob] = []
+    @Published var showProgressView: Bool = false
     
     func updateJobsList() {
-        jobs = pm.fetchSelectedJobs()
-    }
-    
-    func delete(job: SelectedJob) {
-        pm.removeSelectedJob(selectedJobId: job.id!)
-        updateJobsList()
+        showProgressView = true
+        if searchOptionSelected == "Toutes" {
+            jobsWithCandidacy = pm.fetchSelectedJobsWithCandidacy()
+        } else {
+            jobsWithCandidacy = pm.fetchSelectedJobsByState(candidacyState: searchOptionSelected)
+        }
+        jobsWithoutCandidacy = pm.fetchSelectedJobsWhithoutCandidacy()
+        showProgressView = false
     }
 }

@@ -16,8 +16,8 @@ class JobDetailsViewModel: ObservableObject  {
     @Published var jobLocation: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 48.855045, longitude: 2.342524)
     var favoriteJobList: [SelectedJob] = []
 
-    var pm = PersistenceManager(coreDataStack: CoreDataStack(modelName: "NewJob"))
-    
+//    var pm = PersistenceManager(coreDataStack: CoreDataStack(modelName: "NewJob"))
+    var pm = PersistenceManager()
     
     func modifyShowAllDescription() {
         showAllDescription = !showAllDescription

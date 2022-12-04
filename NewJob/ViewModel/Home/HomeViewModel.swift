@@ -8,7 +8,8 @@
 import Foundation
 
 class HomeViewModel: ObservableObject {
-    var pm = PersistenceManager(coreDataStack: CoreDataStack(modelName: "NewJob"))
+//    var pm = PersistenceManager(coreDataStack: CoreDataStack(modelName: "NewJob"))
+    var pm = PersistenceManager()
     @Published var jobs: [SelectedJob] = []
     @Published var jobsWithCandidacyMake: [SelectedJob] = []
     @Published var jobsWithCandidacyMakeCount = 0

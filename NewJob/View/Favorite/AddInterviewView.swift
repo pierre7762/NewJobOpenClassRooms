@@ -11,8 +11,10 @@ struct AddInterviewView: View {
 //    @State var isCreateOrModify: CreateOrModify
 //    @State var actualRelaunch: Relaunch?
 //    @State var candidacy: Candidacy?
+    @State var candidacy: Candidacy?
+    @State var showingDestinataireSheet: Bool = false
     @Environment(\.dismiss) var dismiss
-    @State var vm: ActionsToBeTakenOnFavoriteJobViewModel
+    @ObservedObject var vm: AddInterviewViewModel = AddInterviewViewModel()
     
     var body: some View {
         VStack {
@@ -37,7 +39,19 @@ struct AddInterviewView: View {
                     
                     Form {
                         Section(header: Text("Entretien")) {
-                            PickerDateView(typeOfView: .interview, vm: vm)
+                            DatePicker(
+                                    "Du :",
+                                    selection: $vm.createDateInterview,
+                                    displayedComponents: [.date]
+                                )
+                            .datePickerStyle(.compact)
+                            Picker("Contact", selection: $vm.contactSelected) {
+                                Text("Non précisé").tag("Non précisé")
+                                ForEach(vm.contactList, content: { contact in
+                                    Text("\(contact.name!) (\(contact.compagny!))").tag(contact.name!)
+                                })
+                            }
+                            .pickerStyle(.menu)
                         }
                         Section(header: Text("Informations")){
                             TextEditor(text: $vm.interviewComment)
@@ -52,13 +66,13 @@ struct AddInterviewView: View {
                     HStack {
                         Spacer()
                         Button {
-                            vm.createInterview()
+                            vm.createInterview(candidacyId: (candidacy?.id)!)
                             dismiss()
                         } label: {
                             Text("Enregistrer")
                                 .padding()
                                 .foregroundColor(.white)
-                                
+
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 16)
                                         .stroke(.white, lineWidth: 2)
@@ -66,7 +80,7 @@ struct AddInterviewView: View {
                                 .background(.green)
                                 .cornerRadius(16)
                         }
-                        
+
                         Spacer()
                     }
                     .padding()
@@ -75,7 +89,7 @@ struct AddInterviewView: View {
             }
         }
         .onAppear() {
-//            vm.fetchCandidacyContactList(candidacyId: candidacy!.id!)
+            vm.fetchCandidacyContactList(candidacyId: (candidacy?.id)!)
         }
     }
 }

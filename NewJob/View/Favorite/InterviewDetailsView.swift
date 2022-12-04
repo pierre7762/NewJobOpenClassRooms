@@ -22,6 +22,16 @@ struct InterviewDetailsView: View {
                         Section(header: Text("Date")) {
                             Text("\(vm.converteDateToString(date: interview.date!))")
                         }
+                        if interview.contact != nil {
+                            Section(header: Text("Contact")) {
+                                NavigationLink(destination: ContactDetailsView(contact: ContactDisplayable(contact: interview.contact!))) {
+                                    Text(interview.contact!.name ?? "Inconnu")
+                                    if (interview.contact!.functionInCompany != nil) && interview.contact!.functionInCompany != "" {
+                                        Text(" (\(interview.contact!.functionInCompany!))")
+                                    }
+                                }
+                            }
+                        }
                         
                         Section(header: Text("Informations")){
                             Text("\((interview.comment == "" ? "Pas d'informations renseignées" : interview.comment!))")

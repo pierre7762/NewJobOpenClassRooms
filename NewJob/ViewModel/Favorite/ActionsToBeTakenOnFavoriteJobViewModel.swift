@@ -8,7 +8,7 @@
 import Foundation
 
 class ActionsToBeTakenOnFavoriteJobViewModel: ObservableObject {
-
+    
     @Published var favoriteJob: SelectedJob?
     @Published var dataReady: Bool = false
     @Published var createCandidacyToggle = false
@@ -18,6 +18,7 @@ class ActionsToBeTakenOnFavoriteJobViewModel: ObservableObject {
     @Published var comment: String = ""
     @Published var interviewComment = ""
     @Published var showingDestinataireSheet = false
+    @Published var showingDeleteSheet = false
     @Published var showingRelaunchSheet = false
     @Published var showingInterviewSheet = false
     @Published var contactName = ""
@@ -31,34 +32,31 @@ class ActionsToBeTakenOnFavoriteJobViewModel: ObservableObject {
     @Published var favoriteJobIsInit = false
     @Published var textCandidacyState: String = "En cours"
     
-    var pm = PersistenceManager(coreDataStack: CoreDataStack(modelName: "NewJob"))
+    var pm = PersistenceManager()
     
     func initFavoriteJob(jobId: String) {
         guard let job = try? pm.getSelectedJobWithId(id: jobId) else { return }
         favoriteJob = job
         guard let candidacy = job.candidacy else {
-            createDateCandidacy = job.candidacy?.candidacyDate ?? Date()
-            means = job.candidacy?.candidacyMeans ?? ""
             createCandidacyToggle = false
             return
         }
-        createCandidacyToggle = true
-
+        createDateCandidacy = candidacy.candidacyDate!
         means = candidacy.candidacyMeans!
         comment = candidacy.comment!
-        createDateCandidacy = job.candidacy!.candidacyDate!
-        textCandidacyState = (job.candidacy?.result)!
+        textCandidacyState = candidacy.state!
         favoriteJobIsInit = true
-        fetchRelaunches()
+        createCandidacyToggle = true
     }
     
-    func createRemoveCandidady(isCreated: Bool) {
+    func toDoAction(isCreated: Bool) {
         guard let job = favoriteJob else { return }
         switch isCreated {
         case true:
             if(favoriteJob?.candidacy == nil) {
-                pm.createCandidacy(candidacyMeans: means, candidacyDate: createDateCandidacy, comment: "test", favoriteJobId: job.id!)
+                pm.createCandidacy(candidacyMeans: means, candidacyDate: createDateCandidacy, comment: comment, favoriteJobId: job.id!)
             }
+            favoriteJobIsInit = true
             
         case false:
             pm.removeCandidacy(favoriteJobId: job.id!)
@@ -66,33 +64,25 @@ class ActionsToBeTakenOnFavoriteJobViewModel: ObservableObject {
         let jobUpdated = try? pm.getSelectedJobWithId(id: (favoriteJob?.id)!)
         favoriteJob = jobUpdated
     }
-        
+    
     func updateCandidacy() {
         if favoriteJobIsInit {
             guard let id = favoriteJob?.id else { return }
-            guard let candidacy = favoriteJob?.candidacy else { return }
-            
             let amendedApplication = checkIfCandidacyFormIsDifferentOfFavoriteJobCandidacy()
-
             if amendedApplication {
-                candidacy.candidacyDate = createDateCandidacy
-                candidacy.candidacyMeans = means
-                candidacy.comment = comment
-                candidacy.result = textCandidacyState
-                
                 pm.updateSelectedJobCandidacy(
                     jobId: id,
                     candidacyDate: createDateCandidacy,
                     candidacyMeans: means,
                     comment: comment,
-                    result: textCandidacyState
+                    state: textCandidacyState
                 )
-
+                
                 favoriteJob = try? pm.getSelectedJobWithId(id: id)
             }
         }
     }
-
+    
     func checkIfCandidacyFormIsDifferentOfFavoriteJobCandidacy() -> Bool {
         guard let candidacy = favoriteJob?.candidacy else { return true}
         
@@ -105,7 +95,7 @@ class ActionsToBeTakenOnFavoriteJobViewModel: ObservableObject {
         if candidacy.comment != comment {
             return true
         }
-        if candidacy.result != textCandidacyState {
+        if candidacy.state != textCandidacyState {
             return true
         }
         
@@ -120,10 +110,13 @@ class ActionsToBeTakenOnFavoriteJobViewModel: ObservableObject {
         }
     }
     
+    func fetchContactForThisCandidacy() {
+        favoriteJob = try? pm.getSelectedJobWithId(id: (favoriteJob?.id)!)
+    }
+    
     func fetchRelaunches() {
         if ((favoriteJob?.candidacy) != nil) {
             relaunchesArray = pm.fetchAllRelaunchesfromCandidacyId(candidacyId: (favoriteJob?.candidacy?.id)!, ascendingDate: false)
-            
         }
     }
     
@@ -131,11 +124,6 @@ class ActionsToBeTakenOnFavoriteJobViewModel: ObservableObject {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
         return formatter.string(from: date)
-    }
-    
-    func createInterview() {
-        pm.createInterview(candidacyID: (favoriteJob?.candidacy?.id)!, date: createDateInterview, comment: interviewComment)
-        interviewArray = pm.fetchAllInterviewFromCandidacyId(candidacyId: (favoriteJob?.candidacy?.id)!, ascendingDate: true)
     }
     
     func removeInterview(interviewId: UUID) {
