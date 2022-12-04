@@ -20,7 +20,9 @@ class AddContactViewModel: ObservableObject {
     var jobId = ""
     
 //    var pm = PersistenceManager(coreDataStack: CoreDataStack(modelName: "NewJob"))
-    var pm = PersistenceManager()
+//    var pm = PersistenceManager()
+    var pm: PersistenceManager!
+    
     func initFavoriteJob(job: SelectedJob) {
         favoriteJob = job
     }

@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct RelaunchDetailsView: View {
+    let pm: PersistenceManager
     @State var relaunch: Relaunch
     @ObservedObject var vm: RelaunchDetailsViewModel = RelaunchDetailsViewModel()
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
@@ -27,7 +28,7 @@ struct RelaunchDetailsView: View {
                         }
                         if relaunch.contact != nil {
                             Section(header: Text("Contact")) {
-                                NavigationLink(destination: ContactDetailsView(contact: ContactDisplayable(contact: relaunch.contact!))) {
+                                NavigationLink(destination: ContactDetailsView(pm: pm, contact: ContactDisplayable(contact: relaunch.contact!))) {
                                     Text(relaunch.contact!.name ?? "Inconnu")
                                     if (relaunch.contact!.functionInCompany != nil) && relaunch.contact!.functionInCompany != "" {
                                         Text(" (\(relaunch.contact!.functionInCompany!))")
@@ -57,14 +58,20 @@ struct RelaunchDetailsView: View {
                         )
                     .alert("Supprimer la relance ?", isPresented: $showingAlert) {
                         Button("Supprimer", role: .destructive) {
-                            presentationMode.wrappedValue.dismiss()
+                            print("in button, relaunch : ", relaunch)
                             vm.removeRelaunch(relaunchID: relaunch.id!)
+                            presentationMode.wrappedValue.dismiss()
+                            
                             
                         }
                         Button("Annuler", role: .cancel) {}
                     }
             }
             .padding()
+        }
+        .onAppear() {
+            vm.pm = pm
+            print("relaunch : ", relaunch)
         }
         .navigationBarTitle(Text("Relance"), displayMode:.inline)
         .toolbarBackground(
@@ -76,6 +83,6 @@ struct RelaunchDetailsView: View {
 
 struct RelaunchDetailsView_Previews: PreviewProvider {
     static var previews: some View {
-        RelaunchDetailsView(relaunch: Relaunch())
+        RelaunchDetailsView(pm: PersistenceManager(), relaunch: Relaunch())
     }
 }

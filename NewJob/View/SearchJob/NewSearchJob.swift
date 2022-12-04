@@ -9,6 +9,7 @@ import WrappingStack
 import SwiftUI
 
 struct NewSearchJob: View {
+    let pm: PersistenceManager
     @ObservedObject private var vm = NewSearchJobViewModel()
     @State private var qualificationState = 0
     
@@ -29,7 +30,7 @@ struct NewSearchJob: View {
                             ProgressView()
                         } else {
                             NavigationLink(
-                                destination: ResultNewSearch(vm: vm),
+                                destination: ResultNewSearch(pm: pm, vm: vm),
                                 label: {
                                     Text("Rechercher")
                                         .padding()
@@ -67,7 +68,7 @@ struct NewSearchJob: View {
 
 struct NewSearchJob_Previews: PreviewProvider {
     static var previews: some View {
-        NewSearchJob()
+        NewSearchJob(pm: PersistenceManager())
     }
 }
 

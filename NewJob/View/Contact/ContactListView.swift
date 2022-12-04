@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ContactListView: View {
+    let pm: PersistenceManager
     @ObservedObject var vm = ContactListViewModel()
     
     func delete(offsets: IndexSet) {
@@ -25,7 +26,7 @@ struct ContactListView: View {
             }
             List {
                 ForEach(vm.contacts) { contact in
-                    NavigationLink(destination: ContactDetailsView(contact: ContactDisplayable(contact: contact))) {
+                    NavigationLink(destination: ContactDetailsView(pm: pm, contact: ContactDisplayable(contact: contact))) {
                         ContactRowView(contact: contact)
                     }
                     .isDetailLink(false)
@@ -41,6 +42,7 @@ struct ContactListView: View {
         )
         .toolbarBackground(.visible, for: .navigationBar)
         .onAppear() {
+            vm.pm = pm
             vm.getContactsList()
         }
         .onChange(of: vm.showingDestinataireSheet) { newValue in
@@ -51,6 +53,6 @@ struct ContactListView: View {
 
 struct ContactView_Previews: PreviewProvider {
     static var previews: some View {
-        ContactListView()
+        ContactListView(pm: PersistenceManager())
     }
 }

@@ -11,6 +11,7 @@ import WebKit
 
 struct SelectedJobDetailsView: View {
     @ObservedObject private var vm = SelectedJobDetailsViewModel()
+    let pm: PersistenceManager
     var job: SelectedJob
     var index: Int
     @State private var coordinate = CLLocationCoordinate2D(latitude: 48.855045, longitude: 2.342524)
@@ -117,6 +118,7 @@ struct SelectedJobDetailsView: View {
         .background(Color(white: 1.0))
         .cornerRadius(12)
         .onAppear {
+            vm.pm = pm
             vm.job = job
 //            vm.checkIfIsFavorite()
         }

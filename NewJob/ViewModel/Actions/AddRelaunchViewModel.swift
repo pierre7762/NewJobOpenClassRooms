@@ -15,7 +15,9 @@ class AddRelaunchViewModel: ObservableObject{
     @Published var contactList: [Contact] = []
     @Published var contactSelected: String = "Non précisé"
     
-    var pm = PersistenceManager()
+//    var pm = PersistenceManager()
+    var pm: PersistenceManager!
+    
     func fetchCandidacyContactList(candidacyId: UUID) {
         var contacts: [Contact] = []
         contacts = try! pm.fetchCandidacyContactsList(candidacyID: candidacyId)

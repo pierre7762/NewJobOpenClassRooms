@@ -11,6 +11,7 @@ struct SplashScreenView: View {
     @State var isActive : Bool = false
     @State private var size = 0.7
     @State private var opacity = 0.4
+//    var pm: PersistenceManager
     
     var body: some View {
         if isActive {
@@ -18,7 +19,6 @@ struct SplashScreenView: View {
         } else {
             ZStack {
                 VStack {
-//                    Image(systemName: "hare.fill")
                     Image("logo")
                         .font(.system(size: 80))
                         .foregroundColor(.red)

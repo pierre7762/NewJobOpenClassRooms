@@ -13,7 +13,8 @@ class ContactDetailsViewModel: ObservableObject {
 
 //    var pm = PersistenceManager(coreDataStack: CoreDataStack(modelName: "NewJob"))
 //    var pm = PersistenceManager(coreDataStack: nil)
-    var pm = PersistenceManager()
+//    var pm = PersistenceManager()
+    var pm: PersistenceManager!
     
     func deleteContact(id: UUID) {
         pm.removeContact(contactId: id)

@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct HomeView: View {
+//    let pm: PersistenceManager
+    let pm = PersistenceManager()
     @State var showUserView = false
-    @StateObject private var viewModel = HomeViewModel()
+    @StateObject private var vm = HomeViewModel()
     
     var body: some View {
         NavigationStack {
@@ -19,10 +21,10 @@ struct HomeView: View {
                 VStack {
                     Spacer()
                     NavigationLink(
-                        destination: ActionToBeTakenView(),
+                        destination: ActionToBeTakenView(pm: pm),
                         label: {
-                            ThisWeekCard(selectedJobCount: viewModel.jobsCount, candidacySending: viewModel.jobsWithCandidacyMakeCount)
-                                .environmentObject(viewModel)
+                            ThisWeekCard(pm: pm, selectedJobCount: vm.jobsCount, candidacySending: vm.jobsWithCandidacyMakeCount)
+                                .environmentObject(vm)
                         }
                     )
                     
@@ -30,7 +32,7 @@ struct HomeView: View {
 
                     HStack () {
                         NavigationLink(
-                            destination: NewSearchJob(),
+                            destination: NewSearchJob(pm: pm),
                             label: {
                                 SquareCard(text: "Chercher", image: "magnifyingglass.circle.fill", size: UIScreen.main.bounds.size.width / 2.5)
                             }
@@ -39,7 +41,7 @@ struct HomeView: View {
                     }
                     HStack () {
                         NavigationLink(
-                            destination: FavoriteJobOfferListView(),
+                            destination: FavoriteJobOfferListView(pm: pm),
                             label: {
                                 SquareCard(text: "Mes annonces", image: "heart.circle.fill", size: UIScreen.main.bounds.size.width / 2.5)
                             }
@@ -54,7 +56,8 @@ struct HomeView: View {
                 }
             }
             .onAppear(){
-                viewModel.updateData()
+                vm.pm = pm
+                vm.updateData()
             }
         }
     }

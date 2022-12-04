@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SelectedJobMenuView: View {
+    let pm: PersistenceManager
     var job: SelectedJob
     var jobId: String
     enum PageSection : String, CaseIterable {
@@ -26,10 +27,10 @@ struct SelectedJobMenuView: View {
                 .padding()
             switch segmentationSelection {
             case .actionView:
-                ActionsToBeTakenOnFavoriteJobView(job: job, jobId: jobId)
+                ActionsToBeTakenOnFavoriteJobView(pm: pm, job: job, jobId: jobId)
                 
             case .jobView:
-                SelectedJobDetailsView(job: job, index: 0)
+                SelectedJobDetailsView(pm: pm, job: job, index: 0)
             }
         }
         .padding()
@@ -46,6 +47,6 @@ struct SelectedJobMenuView: View {
 
 struct SelectedJobMenuView_Previews: PreviewProvider {
     static var previews: some View {
-        SelectedJobMenuView(job: SelectedJob(), jobId: "")
+        SelectedJobMenuView(pm: PersistenceManager(), job: SelectedJob(), jobId: "")
     }
 }

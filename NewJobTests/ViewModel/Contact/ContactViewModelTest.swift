@@ -9,7 +9,6 @@
 //@testable import NewJob
 //
 //final class ContactViewModelTest: XCTestCase {
-//    var coreDataStack: FakeCoreDataStack!
 //    var pmTest: PersistenceManager!
 //    var vm: ContactViewModel!
 //    let resultatJobTest = Resultat(
@@ -27,7 +26,6 @@
 //    // MARK: - Tests Life Cycle
 //    override func setUp() {
 //        super.setUp()
-//        coreDataStack = FakeCoreDataStack()
 //        pmTest = PersistenceManager(inMemory: true)
 //        vm = ContactViewModel()
 //        vm.pm = pmTest

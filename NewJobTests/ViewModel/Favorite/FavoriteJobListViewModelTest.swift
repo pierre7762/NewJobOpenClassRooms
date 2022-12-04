@@ -9,7 +9,6 @@
 //@testable import NewJob
 //
 //final class FavoriteJobListViewModelTest: XCTestCase {
-//    var coreDataStack: FakeCoreDataStack!
 //    var pmTest: PersistenceManager!
 //    var vm: FavoriteJobListViewModel!
 //    let resultatJobTest = Resultat(
@@ -38,7 +37,6 @@
 //    // MARK: - Tests Life Cycle
 //    override func setUp() {
 //        super.setUp()
-//        coreDataStack = FakeCoreDataStack()
 //        pmTest = PersistenceManager(inMemory: true)
 //        vm = FavoriteJobListViewModel()
 //        vm.pm = pmTest
@@ -47,7 +45,6 @@
 //    override func tearDown() {
 //        super.tearDown()
 //        pmTest = nil
-//        coreDataStack = nil
 //        vm = nil
 //    }
 //    

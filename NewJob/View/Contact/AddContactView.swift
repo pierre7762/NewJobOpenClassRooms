@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct AddContactView: View {
+    let pm: PersistenceManager
     var jobId: String?
     @Environment(\.dismiss) var dismiss
     @ObservedObject var viewModel: AddContactViewModel = AddContactViewModel()
@@ -84,6 +85,7 @@ struct AddContactView: View {
 //               }
            }
            .onAppear() {
+               viewModel.pm = pm
                viewModel.jobId = jobId ?? ""
            }
        }
@@ -92,6 +94,6 @@ struct AddContactView: View {
 
 struct AddContactView_Previews: PreviewProvider {
     static var previews: some View {
-        AddContactView(jobId: "")
+        AddContactView(pm: PersistenceManager(), jobId: "")
     }
 }

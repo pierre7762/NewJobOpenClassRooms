@@ -11,6 +11,7 @@ struct AddInterviewView: View {
 //    @State var isCreateOrModify: CreateOrModify
 //    @State var actualRelaunch: Relaunch?
 //    @State var candidacy: Candidacy?
+    let pm: PersistenceManager
     @State var candidacy: Candidacy?
     @State var showingDestinataireSheet: Bool = false
     @Environment(\.dismiss) var dismiss
@@ -89,6 +90,7 @@ struct AddInterviewView: View {
             }
         }
         .onAppear() {
+            vm.pm = pm
             vm.fetchCandidacyContactList(candidacyId: (candidacy?.id)!)
         }
     }

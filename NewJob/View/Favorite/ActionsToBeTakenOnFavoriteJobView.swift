@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ActionsToBeTakenOnFavoriteJobView: View {
+    let pm: PersistenceManager
     var job: SelectedJob
     var jobId: String
     @State private var applicationSentOn = Date()
@@ -46,7 +47,7 @@ struct ActionsToBeTakenOnFavoriteJobView: View {
                             if vm.favoriteJob!.candidacy?.contact?.count != nil {
                                 List {
                                     ForEach(vm.favoriteJob!.candidacy?.contact?.allObjects as! [Contact]) { contact in
-                                        NavigationLink(destination: ContactDetailsView(contact: ContactDisplayable(contact: contact))) {
+                                        NavigationLink(destination: ContactDetailsView(pm: pm, contact: ContactDisplayable(contact: contact))) {
                                             Text(contact.name ?? "Inconnu")
                                             if (contact.functionInCompany != nil) && contact.functionInCompany != "" {
                                                 Text(" (\(contact.functionInCompany!))")
@@ -66,7 +67,7 @@ struct ActionsToBeTakenOnFavoriteJobView: View {
                                 Image(systemName: "plus.circle")
                             }
                             .sheet(isPresented: $vm.showingDestinataireSheet) {
-                                AddContactView(jobId: vm.favoriteJob?.id)
+                                AddContactView(pm: pm, jobId: vm.favoriteJob?.id)
                             }
                         }
                     }
@@ -78,7 +79,7 @@ struct ActionsToBeTakenOnFavoriteJobView: View {
                             if job.candidacy?.relaunch?.count != nil {
                                 List {
                                     ForEach(job.candidacy?.relaunch?.allObjects as! [Relaunch]) { relaunch in
-                                        NavigationLink(destination: RelaunchDetailsView(relaunch: relaunch)) {
+                                        NavigationLink(destination: RelaunchDetailsView(pm: pm, relaunch: relaunch)) {
                                             Text("Du \(vm.converteDateToString(date: relaunch.date!))")
                                         }
                                     }
@@ -95,7 +96,7 @@ struct ActionsToBeTakenOnFavoriteJobView: View {
                                 Image(systemName: "plus.circle")
                             }
                             .sheet(isPresented: $vm.showingRelaunchSheet) {
-                                AddRelaunchView(candidacy: vm.favoriteJob?.candidacy)
+                                AddRelaunchView(pm: pm, candidacy: vm.favoriteJob?.candidacy)
                             }
                         }
                     }
@@ -106,7 +107,7 @@ struct ActionsToBeTakenOnFavoriteJobView: View {
                             if job.candidacy?.interview?.count != nil {
                                 List {
                                     ForEach(job.candidacy?.interview?.allObjects as! [Interview]) { interview in
-                                        NavigationLink(destination: InterviewDetailsView(interview: interview, vm: vm)) {
+                                        NavigationLink(destination: InterviewDetailsView(pm: pm, interview: interview, vm: vm)) {
                                             Text("Du \(vm.converteDateToString(date: interview.date!))")
                                         }
                                     }
@@ -123,7 +124,7 @@ struct ActionsToBeTakenOnFavoriteJobView: View {
                                 Image(systemName: "plus.circle")
                             }
                             .sheet(isPresented: $vm.showingInterviewSheet) {
-                                AddInterviewView(candidacy: vm.favoriteJob?.candidacy)
+                                AddInterviewView(pm: pm, candidacy: vm.favoriteJob?.candidacy)
                             }
                         }
                     }
@@ -168,6 +169,7 @@ struct ActionsToBeTakenOnFavoriteJobView: View {
             }
         }
         .onAppear() {
+            vm.pm = pm
             vm.initFavoriteJob(jobId: job.id!)
             vm.fetchRelaunches()
         }
@@ -202,6 +204,6 @@ struct ActionsToBeTakenOnFavoriteJobView: View {
 
 struct ActionsToBeTakenOnFavoriteJob_Previews: PreviewProvider {
     static var previews: some View {
-        ActionsToBeTakenOnFavoriteJobView(job: SelectedJob(), jobId: "")
+        ActionsToBeTakenOnFavoriteJobView(pm: PersistenceManager(), job: SelectedJob(), jobId: "")
     }
 }

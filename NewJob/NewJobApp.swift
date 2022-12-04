@@ -9,8 +9,6 @@ import SwiftUI
 
 @main
 struct NewJobApp: App {
-//    @StateObject private var dataController = DataController()
-//    let myController = PersistenceManager.shared
     var body: some Scene {
         WindowGroup {
             SplashScreenView()

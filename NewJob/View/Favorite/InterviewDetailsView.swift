@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct InterviewDetailsView: View {
+    let pm: PersistenceManager
     @State var interview: Interview
     @State var vm: ActionsToBeTakenOnFavoriteJobViewModel
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
@@ -24,7 +25,7 @@ struct InterviewDetailsView: View {
                         }
                         if interview.contact != nil {
                             Section(header: Text("Contact")) {
-                                NavigationLink(destination: ContactDetailsView(contact: ContactDisplayable(contact: interview.contact!))) {
+                                NavigationLink(destination: ContactDetailsView(pm: pm, contact: ContactDisplayable(contact: interview.contact!))) {
                                     Text(interview.contact!.name ?? "Inconnu")
                                     if (interview.contact!.functionInCompany != nil) && interview.contact!.functionInCompany != "" {
                                         Text(" (\(interview.contact!.functionInCompany!))")
@@ -76,6 +77,6 @@ struct InterviewDetailsView: View {
 
 struct InterviewDetailsView_Previews: PreviewProvider {
     static var previews: some View {
-        InterviewDetailsView(interview: Interview(), vm: ActionsToBeTakenOnFavoriteJobViewModel())
+        InterviewDetailsView(pm: PersistenceManager(), interview: Interview(), vm: ActionsToBeTakenOnFavoriteJobViewModel())
     }
 }

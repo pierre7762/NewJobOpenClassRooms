@@ -14,7 +14,9 @@ class ThisWeekCardViewModel: ObservableObject {
     @Published var relaunchToBeRelanchThisWeekCount: Int = 0
     @Published var interviewsToBeRelaunchThisWeekCount: Int = 0
 //    var pm = PersistenceManager(coreDataStack: CoreDataStack(modelName: "NewJob"))
-    var pm = PersistenceManager()
+//    var pm = PersistenceManager()
+    var pm: PersistenceManager!
+    
     func updateData() {
         fetchAllCandidacyCount()
         fetchAllInterviewsCount()

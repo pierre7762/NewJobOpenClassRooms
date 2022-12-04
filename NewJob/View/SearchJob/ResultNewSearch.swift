@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ResultNewSearch: View {
+    let pm: PersistenceManager
     @ObservedObject var vm: NewSearchJobViewModel
     
     var body: some View {
@@ -15,7 +16,7 @@ struct ResultNewSearch: View {
             LinearGradient(gradient: Gradient(colors: [.indigo,.cyan,.mint, .green]), startPoint: .topTrailing, endPoint: .bottomLeading)
                 .ignoresSafeArea()
             if vm.jobs.count > 0 {
-                CustomCardListJob(jobs: vm.jobs, width: UIScreen.main.bounds.width)
+                CustomCardListJob(pm: pm, jobs: vm.jobs, width: UIScreen.main.bounds.width)
             } else {
                 ProgressView()
                     .progressViewStyle(CircularProgressViewStyle(tint: .white))
@@ -37,6 +38,6 @@ struct ResultNewSearch: View {
 
 struct ResultNewSearch_Previews: PreviewProvider {
     static var previews: some View {
-        ResultNewSearch(vm: NewSearchJobViewModel())
+        ResultNewSearch(pm: PersistenceManager(), vm: NewSearchJobViewModel())
     }
 }

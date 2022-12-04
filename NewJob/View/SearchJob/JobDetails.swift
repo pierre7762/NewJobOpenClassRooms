@@ -12,6 +12,7 @@ import WebKit
 
 struct JobDetails: View {
     @ObservedObject private var viewModel = JobDetailsViewModel()
+    let pm: PersistenceManager
     var job: Resultat
     var index: Int
     @State private var coordinate = CLLocationCoordinate2D(latitude: 48.855045, longitude: 2.342524)
@@ -144,6 +145,7 @@ struct JobDetails: View {
             }
         }
         .onAppear {
+            viewModel.pm = pm
             viewModel.checkIfIsFavorite(job: job)
             mapRegion = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: job.lieuTravail.latitude ?? 48.855045 , longitude: job.lieuTravail.longitude ?? 2.342524), span: MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2))
         }
@@ -210,7 +212,7 @@ struct JobDetails_Previews: PreviewProvider {
     )
     
     static var previews: some View {
-        JobDetails(job: job, index: 0 )
+        JobDetails(pm: PersistenceManager(), job: job, index: 0 )
         
     }
 }

@@ -17,7 +17,9 @@ class SelectedJobDetailsViewModel: ObservableObject  {
     var job: SelectedJob?
 
 //    var pm = PersistenceManager(coreDataStack: CoreDataStack(modelName: "NewJob"))
-    var pm = PersistenceManager()
+//    var pm = PersistenceManager()
+    var pm: PersistenceManager!
+    
     func modifyShowAllDescription() {
         showAllDescription = !showAllDescription
     }

@@ -32,7 +32,8 @@ class ActionsToBeTakenOnFavoriteJobViewModel: ObservableObject {
     @Published var favoriteJobIsInit = false
     @Published var textCandidacyState: String = "En cours"
     
-    var pm = PersistenceManager()
+//    var pm = PersistenceManager()
+    var pm: PersistenceManager!
     
     func initFavoriteJob(jobId: String) {
         guard let job = try? pm.getSelectedJobWithId(id: jobId) else { return }

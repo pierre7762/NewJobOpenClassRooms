@@ -11,7 +11,9 @@ class ContactListViewModel: ObservableObject {
     @Published var contacts: [Contact] = []
     @Published var showingDestinataireSheet = false
 //    var pm = PersistenceManager(coreDataStack: CoreDataStack(modelName: "NewJob"))
-    var pm = PersistenceManager()
+//    var pm = PersistenceManager()
+    var pm: PersistenceManager!
+    
     func getContactsList() {
         contacts = pm.fetchContact()
     }

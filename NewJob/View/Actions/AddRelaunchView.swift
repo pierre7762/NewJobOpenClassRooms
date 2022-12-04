@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AddRelaunchView: View {
-
+    let pm: PersistenceManager
     @State var actualRelaunch: Relaunch?
     @State var candidacy: Candidacy?
     @State var showingDestinataireSheet: Bool = false
@@ -87,6 +87,7 @@ struct AddRelaunchView: View {
             }
         }
         .onAppear() {
+            vm.pm = pm
             vm.fetchCandidacyContactList(candidacyId: candidacy!.id!)
         }
     }
@@ -94,6 +95,6 @@ struct AddRelaunchView: View {
 
 struct AddRelaunchView_Previews: PreviewProvider {
     static var previews: some View {
-        AddRelaunchView()
+        AddRelaunchView(pm: PersistenceManager())
     }
 }

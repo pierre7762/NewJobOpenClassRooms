@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct CustomCardListJob: View {
+    let pm: PersistenceManager
     var jobs: [Resultat]
     var width: Double
     
@@ -16,7 +17,7 @@ struct CustomCardListJob: View {
             List {
                 ForEach(jobs) { job in
                     NavigationLink(
-                        destination: JobDetails(job: job, index: 0),
+                        destination: JobDetails(pm: pm, job: job, index: 0),
                         label: {
                             VStack(alignment: .leading) {
                                 HStack(alignment: .lastTextBaseline) {
@@ -103,6 +104,6 @@ struct CustomCardListJob_Previews: PreviewProvider {
 //        dureeTravailLibelleConverti: ""
     )]
     static var previews: some View {
-        CustomCardListJob(jobs: jobs, width: 200)
+        CustomCardListJob(pm: PersistenceManager(), jobs: jobs, width: 200)
     }
 }

@@ -8,11 +8,13 @@
 import SwiftUI
 
 struct FavoriteJobOfferListView: View {
+    let pm: PersistenceManager
     @ObservedObject var vm = FavoriteJobListViewModel()
     
-    init() {
-        UITableView.appearance().backgroundColor = .init(white: 1.0, alpha: 0.0)
-    }
+//    init() {
+//        UITableView.appearance().backgroundColor = .init(white: 1.0, alpha: 0.0)
+//    }
+    
     
     var body: some View {
         ZStack {
@@ -28,12 +30,12 @@ struct FavoriteJobOfferListView: View {
                     Form {
                         if vm.jobsWithoutCandidacy.count > 0 {
                             Section(header: Text("Sans Candidatures")) {
-                                JobsInList(jobsList: vm.jobsWithoutCandidacy)
+                                JobsInList(jobsList: vm.jobsWithoutCandidacy, pm: pm)
                             }
                         }
                         Section(header: Text("Candidatures")) {
                             if vm.jobsWithCandidacy.count > 0 {
-                                JobsInList(jobsList: vm.jobsWithCandidacy)
+                                JobsInList(jobsList: vm.jobsWithCandidacy, pm: pm)
                             } else {
                                 Text("Aucune candidature \(vm.searchOptionSelected.lowercased())")
                             }
@@ -45,6 +47,7 @@ struct FavoriteJobOfferListView: View {
             }
         }
         .onAppear() {
+            vm.pm = pm
             vm.updateJobsList()
         }
         .onChange(of: vm.searchOptionSelected, perform: { _ in
@@ -73,6 +76,6 @@ struct FavoriteJobOfferListView: View {
 
 struct FavoriteJobOfferListView_Previews: PreviewProvider {
     static var previews: some View {
-        FavoriteJobOfferListView()
+        FavoriteJobOfferListView(pm: PersistenceManager())
     }
 }

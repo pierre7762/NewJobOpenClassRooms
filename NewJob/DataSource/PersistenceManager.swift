@@ -8,11 +8,11 @@
 import Foundation
 import CoreData
 
-struct PersistenceManager {
+class PersistenceManager: ObservableObject {
     // MARK: Properties
-    static let shared = PersistenceManager()
+//    static let shared = PersistenceManager()
     var viewContext: NSManagedObjectContext {
-        return PersistenceManager.shared.container.viewContext
+        return self.container.viewContext
     }
     
     let appName = "NewJob"
@@ -40,7 +40,8 @@ struct PersistenceManager {
     
     func saveData() {
         do {
-            try viewContext.save()
+//            try viewContext.save()
+            try self.container.viewContext.save()
         } catch let error {
             print("Error: \(error)")
         }
@@ -416,8 +417,6 @@ struct PersistenceManager {
         do {
             contacts = try viewContext.fetch(request)
             let contact = contacts.first
-            
-            //            return candidacy?.relaunch?.allObjects as! [Relaunch]
             return contact?.candidacy?.allObjects as! [Candidacy]
         } catch  {
             print(error.localizedDescription)

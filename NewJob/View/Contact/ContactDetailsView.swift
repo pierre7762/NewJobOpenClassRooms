@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ContactDetailsView: View {
+    let pm: PersistenceManager
     let contact: ContactDisplayable
     var mail = ""
     @ObservedObject var vm: ContactDetailsViewModel = ContactDetailsViewModel()
@@ -95,6 +96,7 @@ struct ContactDetailsView: View {
             )
             .toolbarBackground(.visible, for: .navigationBar)
             .onAppear(){
+                vm.pm = pm
                 vm.fetchCandidaciesWhoAreConnectedAtThisContact(contactID: contact.id)
             }
     }
@@ -105,6 +107,6 @@ struct ContactDetailsView_Previews: PreviewProvider {
     
     
     static var previews: some View {
-        ContactDetailsView(contact: people)
+        ContactDetailsView(pm: PersistenceManager(), contact: people)
     }
 }

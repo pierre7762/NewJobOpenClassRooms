@@ -13,7 +13,8 @@ class ActionToBeTakenViewModel: ObservableObject {
     @Published var interviewsToBeRelaunch: [SelectedJobWithnumberOfDaysFromCandidacy] = []
     
 //    var pm = PersistenceManager(coreDataStack: CoreDataStack(modelName: "NewJob"))
-    var pm = PersistenceManager()
+//    var pm = PersistenceManager()
+    var pm: PersistenceManager!
     
     func getCandidacyToBeRelaunch(numberOfDayFrom: Int) {
         candidaciesToBeRelanch = []

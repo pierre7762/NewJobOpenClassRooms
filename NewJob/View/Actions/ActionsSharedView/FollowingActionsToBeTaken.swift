@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct FollowingActionsToBeTaken: View {
+    let pm: PersistenceManager
     var headerTitle: String
     var object: [SelectedJobWithnumberOfDaysFromCandidacy]
     var emptyText: String
@@ -21,7 +22,7 @@ struct FollowingActionsToBeTaken: View {
             if object.count > 0 {
                 ForEach(object) { job in
                     NavigationLink(
-                        destination:  SelectedJobMenuView(job: job.selectedJob, jobId: job.selectedJob.id!),
+                        destination:  SelectedJobMenuView(pm: pm, job: job.selectedJob, jobId: job.selectedJob.id!),
                         label: {
                             VStack(alignment: .leading) {
                                 HStack(alignment: .lastTextBaseline) {
@@ -37,7 +38,7 @@ struct FollowingActionsToBeTaken: View {
                                     .font(.footnote)
                                     .foregroundColor(.gray)
                                 Spacer()
-                                Text(" Il y à \(job.numberOfDaysFromCandidacy) jours")
+                                Text(" Il y a \(job.numberOfDaysFromCandidacy) jours")
                                     .font(.footnote)
                             }
                             .frame(width: UIScreen.main.bounds.width * 0.8, alignment: .leading)
@@ -57,6 +58,6 @@ struct FollowingActionsToBeTaken: View {
 
 struct FollowingActionsToBeTaken_Previews: PreviewProvider {
     static var previews: some View {
-        FollowingActionsToBeTaken(headerTitle: "", object: [], emptyText: "")
+        FollowingActionsToBeTaken(pm: PersistenceManager(), headerTitle: "", object: [], emptyText: "")
     }
 }

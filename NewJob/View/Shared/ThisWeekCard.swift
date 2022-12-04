@@ -17,6 +17,7 @@ struct CardModifier: ViewModifier {
 }
 
 struct ThisWeekCard: View {
+    let pm: PersistenceManager
     var selectedJobCount: Int
     var candidacySending: Int
     @State var vm: ThisWeekCardViewModel = ThisWeekCardViewModel()
@@ -49,6 +50,7 @@ struct ThisWeekCard: View {
            .modifier(CardModifier())
            .padding(.all, 10)
            .onAppear(){
+               vm.pm = pm
                vm.updateData()
            }
        }
@@ -56,7 +58,7 @@ struct ThisWeekCard: View {
 
 struct ThisWeekCard_Previews: PreviewProvider {
     static var previews: some View {
-        ThisWeekCard(selectedJobCount: 5, candidacySending: 2, vm: ThisWeekCardViewModel())
+        ThisWeekCard(pm: PersistenceManager(), selectedJobCount: 5, candidacySending: 2, vm: ThisWeekCardViewModel())
             .previewDevice("iPhone 13").previewLayout(.sizeThatFits)
     }
 }
