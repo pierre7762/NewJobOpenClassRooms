@@ -45,7 +45,11 @@ struct AddRelaunchView: View {
                             Picker("Non précisé", selection: $vm.contactSelected) {
                                 Text("Non précisé").tag("Non précisé")
                                 ForEach(vm.contactList, content: { contact in
-                                    Text("\(contact.name!) (\(contact.compagny!))").tag(contact.name!)
+                                    if contact.compagny != "" {
+                                        Text("\(contact.name!) (\(contact.compagny!))").tag(contact.name!)
+                                    } else {
+                                        Text("\(contact.name!)").tag(contact.name!)
+                                    }
                                 })
                             }
                             .pickerStyle(.menu)

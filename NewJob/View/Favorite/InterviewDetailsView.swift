@@ -25,7 +25,7 @@ struct InterviewDetailsView: View {
                         }
                         if interview.contact != nil {
                             Section(header: Text("Contact")) {
-                                NavigationLink(destination: ContactDetailsView(pm: pm, contact: ContactDisplayable(contact: interview.contact!))) {
+                                NavigationLink(destination: ContactDetailsView(pm: pm, contact: ContactDisplayable(contact: interview.contact!, contactId: interview.contact!.id!), favoriteJobId: (vm.favoriteJob?.id)!)) {
                                     Text(interview.contact!.name ?? "Inconnu")
                                     if (interview.contact!.functionInCompany != nil) && interview.contact!.functionInCompany != "" {
                                         Text(" (\(interview.contact!.functionInCompany!))")
@@ -37,10 +37,8 @@ struct InterviewDetailsView: View {
                         Section(header: Text("Informations")){
                             Text("\((interview.comment == "" ? "Pas d'informations renseignées" : interview.comment!))")
                         }
-                        
                     }
                     .cornerRadius(12)
-                    
                     
                     Spacer()
                     Spacer()
@@ -51,14 +49,13 @@ struct InterviewDetailsView: View {
                         .background(.red)
                         .cornerRadius(12)
                         .overlay(
-                                RoundedRectangle(cornerRadius: 16)
-                                    .stroke(.white, lineWidth: 2)
-                            )
+                            RoundedRectangle(cornerRadius: 16)
+                                .stroke(.white, lineWidth: 2)
+                        )
                         .alert("Supprimer l'entretien ?", isPresented: $showingAlert) {
                             Button("Supprimer", role: .destructive) {
                                 presentationMode.wrappedValue.dismiss()
                                 vm.removeInterview(interviewId: interview.id!)
-                                
                             }
                             Button("Annuler", role: .cancel) {}
                         }
@@ -71,7 +68,6 @@ struct InterviewDetailsView: View {
             Color.white,
             for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
-        
     }
 }
 

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct RelaunchDetailsView: View {
     let pm: PersistenceManager
+    let jobId: String?
     @State var relaunch: Relaunch
     @ObservedObject var vm: RelaunchDetailsViewModel = RelaunchDetailsViewModel()
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
@@ -28,7 +29,7 @@ struct RelaunchDetailsView: View {
                         }
                         if relaunch.contact != nil {
                             Section(header: Text("Contact")) {
-                                NavigationLink(destination: ContactDetailsView(pm: pm, contact: ContactDisplayable(contact: relaunch.contact!))) {
+                                NavigationLink(destination: ContactDetailsView(pm: pm, contact: ContactDisplayable(contact: relaunch.contact!, contactId: relaunch.contact!.id!), favoriteJobId: jobId!)) {
                                     Text(relaunch.contact!.name ?? "Inconnu")
                                     if (relaunch.contact!.functionInCompany != nil) && relaunch.contact!.functionInCompany != "" {
                                         Text(" (\(relaunch.contact!.functionInCompany!))")
@@ -59,10 +60,8 @@ struct RelaunchDetailsView: View {
                     .alert("Supprimer la relance ?", isPresented: $showingAlert) {
                         Button("Supprimer", role: .destructive) {
                             print("in button, relaunch : ", relaunch)
-                            vm.removeRelaunch(relaunchID: relaunch.id!)
+                            vm.removeRelaunch(relaunchID: relaunch.id!, pmDirect: pm)
                             presentationMode.wrappedValue.dismiss()
-                            
-                            
                         }
                         Button("Annuler", role: .cancel) {}
                     }
@@ -71,7 +70,6 @@ struct RelaunchDetailsView: View {
         }
         .onAppear() {
             vm.pm = pm
-            print("relaunch : ", relaunch)
         }
         .navigationBarTitle(Text("Relance"), displayMode:.inline)
         .toolbarBackground(
@@ -83,6 +81,6 @@ struct RelaunchDetailsView: View {
 
 struct RelaunchDetailsView_Previews: PreviewProvider {
     static var previews: some View {
-        RelaunchDetailsView(pm: PersistenceManager(), relaunch: Relaunch())
+        RelaunchDetailsView(pm: PersistenceManager(), jobId: "jobId", relaunch: Relaunch())
     }
 }

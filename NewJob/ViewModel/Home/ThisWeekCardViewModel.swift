@@ -13,8 +13,7 @@ class ThisWeekCardViewModel: ObservableObject {
     @Published var candidaciesToBeRelanchThisWeekCount: Int = 0
     @Published var relaunchToBeRelanchThisWeekCount: Int = 0
     @Published var interviewsToBeRelaunchThisWeekCount: Int = 0
-//    var pm = PersistenceManager(coreDataStack: CoreDataStack(modelName: "NewJob"))
-//    var pm = PersistenceManager()
+
     var pm: PersistenceManager!
     
     func updateData() {
@@ -34,9 +33,7 @@ class ThisWeekCardViewModel: ObservableObject {
     }
     
     func getCandidacyToBeRelaunch() {
-//        var candidaciesToBeRelanch: [SelectedJobWithnumberOfDaysFromCandidacy] = []
-//        var relaunchToBeRelanch: [SelectedJobWithnumberOfDaysFromCandidacy] = []
-        let jobs = pm.fetchSelectedJobs()
+        let jobs = pm.fetchSelectedJobs(onlyInProgress: true)
         var jobsWithCandidacyToBeRelaunch: [SelectedJobWithnumberOfDaysFromCandidacy] = []
         var rToBeRelanch: [SelectedJobWithnumberOfDaysFromCandidacy] = []
         var iToBeRelaunch: [SelectedJobWithnumberOfDaysFromCandidacy] = []
@@ -57,16 +54,21 @@ class ThisWeekCardViewModel: ObservableObject {
                 let calendar = Calendar(identifier: .gregorian)
                 let now = calendar.startOfDay(for: Date.now)
                 
-                if (job.candidacy?.relaunch?.allObjects.count)! < 1 {
+                if (job.candidacy?.relaunch?.allObjects.count)! == 0 {
                     let date = calendar.startOfDay(for: candidacyDate)
                     let components = calendar.dateComponents([.day], from: date, to: fridayDateInThisWeek!)
-                    
                     guard let days = components.day else { return }
+                    
                     if components.day! > numberOfDayFrom {
-                        let job = SelectedJobWithnumberOfDaysFromCandidacy(selectedJob: job, numberOfDaysFromCandidacy: days)
-                        jobsWithCandidacyToBeRelaunch.append(job)
+                        let jobToAdd = SelectedJobWithnumberOfDaysFromCandidacy(selectedJob: job, numberOfDaysFromCandidacy: days)
+                        if (job.candidacy?.interview?.allObjects.count)! > 0 {
+                            iToBeRelaunch.append(jobToAdd)
+                        } else {
+                            jobsWithCandidacyToBeRelaunch.append(jobToAdd)
+                        }
                     }
-                } else if (job.candidacy?.relaunch?.allObjects.count)! > 0 &&  (job.candidacy?.interview?.allObjects.count)! < 1 {
+                    
+                } else if (job.candidacy?.relaunch?.allObjects.count)! > 0 &&  (job.candidacy?.interview?.allObjects.count)! == 0 {
                     let relaunchesResult = pm.fetchAllRelaunchesfromCandidacyId(candidacyId: (job.candidacy?.id)!, ascendingDate: false)
                     let date = calendar.startOfDay(for: (relaunchesResult[0] as AnyObject).date!)
                     let components = calendar.dateComponents([.day], from: date, to: now)
@@ -95,7 +97,7 @@ class ThisWeekCardViewModel: ObservableObject {
         interviewsToBeRelaunchThisWeekCount = iToBeRelaunch.count
     }
     
-    private func howMAnyDaysToHaveFridayInThisWeek(currentWeekDay: Int) -> Int {
+    func howMAnyDaysToHaveFridayInThisWeek(currentWeekDay: Int) -> Int {
         switch currentWeekDay {
         case 1:
             return +5

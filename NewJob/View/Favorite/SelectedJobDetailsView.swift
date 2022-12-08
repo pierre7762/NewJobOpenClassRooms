@@ -22,7 +22,19 @@ struct SelectedJobDetailsView: View {
     @State private var showingAlert = false
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
-    
+    func openMapForPlace(coordinates: CLLocationCoordinate2D, name: String) {
+        let regionDistance:CLLocationDistance = 10000
+        let coordinates = coordinates
+        let regionSpan = MKCoordinateRegion(center: coordinates, latitudinalMeters: regionDistance, longitudinalMeters: regionDistance)
+        let options = [
+            MKLaunchOptionsMapCenterKey: NSValue(mkCoordinate: regionSpan.center),
+            MKLaunchOptionsMapSpanKey: NSValue(mkCoordinateSpan: regionSpan.span)
+        ]
+        let placemark = MKPlacemark(coordinate: coordinates, addressDictionary: nil)
+        let mapItem = MKMapItem(placemark: placemark)
+        mapItem.name = name
+        mapItem.openInMaps(launchOptions: options)
+    }
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -43,7 +55,7 @@ struct SelectedJobDetailsView: View {
                                 title: Text("Voulez-vous obtenir un itinéraire ?"),
                                 buttons: [
                                     .default(Text("Allons-y !"), action: {
-                                        vm.openMapForPlace(coordinates: CLLocationCoordinate2D(latitude: job.workplace!.latitude , longitude: job.workplace!.longitude), name: job.entitled ?? "Localisation du poste")
+                                        openMapForPlace(coordinates: CLLocationCoordinate2D(latitude: job.workplace!.latitude , longitude: job.workplace!.longitude), name: job.entitled ?? "Localisation du poste")
                                     }),
                                     .cancel()
                                 ]

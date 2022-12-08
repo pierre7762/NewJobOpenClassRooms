@@ -7,11 +7,12 @@
 
 import SwiftUI
 
-struct AddContactView: View {
+struct ContactFormView: View {
     let pm: PersistenceManager
+    let actualContact: ContactDisplayable?
     var jobId: String?
     @Environment(\.dismiss) var dismiss
-    @ObservedObject var viewModel: AddContactViewModel = AddContactViewModel()
+    @ObservedObject var viewModel: ContactFormViewModel = ContactFormViewModel()
 
        var body: some View {
            VStack {
@@ -33,10 +34,11 @@ struct AddContactView: View {
                        }
                  
                        Form {
-
                            Section(header: Text(viewModel.title))  {
                                TextField("Nom" , text: $viewModel.contactName)
+                                   .disableAutocorrection(true)
                                TextField("Entreprise" , text: $viewModel.contactCompagny)
+                                   .disableAutocorrection(true)
                                TextField("Fonction" , text: $viewModel.contactFunctionInCompany)
                                TextField("Téléphone" , text: $viewModel.contactPhoneNumber)
                                    .keyboardType(.phonePad)
@@ -45,16 +47,13 @@ struct AddContactView: View {
                                    .textInputAutocapitalization(.never)
                                    .disableAutocorrection(true)
                            }
-                           
-                           
-                           
                        }
                        .cornerRadius(12)
                        
                        HStack {
                            Spacer()
                            Button {
-                               viewModel.createContact()
+                               viewModel.actionToDo(actualContact: actualContact)
                                dismiss()
                            } label: {
                                Text("Enregistrer")
@@ -66,34 +65,25 @@ struct AddContactView: View {
                                                .stroke(.white, lineWidth: 2)
                                        )
                            }
-
                            Spacer()
                        }
                        .padding()
-                       
-                           
-                 
                    }
                    .frame(minWidth: 0, maxWidth: 350, minHeight: 0, maxHeight: 600)
                    .padding()
-//                   .background(.red )
                    Spacer()
-
                }
-//               .onChange(of: viewModel.contactName) { newValue in
-//                   viewModel.searchCompatibleContactName(name: newValue)
-//               }
            }
            .onAppear() {
                viewModel.pm = pm
                viewModel.jobId = jobId ?? ""
+               viewModel.initContact(actualContact: actualContact)
            }
        }
-        
 }
 
 struct AddContactView_Previews: PreviewProvider {
     static var previews: some View {
-        AddContactView(pm: PersistenceManager(), jobId: "")
+        ContactFormView(pm: PersistenceManager(), actualContact: nil, jobId: "")
     }
 }

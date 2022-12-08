@@ -10,12 +10,7 @@ import SwiftUI
 struct FavoriteJobOfferListView: View {
     let pm: PersistenceManager
     @ObservedObject var vm = FavoriteJobListViewModel()
-    
-//    init() {
-//        UITableView.appearance().backgroundColor = .init(white: 1.0, alpha: 0.0)
-//    }
-    
-    
+
     var body: some View {
         ZStack {
             LinearGradient(gradient: Gradient(colors: [.indigo,.cyan,.mint, .green]), startPoint: .topTrailing, endPoint: .bottomLeading)

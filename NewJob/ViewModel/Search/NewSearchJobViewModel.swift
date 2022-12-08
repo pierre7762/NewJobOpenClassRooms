@@ -21,27 +21,23 @@ class NewSearchJobViewModel: ObservableObject {
     @Published var showAlert = false
     @Published var requestInProgress = false
     
+    // MARK: var
+    let poleEmploiService = PoleEmploiService()
+    var apiGouvService = ApiGouvService()
     
-    // MARK: Internal functions
+    // MARK: functions
     func getOffersOnPoleEmploi() {
         requestInProgress.toggle()
         fetchPoleEmploiJobs()
         showResult = true
     }
     
-    
-    // MARK: var
-    let poleEmploiService = PoleEmploiService()
-    let apiGouvService = ApiGouvService()
-    
-    // MARK: functions
     func fetchCityCodeFromCityName(cityName: String) {
         citys = []
             apiGouvService.fetchCityCode(cityName: cityName) { result in
                 DispatchQueue.main.async {
                     switch result {
                     case .success(let cityDatas):
-//                        print(result)
                         if cityDatas.count > 4 {
                             for i in 0...3 {
                                 self.citys.append(City(name: cityDatas[i].nom, codeInsee: cityDatas[i].code, postCode: "", deptCode: cityDatas[i].codeDepartement))
@@ -67,21 +63,14 @@ class NewSearchJobViewModel: ObservableObject {
     }
     
     func updateCodeInsee(codeInsee: String, name: String) {
-        
         search.cityCode = codeInsee
         search.city = name
         citys = []
         citySelected = name
-        
-        if citySelected.elementsEqual(search.city) {
-            showCitys = false
-        } else {
-            showCitys = true
-        }
+        showCitys = false
     }
     
     private func fetchPoleEmploiJobs() {
-        
         poleEmploiService.getPoleEmploiToken { result in
             DispatchQueue.main.async {
                 switch result {

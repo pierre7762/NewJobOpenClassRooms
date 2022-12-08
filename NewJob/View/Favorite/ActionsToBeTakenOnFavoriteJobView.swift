@@ -32,14 +32,14 @@ struct ActionsToBeTakenOnFavoriteJobView: View {
                             vm.toDoAction(isCreated: change)
                         }
                 }
-                
+
                 if vm.createCandidacyToggle {
                     Section(header: Text("Candidature")) {
                         PickerDateView(typeOfView: .candidacy, vm: vm)
                         PickerCandidacyMeansView(vm: vm)
                         InformationsCandidacyView(vm: vm)
                     }
-                    
+
                     Section {
                         if vm.favoriteJob?.candidacy?.contact?.count == 0 {
                             Text("Vous n'avez pas de contacts")
@@ -47,7 +47,7 @@ struct ActionsToBeTakenOnFavoriteJobView: View {
                             if vm.favoriteJob!.candidacy?.contact?.count != nil {
                                 List {
                                     ForEach(vm.favoriteJob!.candidacy?.contact?.allObjects as! [Contact]) { contact in
-                                        NavigationLink(destination: ContactDetailsView(pm: pm, contact: ContactDisplayable(contact: contact))) {
+                                        NavigationLink(destination: ContactDetailsView(pm: pm, contact: ContactDisplayable(contact: contact, contactId: contact.id!), favoriteJobId: jobId)) {
                                             Text(contact.name ?? "Inconnu")
                                             if (contact.functionInCompany != nil) && contact.functionInCompany != "" {
                                                 Text(" (\(contact.functionInCompany!))")
@@ -67,11 +67,11 @@ struct ActionsToBeTakenOnFavoriteJobView: View {
                                 Image(systemName: "plus.circle")
                             }
                             .sheet(isPresented: $vm.showingDestinataireSheet) {
-                                AddContactView(pm: pm, jobId: vm.favoriteJob?.id)
+                                ContactFormView(pm: pm, actualContact: nil, jobId: vm.favoriteJob?.id)
                             }
                         }
                     }
-                    
+
                     Section {
                         if vm.favoriteJob?.candidacy?.relaunch?.count == 0 {
                             Text("Vous n'avez pas de relances")
@@ -79,7 +79,7 @@ struct ActionsToBeTakenOnFavoriteJobView: View {
                             if job.candidacy?.relaunch?.count != nil {
                                 List {
                                     ForEach(job.candidacy?.relaunch?.allObjects as! [Relaunch]) { relaunch in
-                                        NavigationLink(destination: RelaunchDetailsView(pm: pm, relaunch: relaunch)) {
+                                        NavigationLink(destination: RelaunchDetailsView(pm: pm, jobId: jobId, relaunch: relaunch)) {
                                             Text("Du \(vm.converteDateToString(date: relaunch.date!))")
                                         }
                                     }
@@ -128,7 +128,7 @@ struct ActionsToBeTakenOnFavoriteJobView: View {
                             }
                         }
                     }
-                    
+
                     Section {
                         Picker("Candidature", selection: $vm.textCandidacyState) {
                             Text("En cours").tag("En cours")
@@ -142,7 +142,7 @@ struct ActionsToBeTakenOnFavoriteJobView: View {
                             Spacer()
                         }
                     }
-                    
+
                 }
                 
                 
@@ -164,7 +164,7 @@ struct ActionsToBeTakenOnFavoriteJobView: View {
             }
             .onChange(of: vm.showingDestinataireSheet) { value in
                 if vm.showingDestinataireSheet == false {
-                    vm.fetchContactForThisCandidacy()
+                    vm.fetchSelectedJob()
                 }
             }
         }

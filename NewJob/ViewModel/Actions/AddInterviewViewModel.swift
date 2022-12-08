@@ -12,7 +12,6 @@ class AddInterviewViewModel: ObservableObject {
     @Published var interviewComment: String = ""
     @Published var contactList: [Contact] = []
     @Published var contactSelected: String = "Non précisé"
-//    var pm = PersistenceManager()
     var pm: PersistenceManager!
     
     func fetchCandidacyContactList(candidacyId: UUID) {
@@ -23,12 +22,8 @@ class AddInterviewViewModel: ObservableObject {
     
     func createInterview(candidacyId: UUID) {
         var cont: Contact?
-        if contactSelected != "Non précisé" {
-            do {
-                try cont = pm.fetchContactByName(name: contactSelected)
-            } catch {
-                cont = nil
-            }
+        if contactSelected != "Non précisé" {            
+            try? cont = pm.fetchContactByName(name: contactSelected)
         }
         pm.createInterview(candidacyID: candidacyId, contact: cont, date: createDateInterview, comment: interviewComment)
     }

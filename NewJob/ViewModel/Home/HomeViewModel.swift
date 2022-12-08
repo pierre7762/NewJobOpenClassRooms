@@ -8,8 +8,6 @@
 import Foundation
 
 class HomeViewModel: ObservableObject {
-//    var pm = PersistenceManager(coreDataStack: CoreDataStack(modelName: "NewJob"))
-//    var pm = PersistenceManager()
     var pm: PersistenceManager!
     
     @Published var jobs: [SelectedJob] = []
@@ -27,7 +25,7 @@ class HomeViewModel: ObservableObject {
     }
     
     func getJobs() {
-        jobs = pm.fetchSelectedJobs()
+        jobs = pm.fetchSelectedJobs(onlyInProgress: false)
         jobsWithCandidacyMake = pm.fetchSelectedJobWhoHaveCandidacyMake(jobs: jobs)
         jobsWithCandidacyMakeCount = jobsWithCandidacyMake.count
     }

@@ -144,24 +144,37 @@ final class ActionsToBeTakenOnFavoriteJobViewModelTest: XCTestCase {
         XCTAssertEqual(result, "12 déc. 2019")
     }
     
-//    func testCreateInterview_WhenItsTheFirstInterview_ThenInterviewArrayCountIsOne() {
-//        vm.toDoAction(isCreated: true)
-//        XCTAssertEqual(vm.interviewArray.count, 0)
-//        vm.createInterview()
-//        XCTAssertEqual(vm.interviewArray.count, 1)
-//    }
-//    
-//    func testRemoveInterview_WhenInterviewCountIsAtOne_ThenInterviewArrayCountIsZero() {
-//        vm.toDoAction(isCreated: true)
-//        vm.createInterview()
-//        XCTAssertEqual(vm.interviewArray.count, 1)
-//        vm.removeInterview(interviewId: vm.interviewArray[0].id!)
-//        XCTAssertEqual(vm.interviewArray.count, 0)
-//    }
+    func testFetchSelectedJob_whenExist_thenUpdateFavoriteJob() {
+        vm.pm.createSelectedJob(job: resultatJobTest)
+        vm.pm.createCandidacy(candidacyMeans: "Mail", candidacyDate: Date.now, comment: "", favoriteJobId: resultatJobTest.id)
+        vm.fetchSelectedJob()
+        XCTAssertEqual(vm.favoriteJob!.candidacy?.state, "En cours")
+        vm.pm.updateSelectedJobCandidacy(jobId: resultatJobTest.id, candidacyDate: nil, candidacyMeans: nil, comment: nil, state: "Validée")
+        vm.fetchSelectedJob()
+        XCTAssertEqual(vm.favoriteJob!.candidacy?.state, "Validée")
+    }
+    
+    func testRemoveInterview_WhenInterviewCountIsAtOne_ThenInterviewArrayCountIsZero() {
+        vm.toDoAction(isCreated: true)
+        vm.pm.createInterview(candidacyID: (vm.favoriteJob?.candidacy?.id)!, contact: nil, date: Date.now, comment: "")
+        vm.interviewArray = vm.pm.fetchAllInterviewFromCandidacyId(candidacyId: (vm.favoriteJob?.candidacy?.id)!, ascendingDate: true)
+        XCTAssertEqual(vm.interviewArray.count, 1)
+        let interViewArray = vm.pm.fetchAllInterviewFromCandidacyId(candidacyId: (vm.favoriteJob?.candidacy?.id)!, ascendingDate: true)
+        vm.removeInterview(interviewId: interViewArray[0].id!)
+        XCTAssertEqual(vm.interviewArray.count, 0)
+    }
     
     func testRemoveSelectedJob_WhenIsSelected_ThenRemoveIt() {
         vm.removeSelectedJob(jobId: (vm.favoriteJob?.id)!)
-        let result = vm.pm.fetchSelectedJobs()
+        let result = vm.pm.fetchSelectedJobs(onlyInProgress: false)
         XCTAssertEqual(result.count, 0)
+    }
+    
+    func testFetchRelaunches_WhenDontExist_ThenReturnZero() {
+        vm.pm.createSelectedJob(job: resultatJobTest)
+        vm.pm.createCandidacy(candidacyMeans: "Mail", candidacyDate: Date.now, comment: "", favoriteJobId: resultatJobTest.id)
+        vm.fetchRelaunches()
+        XCTAssertEqual(vm.relaunchesArray.count, 0)
+
     }
 }

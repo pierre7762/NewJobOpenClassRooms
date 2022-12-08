@@ -10,60 +10,50 @@ import SwiftUI
 struct ContactDetailsView: View {
     let pm: PersistenceManager
     let contact: ContactDisplayable
+    let favoriteJobId: String
     var mail = ""
-    @ObservedObject var vm: ContactDetailsViewModel = ContactDetailsViewModel()
+    
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @State private var showingAlert = false
+    @StateObject var vm: ContactDetailsViewModel = ContactDetailsViewModel()
     
     var body: some View {
-            ZStack {
-                LinearGradient(gradient: Gradient(colors: [.indigo,.cyan,.mint,.green]), startPoint: .topTrailing, endPoint: .bottomLeading)
-                    .ignoresSafeArea()
+        ZStack {
+            LinearGradient(gradient: Gradient(colors: [.indigo,.cyan,.mint,.green]), startPoint: .topTrailing, endPoint: .bottomLeading)
+                .ignoresSafeArea()
                 VStack() {
-                    Text(contact.name)
+                    Text(vm.contact?.name ?? "")
                         .foregroundColor(.black)
                         .fontWeight(.bold)
                         .font(.title)
-                    Text(contact.compagny)
+                    Text(vm.contact?.compagny ?? "")
                         .foregroundColor(.black)
                         .fontWeight(.semibold)
                         .font(.subheadline)
                     List {
                         Section {
-                            if contact.phoneNumber != "" {
+                            if vm.contact?.phoneNumber != "" {
                                 HStack{
                                     Image(systemName: "phone.fill")
                                         .foregroundColor(.black)
                                         .font(.system(size: 30))
-                                    Link("\(contact.phoneNumber)", destination: URL(string: "tel:\(contact.phoneNumber)")!)
+                                    Link("\(vm.contact?.phoneNumber ?? "")", destination: URL(string: "tel:\(vm.contact?.phoneNumber ?? "")")!)
                                 }
                             }
-                            if contact.mailUnwrapped != ""{
+                            if vm.contact?.mailUnwrapped != ""{
                                 HStack{
                                     Image(systemName: "mail")
                                         .foregroundColor(.black)
                                         .font(.system(size: 30))
-                                    Link("\(contact.mailUnwrapped)", destination: URL(string: "mailto:\(contact.mailUnwrapped)")!)
+                                    Link("\(vm.contact?.mailUnwrapped ?? "")", destination: URL(string: "mailto:\(vm.contact?.mailUnwrapped ?? "")")!)
                                 }
                             }
                         }
-                        Section (header: Text("Informations")){
-                            Text("Société : \(contact.compagny)")
-                            Text("Poste : \(contact.functionInCompany)")
-                        }
-                        Section (header: Text("Candidatures liées")){
-                            List {
-                                ForEach(vm.candidacyArray) { candidacy in
-                                    Text(candidacy.selectedJob?.entitled ?? "rien")
-                                }
+                        if vm.contact?.functionInCompany != "" && vm.contact?.compagny != "" {
+                            Section (header: Text("Informations")){
+                                Text("Société : \(vm.contact?.compagny ?? "")")
+                                Text("Poste : \(vm.contact?.functionInCompany ?? "")")
                             }
-                            .scrollContentBackground(.hidden)
-                            
-//                            List {
-//                                ForEach($vm.candidacy.allObjects as! [Candidacy]) { cand in
-//                                    Text((cand.selectedJob?.entitled)!)
-//                                }
-//                            }
                         }
                     }
                     .cornerRadius(12)
@@ -77,36 +67,51 @@ struct ContactDetailsView: View {
                         .background(.red)
                         .cornerRadius(12)
                         .overlay(
-                                RoundedRectangle(cornerRadius: 16)
-                                    .stroke(.white, lineWidth: 2)
-                            )
-                    .alert("Supprimer le contact ?", isPresented: $showingAlert) {
-                        Button("Supprimer", role: .destructive) {
-                            vm.deleteContact(id: contact.id)
-                            presentationMode.wrappedValue.dismiss()
+                            RoundedRectangle(cornerRadius: 16)
+                                .stroke(.white, lineWidth: 2)
+                        )
+                        .alert("Supprimer le contact ?", isPresented: $showingAlert) {
+                            Button("Supprimer", role: .destructive) {
+                                vm.deleteContact(id: vm.contact!.contactId)
+                                presentationMode.wrappedValue.dismiss()
+                            }
+                            Button("Annuler", role: .cancel) {}
                         }
-                        Button("Annuler", role: .cancel) {}
-                    }
                 }
                 .padding()
+        }
+        .toolbarBackground(
+            Color.white,
+            for: .navigationBar
+        )
+        .toolbarBackground(.visible, for: .navigationBar)
+        .toolbar {
+            Button {
+                vm.showingUpdateContactSheet.toggle()
+            } label: {
+                Text("Modifier")
             }
-            .toolbarBackground(
-                Color.white,
-                for: .navigationBar
-            )
-            .toolbarBackground(.visible, for: .navigationBar)
-            .onAppear(){
-                vm.pm = pm
-                vm.fetchCandidaciesWhoAreConnectedAtThisContact(contactID: contact.id)
+            .sheet(isPresented: $vm.showingUpdateContactSheet) {
+                ContactFormView(pm: pm, actualContact: contact, jobId: favoriteJobId)
             }
+        }
+        .onAppear(){
+            vm.pm = pm
+            vm.updateContactData(contactId: contact.contactId)
+        }
+        .onChange(of: vm.showingUpdateContactSheet) { newValue in
+            if newValue == false {
+                vm.updateContactData(contactId: contact.contactId)
+            }
+        }
     }
 }
 
 struct ContactDetailsView_Previews: PreviewProvider {
-    static var people: ContactDisplayable = ContactDisplayable(contact: Contact())
+    static var people: ContactDisplayable = ContactDisplayable(contact: Contact(), contactId: UUID())
     
     
     static var previews: some View {
-        ContactDetailsView(pm: PersistenceManager(), contact: people)
+        ContactDetailsView(pm: PersistenceManager(), contact: people, favoriteJobId: "")
     }
 }

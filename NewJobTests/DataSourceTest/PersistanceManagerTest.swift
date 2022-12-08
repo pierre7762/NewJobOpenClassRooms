@@ -10,7 +10,6 @@ import CoreData
 @testable import NewJob
 
 final class PersistanceManagerTest: XCTestCase {
-    var coreDataStack: FakeCoreDataStack!
     var pmTest: PersistenceManager!
     let resultatJobTest1 = Resultat(
         id: "idString",
@@ -38,20 +37,18 @@ final class PersistanceManagerTest: XCTestCase {
     // MARK: - Tests Life Cycle
     override func setUp() {
         super.setUp()
-        coreDataStack = FakeCoreDataStack()
         pmTest = PersistenceManager(inMemory: true)
     }
 
     override func tearDown() {
         super.tearDown()
         pmTest = nil
-        coreDataStack = nil
     }
 
     // MARK: - Tests
 
     func testFetchSelectedJobs_WhenDataBaseIsEmpty_ThenShouldReturnACountAtZero() {
-        let data = pmTest.fetchSelectedJobs()
+        let data = pmTest.fetchSelectedJobs(onlyInProgress: false)
         let expectedCount = 0
         let count = data.count
 
@@ -59,9 +56,9 @@ final class PersistanceManagerTest: XCTestCase {
     }
 
     func testCreateSelectedJob_WhenDataBaseIsEmpty_ThenShouldReturnACountAtZero() {
-        let initialData = pmTest.fetchSelectedJobs()
+        let initialData = pmTest.fetchSelectedJobs(onlyInProgress: false)
         pmTest.createSelectedJob(job: resultatJobTest1)
-        let dataAfterAdding = pmTest.fetchSelectedJobs()
+        let dataAfterAdding = pmTest.fetchSelectedJobs(onlyInProgress: false)
         let expectationCountBeforeAdding = 0
         let expectationCountAfterAdding = 1
 
@@ -72,20 +69,20 @@ final class PersistanceManagerTest: XCTestCase {
     func testRemoveSelectedJob_WhenDataBaseHadTwoJob_ThenShouldStayOne() {
         pmTest.createSelectedJob(job: resultatJobTest1)
         pmTest.createSelectedJob(job: resultatJobTest2)
-        let dataAfterAdding = pmTest.fetchSelectedJobs()
+        let dataAfterAdding = pmTest.fetchSelectedJobs(onlyInProgress: false)
         XCTAssertEqual(dataAfterAdding.count, 2)
 
         pmTest.removeSelectedJob(selectedJobId: resultatJobTest1.id)
-        let dataAfterRemoving = pmTest.fetchSelectedJobs()
+        let dataAfterRemoving = pmTest.fetchSelectedJobs(onlyInProgress: false)
         XCTAssertEqual(dataAfterRemoving.count, 1)
         XCTAssertEqual(dataAfterRemoving[0].entitled, "JobCreationTest2")
     }
 
     func testGetSelectedJobWithId_WhenOneJobIsCreate_ThenShouldReturnTheGoodJob() {
-        let initialData = pmTest.fetchSelectedJobs()
+        let initialData = pmTest.fetchSelectedJobs(onlyInProgress: false)
         pmTest.createSelectedJob(job: resultatJobTest1)
         pmTest.createSelectedJob(job: resultatJobTest2)
-        let dataAfterAdding = pmTest.fetchSelectedJobs()
+        let dataAfterAdding = pmTest.fetchSelectedJobs(onlyInProgress: false)
         let expectationCountBeforeAdding = 0
         let expectationCountAfterAdding = 2
         let expectationJobEntitled = "JobCreationTest2"
@@ -94,6 +91,46 @@ final class PersistanceManagerTest: XCTestCase {
         XCTAssertEqual(initialData.count, expectationCountBeforeAdding)
         XCTAssertEqual(dataAfterAdding.count, expectationCountAfterAdding)
         XCTAssertEqual(expectationJobEntitled, jobResult!.entitled)
+    }
+    
+    func testFetchSelectedJobsWhithoutCandidacy_WhenOneJobWithCandidacyAndOneWithout_ThenReturnOne() {
+        let initialResult = pmTest.fetchSelectedJobsWhithoutCandidacy()
+        XCTAssertEqual(initialResult.count, 0)
+        pmTest.createSelectedJob(job: resultatJobTest1)
+        pmTest.createSelectedJob(job: resultatJobTest2)
+        pmTest.createCandidacy(candidacyMeans: "Mail", candidacyDate: Date.now, comment: "", favoriteJobId: "idString2")
+        
+        let expectation = 1
+        let result = pmTest.fetchSelectedJobsWhithoutCandidacy()
+        XCTAssertEqual(expectation, result.count)
+        XCTAssertEqual(result[0].id, "idString")
+    }
+    
+    func testFetchSelectedJobsWithCandidacy_WhenOneJobWithCandidacyAndOneWithout_ThenReturnOne() {
+        let initialResult = pmTest.fetchSelectedJobsWithCandidacy()
+        XCTAssertEqual(initialResult.count, 0)
+        pmTest.createSelectedJob(job: resultatJobTest1)
+        pmTest.createSelectedJob(job: resultatJobTest2)
+        pmTest.createCandidacy(candidacyMeans: "Mail", candidacyDate: Date.now, comment: "", favoriteJobId: "idString2")
+        
+        let expectation = 1
+        let result = pmTest.fetchSelectedJobsWithCandidacy()
+        XCTAssertEqual(expectation, result.count)
+        XCTAssertEqual(result[0].id, "idString2")
+    }
+    
+    func testFetchSelectedJobsByState_WhenTwoJobsWithReject_ThenReturnOne() {
+        let initialResult = pmTest.fetchSelectedJobsByState(candidacyState: "Validée")
+        XCTAssertEqual(initialResult.count, 0)
+        pmTest.createSelectedJob(job: resultatJobTest1)
+        pmTest.createSelectedJob(job: resultatJobTest2)
+        pmTest.createCandidacy(candidacyMeans: "Mail", candidacyDate: Date.now, comment: "", favoriteJobId: "idString")
+        pmTest.createCandidacy(candidacyMeans: "Mail", candidacyDate: Date.now, comment: "", favoriteJobId: "idString2")
+        pmTest.updateSelectedJobCandidacy(jobId: "idString2", candidacyDate: nil, candidacyMeans: nil, comment: nil, state: "Validée")
+        let expectation = 1
+        let result = pmTest.fetchSelectedJobsByState(candidacyState: "Validée")
+        XCTAssertEqual(expectation, result.count)
+        XCTAssertEqual(result[0].id, "idString2")
     }
 
     //    func testGetSelectedJobWithId_WhenGiveWrongId_ThenShouldReturnError() {
@@ -115,7 +152,7 @@ final class PersistanceManagerTest: XCTestCase {
 
     func testCheckIfIsFavoriteResultat_WhenTheJobIsCreate_ThenShouldReturnTrue() {
         pmTest.createSelectedJob(job: resultatJobTest1)
-        let selectedJobsList = pmTest.fetchSelectedJobs()
+        let selectedJobsList = pmTest.fetchSelectedJobs(onlyInProgress: false)
         let job = selectedJobsList.first
 
         let jobResult = pmTest.checkIfIsFavoriteSelectedJob(job: job!)
@@ -124,14 +161,14 @@ final class PersistanceManagerTest: XCTestCase {
 
     // MARK: Candidacy
     func testCreateCandidacy_WhenDataAreOk_ThenShouldAddCandidacy() {
-        let initialData = pmTest.fetchSelectedJobs()
+        let initialData = pmTest.fetchSelectedJobs(onlyInProgress: false)
         pmTest.createSelectedJob(job: resultatJobTest1)
-        let dataAfterAddJob = pmTest.fetchSelectedJobs()
+        let dataAfterAddJob = pmTest.fetchSelectedJobs(onlyInProgress: false)
         XCTAssertEqual(initialData.count, 0)
         XCTAssertEqual(dataAfterAddJob.count, 1)
 
         pmTest.createCandidacy(candidacyMeans: "mail", candidacyDate: Date.now, comment: "test comment", favoriteJobId: "idString")
-        let jobs = pmTest.fetchSelectedJobs()
+        let jobs = pmTest.fetchSelectedJobs(onlyInProgress: false)
         let candidacy = jobs.first?.candidacy
 
         XCTAssertEqual(candidacy?.comment, "test comment")
@@ -140,29 +177,29 @@ final class PersistanceManagerTest: XCTestCase {
     func testRemoveCandidacy_WhenSendJobId_ThenShouldRemovecandidacy() {
         pmTest.createSelectedJob(job: resultatJobTest1)
         pmTest.createCandidacy(candidacyMeans: "mail", candidacyDate: Date.now, comment: "test comment", favoriteJobId: "idString")
-        let jobs = pmTest.fetchSelectedJobs()
+        let jobs = pmTest.fetchSelectedJobs(onlyInProgress: false)
 
         XCTAssertEqual(jobs.first?.candidacy?.comment, "test comment")
         pmTest.removeCandidacy(favoriteJobId: "idString")
-        let jobs2 = pmTest.fetchSelectedJobs()
+        let jobs2 = pmTest.fetchSelectedJobs(onlyInProgress: false)
         XCTAssertEqual(jobs2.first?.candidacy, nil)
     }
 
     func testRemoveCandidacy_WhenSendWrongJobId_ThenShouldReturnError() {
         pmTest.createSelectedJob(job: resultatJobTest1)
         pmTest.createCandidacy(candidacyMeans: "mail", candidacyDate: Date.now, comment: "test comment", favoriteJobId: "idString")
-        let jobs = pmTest.fetchSelectedJobs()
+        let jobs = pmTest.fetchSelectedJobs(onlyInProgress: false)
 
         XCTAssertEqual(jobs.first?.candidacy?.comment, "test comment")
         pmTest.removeCandidacy(favoriteJobId: "idStrin")
-        let jobs2 = pmTest.fetchSelectedJobs()
+        let jobs2 = pmTest.fetchSelectedJobs(onlyInProgress: false)
         XCTAssertEqual(jobs2.first?.candidacy?.comment, "test comment")
     }
 
     func testUpdateSelectedJobCandidacy_WhenSendCandidacyUpdated_ThenShouldUpdateCandidacy() {
         pmTest.createSelectedJob(job: resultatJobTest1)
         pmTest.createCandidacy(candidacyMeans: "mail", candidacyDate: Date.now, comment: "test comment", favoriteJobId: "idString")
-        let jobs = pmTest.fetchSelectedJobs()
+        let jobs = pmTest.fetchSelectedJobs(onlyInProgress: false)
         XCTAssertEqual(jobs.first?.candidacy?.comment, "test comment")
 
         pmTest.updateSelectedJobCandidacy(
@@ -177,7 +214,7 @@ final class PersistanceManagerTest: XCTestCase {
             candidacyMeans: "Non précisé",
             comment: "comment Updated",
             state: nil)
-        let jobs2 = pmTest.fetchSelectedJobs()
+        let jobs2 = pmTest.fetchSelectedJobs(onlyInProgress: false)
         XCTAssertEqual(jobs2.first?.candidacy?.comment, "comment Updated")
         XCTAssertEqual(jobs2.first?.candidacy?.candidacyMeans, "Non précisé")
     }
@@ -200,7 +237,7 @@ final class PersistanceManagerTest: XCTestCase {
         pmTest.createSelectedJob(job: resultatJobTest1)
         pmTest.createCandidacy(candidacyMeans: "mail", candidacyDate: Date.now, comment: "test comment", favoriteJobId: "idString")
         pmTest.createSelectedJob(job: resultatJobTest2)
-        let jobs = pmTest.fetchSelectedJobs()
+        let jobs = pmTest.fetchSelectedJobs(onlyInProgress: false)
 
         let allJobsWithCandidacy = pmTest.fetchSelectedJobWhoHaveCandidacyMake(jobs: jobs)
 
@@ -224,7 +261,7 @@ final class PersistanceManagerTest: XCTestCase {
         pmTest.createSelectedJob(job: resultatJobTest1)
         pmTest.createCandidacy(candidacyMeans: "", candidacyDate: Date.now, comment: "", favoriteJobId: "idString")
         pmTest.createContact(jobId: "idString", name: "ContactName", compagny: "CompagnyName", functionInCompany: "RH", contactMail: "rh@test.fr", contactPhoneNumber: "06.00.00.00.00")
-        let jobs = pmTest.fetchSelectedJobs()
+        let jobs = pmTest.fetchSelectedJobs(onlyInProgress: false)
         let job = jobs.first
         let contactToThisJob = job!.candidacy?.contact?.count
 
@@ -255,6 +292,17 @@ final class PersistanceManagerTest: XCTestCase {
         let contactGetWithFetchRequest = try? pmTest.fetchContactById(contactId: contact.id!)
 
         XCTAssertEqual(contact.name, contactGetWithFetchRequest!.name)
+    }
+    
+    func testUpdateContact_whenContactNameChangeFromTestToUpdate_thenReturnUpdate() {
+        pmTest.createSelectedJob(job: resultatJobTest1)
+        pmTest.createCandidacy(candidacyMeans: "Mail", candidacyDate: Date.now, comment: "", favoriteJobId: resultatJobTest1.id)
+        pmTest.createContact(jobId: "idString", name: "test", compagny: "", functionInCompany: "", contactMail: "", contactPhoneNumber: "")
+        let contact = try? pmTest.fetchContactByName(name: "test")
+        XCTAssertEqual(contact!.name, "test")
+        pmTest.updateContact(contactId: contact!.id!, name: "update", compagny: "", functionInCompany: "", contactMail: "", contactPhoneNumber: "")
+        let contactAfterUpdate = try? pmTest.fetchContactById(contactId: contact!.id!)
+        XCTAssertEqual(contactAfterUpdate!.name, "update")
     }
 
     func testRemoveContact_WhenDataBaseHadTwoContacts_ThenShouldStayTheOtherContact() {
@@ -307,7 +355,7 @@ final class PersistanceManagerTest: XCTestCase {
     func testCreateRelaunch_WhenDataBaseHaveOneCandidacy_ThenShouldReturnOneRelaunch() {
         pmTest.createSelectedJob(job: resultatJobTest1)
         pmTest.createCandidacy(candidacyMeans: "", candidacyDate: Date.now, comment: "", favoriteJobId: "idString")
-        let selectedJob = pmTest.fetchSelectedJobs().first
+        let selectedJob = pmTest.fetchSelectedJobs(onlyInProgress: false).first
         let relaunches = pmTest.fetchAllRelaunchesfromCandidacyId(candidacyId: (selectedJob?.candidacy?.id)!, ascendingDate: true)
         XCTAssertEqual(relaunches.count, 0)
 
@@ -319,7 +367,7 @@ final class PersistanceManagerTest: XCTestCase {
     func testRemoveRelaunch_WhenDataBaseHaveOneRelaunch_ThenShouldReturnZero() {
         pmTest.createSelectedJob(job: resultatJobTest1)
         pmTest.createCandidacy(candidacyMeans: "", candidacyDate: Date.now, comment: "", favoriteJobId: "idString")
-        let selectedJob = pmTest.fetchSelectedJobs().first
+        let selectedJob = pmTest.fetchSelectedJobs(onlyInProgress: false).first
         pmTest.createRelaunch(candidacyID: (selectedJob?.candidacy?.id)!, contact: nil, date: Date.now, comment: "comment test", means: "Mail")
         let relaunches = pmTest.fetchAllRelaunchesfromCandidacyId(candidacyId: (selectedJob?.candidacy?.id)!, ascendingDate: true)
         XCTAssertEqual(relaunches.count, 1)
@@ -333,17 +381,17 @@ final class PersistanceManagerTest: XCTestCase {
     func testCreateInterview_WhenDataBaseHaveZeroInterview_ThenShouldReturnOne() {
         pmTest.createSelectedJob(job: resultatJobTest1)
         pmTest.createCandidacy(candidacyMeans: "", candidacyDate: Date.now, comment: "", favoriteJobId: "idString")
-        let selectedJob = pmTest.fetchSelectedJobs().first
+        let selectedJob = pmTest.fetchSelectedJobs(onlyInProgress: false).first
         XCTAssertEqual(selectedJob?.candidacy?.relaunch?.count, 0)
         pmTest.createInterview(candidacyID: (selectedJob?.candidacy?.id)!, contact: nil, date: Date.now, comment: "Relaunch comment")
-        let selectedJob2 = pmTest.fetchSelectedJobs().first
+        let selectedJob2 = pmTest.fetchSelectedJobs(onlyInProgress: false).first
         XCTAssertEqual(selectedJob2?.candidacy?.relaunch?.count, 0)
     }
 
     func testFetchAllInterviews_WhenDataBaseHaveZeroInterview_ThenShouldReturnOne() {
         pmTest.createSelectedJob(job: resultatJobTest1)
         pmTest.createCandidacy(candidacyMeans: "", candidacyDate: Date.now, comment: "", favoriteJobId: "idString")
-        let selectedJob = pmTest.fetchSelectedJobs().first
+        let selectedJob = pmTest.fetchSelectedJobs(onlyInProgress: false).first
         pmTest.createInterview(candidacyID: (selectedJob?.candidacy?.id)!, contact: nil, date: Date.now, comment: "Relaunch comment")
         let allInterviews = pmTest.fetchAllInterviews()
 
@@ -353,7 +401,7 @@ final class PersistanceManagerTest: XCTestCase {
     func testRemoveInterview_WhenDataBaseHaveOneInterview_ThenShouldReturnZero() {
         pmTest.createSelectedJob(job: resultatJobTest1)
         pmTest.createCandidacy(candidacyMeans: "", candidacyDate: Date.now, comment: "", favoriteJobId: "idString")
-        let selectedJob = pmTest.fetchSelectedJobs().first
+        let selectedJob = pmTest.fetchSelectedJobs(onlyInProgress: false).first
         pmTest.createInterview(candidacyID: (selectedJob?.candidacy?.id)!, contact: nil, date: Date.now, comment: "Relaunch comment")
         let allInterviews = pmTest.fetchAllInterviews()
         XCTAssertEqual(allInterviews.count, 1)

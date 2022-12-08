@@ -7,8 +7,7 @@
 
 import Foundation
 
-class ActionsToBeTakenOnFavoriteJobViewModel: ObservableObject {
-    
+class ActionsToBeTakenOnFavoriteJobViewModel: ObservableObject {    
     @Published var favoriteJob: SelectedJob?
     @Published var dataReady: Bool = false
     @Published var createCandidacyToggle = false
@@ -32,7 +31,6 @@ class ActionsToBeTakenOnFavoriteJobViewModel: ObservableObject {
     @Published var favoriteJobIsInit = false
     @Published var textCandidacyState: String = "En cours"
     
-//    var pm = PersistenceManager()
     var pm: PersistenceManager!
     
     func initFavoriteJob(jobId: String) {
@@ -111,7 +109,7 @@ class ActionsToBeTakenOnFavoriteJobViewModel: ObservableObject {
         }
     }
     
-    func fetchContactForThisCandidacy() {
+    func fetchSelectedJob() {
         favoriteJob = try? pm.getSelectedJobWithId(id: (favoriteJob?.id)!)
     }
     

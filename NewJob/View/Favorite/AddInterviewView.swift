@@ -8,9 +8,6 @@
 import SwiftUI
 
 struct AddInterviewView: View {
-//    @State var isCreateOrModify: CreateOrModify
-//    @State var actualRelaunch: Relaunch?
-//    @State var candidacy: Candidacy?
     let pm: PersistenceManager
     @State var candidacy: Candidacy?
     @State var showingDestinataireSheet: Bool = false
@@ -20,7 +17,6 @@ struct AddInterviewView: View {
     var body: some View {
         VStack {
             ZStack {
-                
                 LinearGradient(gradient: Gradient(colors: [.indigo,.cyan,.mint, .green]), startPoint: .topTrailing, endPoint: .bottomLeading)
                     .ignoresSafeArea()
                 
@@ -49,7 +45,11 @@ struct AddInterviewView: View {
                             Picker("Contact", selection: $vm.contactSelected) {
                                 Text("Non précisé").tag("Non précisé")
                                 ForEach(vm.contactList, content: { contact in
-                                    Text("\(contact.name!) (\(contact.compagny!))").tag(contact.name!)
+                                    if contact.compagny != "" {
+                                        Text("\(contact.name!) (\(contact.compagny!))").tag(contact.name!)
+                                    } else {
+                                        Text("\(contact.name!)").tag(contact.name!)
+                                    }
                                 })
                             }
                             .pickerStyle(.menu)

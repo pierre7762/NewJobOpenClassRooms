@@ -8,7 +8,8 @@
 import Foundation
 
 struct ContactDisplayable {
-    var id: UUID
+    var idContactDisplayable: UUID
+    var contactId: UUID
     var name: String
     var email: String?
     var mailUnwrapped: String {
@@ -21,8 +22,9 @@ struct ContactDisplayable {
     var candidacy: [Candidacy]
     var relaunch: [Relaunch]
     
-    init(contact: Contact) {
-        id = contact.id!
+    init(contact: Contact, contactId: UUID) {
+        idContactDisplayable = UUID()
+        self.contactId = contactId
         name = contact.name ?? "Nom de contact"
         email = contact.email ?? ""
         phoneNumber = contact.phoneNumber ?? "06.00.00.00.00"

@@ -43,17 +43,24 @@ final class NewSearchJobViewModelTest: XCTestCase {
     }
     
     // MARK: - Tests
-    func testFetchCityCodeFromCityName_WhenNameIsArr_thenReturnResult() {
-        XCTAssertEqual(vm.citys.count, 0)
-        vm.fetchCityCodeFromCityName(cityName: "Arr")
-        XCTAssertEqual(vm.citys.count, 0)
+    func testUpdateCodeInsee_WhenNameIsArras_thenReturnResult() {
+        XCTAssertEqual(vm.search.city, "")
+        XCTAssertEqual(vm.search.cityCode, "")
+        XCTAssertEqual(vm.citySelected, "")
+        vm.updateCodeInsee(codeInsee: "62041", name: "Arras")
+        XCTAssertEqual(vm.search.city, "Arras")
+        XCTAssertEqual(vm.search.cityCode, "62041")
+        XCTAssertEqual(vm.citySelected, "Arras")
     }
     
-    func testFetchCityCodeFromCityName_WhenNameIsArras_thenReturnResult() {
+    
+    
+    
+//    func testFetchCityCodeFromCityName_WhenNameIsArras_thenReturnResult() {
 //        let expectation = XCTestExpectation(description: "Get data from apiGouv")
-        XCTAssertEqual(vm.citys.count, 0)
-        vm.fetchCityCodeFromCityName(cityName: "Arras")
-        
+//        XCTAssertEqual(vm.citys.count, 0)
+//        vm.fetchCityCodeFromCityName(cityName: "Arras")
+//
 //
 //
 //        wait(for: [expectation], timeout: 10.0)
@@ -61,7 +68,7 @@ final class NewSearchJobViewModelTest: XCTestCase {
 //        XCTAssertEqual(vm.citys.count, 4)
 //        let fakeSession = URLSession(configuration: sessionConfiguration)
 //        let sut: ApiGouvService = .init(session: fakeSession)
-    }
+//    }
 
 
 }

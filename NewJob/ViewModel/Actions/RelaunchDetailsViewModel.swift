@@ -9,9 +9,6 @@ import Foundation
 
 class RelaunchDetailsViewModel: ObservableObject {
     @Published var relaunch: Relaunch?
-    
-//    var pm = PersistenceManager(coreDataStack: CoreDataStack(modelName: "NewJob"))
-//    var pm = PersistenceManager()
     var pm: PersistenceManager!
     
     func converteDateToString(date: Date) -> String {
@@ -20,8 +17,8 @@ class RelaunchDetailsViewModel: ObservableObject {
         return formatter.string(from: date)
     }
     
-    func removeRelaunch(relaunchID: UUID) {
-        pm.removeRelaunch(relaunchId: relaunchID)
+    func removeRelaunch(relaunchID: UUID, pmDirect: PersistenceManager) {
+        pmDirect.removeRelaunch(relaunchId: relaunchID)
     }
 
 }

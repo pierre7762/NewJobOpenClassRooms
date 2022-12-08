@@ -20,7 +20,7 @@ class ActionToBeTakenViewModel: ObservableObject {
         candidaciesToBeRelanch = []
         relaunchToBeRelanch = []
         interviewsToBeRelaunch = []
-        let jobs = pm.fetchSelectedJobs()
+        let jobs = pm.fetchSelectedJobs(onlyInProgress: true)
         var jobsWithCandidacyToBeRelaunch: [SelectedJobWithnumberOfDaysFromCandidacy] = []
         var rToBeRelanch: [SelectedJobWithnumberOfDaysFromCandidacy] = []
         var iToBeRelaunch: [SelectedJobWithnumberOfDaysFromCandidacy] = []

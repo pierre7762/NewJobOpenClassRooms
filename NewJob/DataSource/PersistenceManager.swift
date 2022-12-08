@@ -83,10 +83,13 @@ class PersistenceManager: ObservableObject {
         saveData()
     }
     
-    func fetchSelectedJobs() -> [SelectedJob] {
+    func fetchSelectedJobs(onlyInProgress: Bool) -> [SelectedJob] {
         var jobs: [SelectedJob] = []
         let request = NSFetchRequest<SelectedJob>(entityName: "SelectedJob")
         let sortByCreationDate  = NSSortDescriptor(keyPath: \SelectedJob.creationDate, ascending: false)
+        if onlyInProgress {
+            request.predicate = NSPredicate(format: "candidacy.state == 'En cours'")
+        }
         request.sortDescriptors = [sortByCreationDate]
         do {
             jobs = try viewContext.fetch(request)
@@ -312,7 +315,6 @@ class PersistenceManager: ObservableObject {
         }
         
         saveData()
-        print("contact creation save")
     }
     
     func fetchContact() -> [Contact] {
@@ -349,26 +351,30 @@ class PersistenceManager: ObservableObject {
             guard let contact = contacts.first else { return }
             viewContext.delete(contact)
             saveData()
-            
+
         } catch {
             print(error.localizedDescription)
         }
     }
     
-//    func updateContact(contactId: UUID, name: String) {
-//        var contacts: [Contact] = []
-//        let request = NSFetchRequest<Contact>(entityName: "Contact")
-//        request.predicate = NSPredicate(format: "id == %@", contactId as CVarArg)
-//        do {
-//            contacts = try viewContext.fetch(request)
-//            guard let contact = contacts.first else { return }
-//            contact.name = name
-//            saveData()
-//
-//        } catch {
-//            print(error.localizedDescription)
-//        }
-//    }
+    func updateContact(contactId: UUID, name: String, compagny: String, functionInCompany: String, contactMail: String, contactPhoneNumber: String) {
+        var contacts: [Contact] = []
+        let request = NSFetchRequest<Contact>(entityName: "Contact")
+        request.predicate = NSPredicate(format: "id == %@", contactId as CVarArg)
+        do {
+            contacts = try viewContext.fetch(request)
+            guard let contact = contacts.first else { return }
+            contact.name = name
+            contact.compagny = compagny
+            contact.functionInCompany = functionInCompany
+            contact.email = contactMail
+            contact.phoneNumber = contactPhoneNumber
+            saveData()
+
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
     
     func fetchContactWhoStartBy(name: String) -> [Contact]{
         let request = NSFetchRequest<Contact>(entityName: "Contact")

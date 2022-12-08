@@ -11,7 +11,7 @@ import WebKit
 
 
 struct JobDetails: View {
-    @ObservedObject private var viewModel = JobDetailsViewModel()
+    @ObservedObject private var vm = JobDetailsViewModel()
     let pm: PersistenceManager
     var job: Resultat
     var index: Int
@@ -20,6 +20,20 @@ struct JobDetails: View {
     @State var showAction = false
     @State var font: Font = Font.system(.title)
     @State private var showWebView = false
+    
+    func openMapForPlace(coordinates: CLLocationCoordinate2D, name: String) {
+        let regionDistance:CLLocationDistance = 10000
+        let coordinates = coordinates
+        let regionSpan = MKCoordinateRegion(center: coordinates, latitudinalMeters: regionDistance, longitudinalMeters: regionDistance)
+        let options = [
+            MKLaunchOptionsMapCenterKey: NSValue(mkCoordinate: regionSpan.center),
+            MKLaunchOptionsMapSpanKey: NSValue(mkCoordinateSpan: regionSpan.span)
+        ]
+        let placemark = MKPlacemark(coordinate: coordinates, addressDictionary: nil)
+        let mapItem = MKMapItem(placemark: placemark)
+        mapItem.name = name
+        mapItem.openInMaps(launchOptions: options)
+    }
     
     var body: some View {
         ZStack {
@@ -45,7 +59,7 @@ struct JobDetails: View {
                                     title: Text("Voulez-vous obtenir un itinéraire ?"),
                                     buttons: [
                                         .default(Text("Allons-y !"), action: {
-                                            viewModel.openMapForPlace(coordinates: CLLocationCoordinate2D(latitude: job.lieuTravail.latitude! , longitude: job.lieuTravail.longitude!), name: job.entreprise.nom ?? "Localisation du poste")
+                                            openMapForPlace(coordinates: CLLocationCoordinate2D(latitude: job.lieuTravail.latitude! , longitude: job.lieuTravail.longitude!), name: job.entreprise.nom ?? "Localisation du poste")
                                         }),
                                         .cancel()
                                     ]
@@ -72,13 +86,13 @@ struct JobDetails: View {
                         WebView(url: URL(string: job.origineOffre.urlOrigine)!)
                     }
                     
-                    JobDetailsInfo(jobDetailsViewModel: viewModel, job: job)
+                    JobDetailsInfo(jobDetailsViewModel: vm, job: job)
                     
                     Text("Description")
                         .font(.title3)
                         .fontWeight(.semibold)
                         .padding(.init(top: 10, leading: 20, bottom: 0, trailing: 20))
-                    if viewModel.showAllDescription {
+                    if vm.showAllDescription {
                         ScrollView() {
                             
                             
@@ -100,9 +114,9 @@ struct JobDetails: View {
                     HStack() {
                         Spacer()
                         Button(action: {
-                            viewModel.modifyShowAllDescription()
+                            vm.modifyShowAllDescription()
                         }, label: {
-                            if viewModel.showAllDescription {
+                            if vm.showAllDescription {
                                 Label("Reduire", systemImage: "arrow.up.circle")
                             } else {
                                 Label("Voir tout", systemImage: "arrow.down.circle")
@@ -130,13 +144,13 @@ struct JobDetails: View {
         .toolbar{
             ToolbarItem(placement: .automatic) {
                 Button {
-                    if viewModel.isFavorite {
-                        viewModel.deleteThisFavorite(selectedJobId: job.id)
+                    if vm.isFavorite {
+                        vm.deleteThisFavorite(selectedJobId: job.id)
                     } else {
-                        viewModel.prepareSaveJob(job: job)
+                        vm.prepareSaveJob(job: job)
                     }
                 } label: {
-                    if viewModel.isFavorite {
+                    if vm.isFavorite {
                         Image(systemName: "heart.fill")
                     } else {
                         Image(systemName: "heart")
@@ -145,8 +159,8 @@ struct JobDetails: View {
             }
         }
         .onAppear {
-            viewModel.pm = pm
-            viewModel.checkIfIsFavorite(job: job)
+            vm.pm = pm
+            vm.checkIfIsFavorite(job: job)
             mapRegion = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: job.lieuTravail.latitude ?? 48.855045 , longitude: job.lieuTravail.longitude ?? 2.342524), span: MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2))
         }
     }

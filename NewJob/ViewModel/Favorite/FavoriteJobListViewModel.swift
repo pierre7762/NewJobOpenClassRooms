@@ -10,12 +10,11 @@ import Foundation
 class FavoriteJobListViewModel: ObservableObject {
     @Published var searchOptions: [String] = ["En cours", "Toutes","Validée","Rejetée"]
     @Published var searchOptionSelected = "En cours"
-//    var pm = PersistenceManager()
-    var pm: PersistenceManager!
-    
     @Published var jobsWithCandidacy: [SelectedJob] = []
     @Published var jobsWithoutCandidacy: [SelectedJob] = []
     @Published var showProgressView: Bool = false
+    
+    var pm: PersistenceManager!
     
     func updateJobsList() {
         showProgressView = true

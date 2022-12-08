@@ -18,7 +18,7 @@ struct ContactCandidacyRow: View {
             if job.candidacy?.contact?.count != nil {
                 List {
                     ForEach(job.candidacy?.contact?.allObjects as! [Contact]) { contact in
-                        NavigationLink(destination: ContactDetailsView(pm: pm, contact: ContactDisplayable(contact: contact))) {
+                        NavigationLink(destination: ContactDetailsView(pm: pm, contact: ContactDisplayable(contact: contact, contactId: contact.id!), favoriteJobId: jobId)) {
                             Text(contact.name ?? "Inconnu")
                             if (contact.functionInCompany != nil) && contact.functionInCompany != "" {
                                 Text(" (\(contact.functionInCompany!))")

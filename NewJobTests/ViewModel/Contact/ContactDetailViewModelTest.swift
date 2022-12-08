@@ -55,9 +55,24 @@ final class ContactDetailViewModelTest: XCTestCase {
         let allContacts = vm.pm.fetchContact()
         XCTAssertEqual(allContacts.count, 1)
         let contact = try? vm.pm.fetchContactByName(name: "Dupont")
-        vm.fetchCandidaciesWhoAreConnectedAtThisContact(contactID: (contact?.id)!)
+        vm.fetchCandidaciesWhoAreConnectedAtThisContact(contactID: (contact?.id)!, pmTest: vm.pm)
         
         XCTAssertEqual(vm.candidacyArray.count, 1)
+    }
+    
+    func testUpdateContactData_whenContactDisplayableIsNil_thenLoadContact() {
+        let contact = vm.pm.fetchContact().first
+        vm.contact = nil
+        vm.updateContactData(contactId: (contact?.id)!)
+        XCTAssertEqual(vm.contact?.name, "Dupont")
+    }
+    
+    func testUpdateContactData_whenContactDisplayableExist_thenGiveData() {
+        let contact = vm.pm.fetchContact().first
+        let contactDisplay = ContactDisplayable(contact: contact!, contactId: (contact?.id)!)
+        vm.contact = contactDisplay
+        vm.updateContactData(contactId: (contact?.id)!)
+        XCTAssertEqual(vm.contact?.name, "Dupont")
     }
 
 }

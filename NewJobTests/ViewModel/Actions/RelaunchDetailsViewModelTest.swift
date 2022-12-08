@@ -56,14 +56,14 @@ final class RelaunchDetailsViewModelTest: XCTestCase {
     func testRemoveRelaunch_WhenOneRelaunchInMemory_ThenRemoveAllRelaunch() {
         pmTest.createSelectedJob(job: resultatJobTest)
         pmTest.createCandidacy(candidacyMeans: "", candidacyDate: Date.now, comment: "", favoriteJobId: "idString")
-        let selectedJob = pmTest.fetchSelectedJobs().first
+        let selectedJob = pmTest.fetchSelectedJobs(onlyInProgress: false).first
         let relaunches = pmTest.fetchAllRelaunchesfromCandidacyId(candidacyId: (selectedJob?.candidacy?.id)!, ascendingDate: true)
         XCTAssertEqual(relaunches.count, 0)
         
         pmTest.createRelaunch(candidacyID: (selectedJob?.candidacy?.id)!, contact: nil, date: Date.now, comment: "comment test", means: "Mail")
         let relaunchesAfterAdding = pmTest.fetchAllRelaunchesfromCandidacyId(candidacyId: (selectedJob?.candidacy?.id)!, ascendingDate: true)
         XCTAssertEqual(relaunchesAfterAdding.count, 1)
-        vm.removeRelaunch(relaunchID: relaunchesAfterAdding[0].id!)
+        vm.removeRelaunch(relaunchID: relaunchesAfterAdding[0].id!, pmDirect: vm.pm!)
         let relaunchesAfterRemoving = pmTest.fetchAllRelaunchesfromCandidacyId(candidacyId: (selectedJob?.candidacy?.id)!, ascendingDate: true)
         XCTAssertEqual(relaunchesAfterRemoving.count, 0)
     }
