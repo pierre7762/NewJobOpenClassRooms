@@ -251,9 +251,9 @@ final class PersistanceManagerTest: XCTestCase {
         pmTest.createContact(jobId: "idString", name: "ContactName2", compagny: "CompagnyName2", functionInCompany: "RH2", contactMail: "rh@test.com", contactPhoneNumber: "06.00.00.00.01")
         let allCandidacy = pmTest.fetchAllCandidacies()
         let candidacy = allCandidacy[0]
-        let allContactFromCandidacy = try? pmTest.fetchCandidacyContactsList(candidacyID: candidacy.id!)
+        let allContactFromCandidacy = pmTest.fetchCandidacyContactsList(candidacyID: candidacy.id!)
 
-        XCTAssertEqual(allContactFromCandidacy?.count, 2)
+        XCTAssertEqual(allContactFromCandidacy.count, 2)
     }
 
     // MARK: Contact
@@ -387,6 +387,33 @@ final class PersistanceManagerTest: XCTestCase {
         let selectedJob2 = pmTest.fetchSelectedJobs(onlyInProgress: false).first
         XCTAssertEqual(selectedJob2?.candidacy?.relaunch?.count, 0)
     }
+    
+    func testUpadteInterview_whenEditInterview_thenUpdateInterview() {
+        pmTest.createSelectedJob(job: resultatJobTest1)
+        pmTest.createCandidacy(candidacyMeans: "", candidacyDate: Date.now, comment: "", favoriteJobId: "idString")
+        let selectedJob = pmTest.fetchSelectedJobs(onlyInProgress: false).first
+        XCTAssertEqual(selectedJob?.candidacy?.relaunch?.count, 0)
+        pmTest.createInterview(candidacyID: (selectedJob?.candidacy?.id)!, contact: nil, date: Date.now, comment: "Interview comment")
+        let allInterviews = pmTest.fetchAllInterviews()
+        var interview = allInterviews.first
+        XCTAssertEqual(interview?.comment, "Interview comment")
+        pmTest.updateInterview(interviewId: (interview?.id!)!, contact: nil, date: (interview?.date)!, comment: "Interview updated")
+        interview = allInterviews.first
+        XCTAssertEqual(interview?.comment, "Interview updated")
+    }
+    
+    func testFetchInterviewWithId_whenInterviewExist_thenReturnInterview() {
+        pmTest.createSelectedJob(job: resultatJobTest1)
+        pmTest.createCandidacy(candidacyMeans: "", candidacyDate: Date.now, comment: "", favoriteJobId: "idString")
+        let selectedJob = pmTest.fetchSelectedJobs(onlyInProgress: false).first
+        pmTest.createInterview(candidacyID: (selectedJob?.candidacy?.id)!, contact: nil, date: Date.now, comment: "Interview comment test ")
+        let allInterviews = pmTest.fetchAllInterviews()
+        guard let interviewId = allInterviews.first?.id else { return }
+        let interviewGetWithFetch = pmTest.fetchInterviewWithId(interviewId: interviewId)
+        XCTAssertEqual(interviewGetWithFetch.comment, "Interview comment test ")
+        
+        
+    }
 
     func testFetchAllInterviews_WhenDataBaseHaveZeroInterview_ThenShouldReturnOne() {
         pmTest.createSelectedJob(job: resultatJobTest1)
@@ -409,15 +436,4 @@ final class PersistanceManagerTest: XCTestCase {
         let allInterviews2 = pmTest.fetchAllInterviews()
         XCTAssertEqual(allInterviews2.count, 0)
     }
-
-    // MARK: ActionsToBeTaken
-//    func testFetchAllInterviewFromCandidacyId_WhenDataBaseHaveOneInterview_ThenShouldReturnZero() {
-//        pmTest.createSelectedJob(job: resultatJobTest1)
-//        pmTest.createCandidacy(candidacyMeans: "", candidacyDate: Date.now, comment: "", favoriteJobId: "idString")
-//        let selectedJob = pmTest.fetchSelectedJobs().first
-//        pmTest.createInterview(candidacyID: (selectedJob?.candidacy?.id)!, contact: nil, date: Date.now, comment: "Relaunch comment")
-//        pmTest.createInterview(candidacyID: (selectedJob?.candidacy?.id)!, contact: Contact(), date: Date.now, comment: "Relaunch comment2")
-//        let allInterviews = pmTest.fetchAllInterviewFromCandidacyId(candidacyId: (selectedJob?.candidacy?.id)!, ascendingDate: true)
-//        XCTAssertEqual(allInterviews.count, 2)
-//    }
 }

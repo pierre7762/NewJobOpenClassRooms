@@ -9,6 +9,7 @@ import Foundation
 
 class RelaunchDetailsViewModel: ObservableObject {
     @Published var relaunch: Relaunch?
+    @Published var showingUpdateRelaunchSheet: Bool = false
     var pm: PersistenceManager!
     
     func converteDateToString(date: Date) -> String {

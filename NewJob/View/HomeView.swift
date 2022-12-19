@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct HomeView: View {
-//    let pm: PersistenceManager
     let pm = PersistenceManager()
     @State var showUserView = false
     @StateObject private var vm = HomeViewModel()
@@ -36,7 +35,6 @@ struct HomeView: View {
                             label: {
                                 SquareCard(text: "Chercher", image: "magnifyingglass.circle.fill", size: UIScreen.main.bounds.size.width / 2.5)
                             }
-                            
                         )
                     }
                     HStack () {
@@ -68,8 +66,6 @@ struct ContentView_Previews: PreviewProvider {
         Group {
             HomeView()
                 .previewDevice("iPhone 13")
-            //            HomeView()
-            //                .previewDevice("iPad Pro (9.7-inch)")
         }
     }
 }

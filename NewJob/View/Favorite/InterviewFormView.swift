@@ -7,12 +7,13 @@
 
 import SwiftUI
 
-struct AddInterviewView: View {
+struct InterviewFormView: View {
     let pm: PersistenceManager
     @State var candidacy: Candidacy?
+    @State var interview: Interview?
     @State var showingDestinataireSheet: Bool = false
     @Environment(\.dismiss) var dismiss
-    @ObservedObject var vm: AddInterviewViewModel = AddInterviewViewModel()
+    @ObservedObject var vm: InterviewFormViewModel = InterviewFormViewModel()
     
     var body: some View {
         VStack {
@@ -21,19 +22,7 @@ struct AddInterviewView: View {
                     .ignoresSafeArea()
                 
                 VStack {
-                    HStack() {
-                        Spacer()
-                        Button {
-                            dismiss()
-                        } label: {
-                            Image(systemName: "xmark.circle.fill")
-                                .font(.system(size: 30))
-                                .foregroundColor(.white)
-                        }
-                        .padding()
-                        .cornerRadius(12)
-                    }
-                    
+                    DismissButtonView()
                     Form {
                         Section(header: Text("Entretien")) {
                             DatePicker(
@@ -67,7 +56,7 @@ struct AddInterviewView: View {
                     HStack {
                         Spacer()
                         Button {
-                            vm.createInterview(candidacyId: (candidacy?.id)!)
+                            vm.actionToDo(candidacyID: (candidacy?.id)!, interviewId: interview?.id)
                             dismiss()
                         } label: {
                             Text("Enregistrer")
@@ -91,13 +80,8 @@ struct AddInterviewView: View {
         }
         .onAppear() {
             vm.pm = pm
-            vm.fetchCandidacyContactList(candidacyId: (candidacy?.id)!)
+            vm.initInterviewForm(candidacyId: (candidacy?.id)!, interview: interview)
         }
     }
 }
 
-//struct AddInterviewView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        AddInterviewView()
-//    }
-//}

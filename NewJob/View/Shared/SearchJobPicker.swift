@@ -22,9 +22,6 @@ struct SearchJobPicker: View {
                 }
                 .pickerStyle(.menu)
                 
-//                .onChange(of: newSearchJob.searchExperienceSelected { newValue in
-//                    newSearchJob.searchExperienceSelected = newValue
-//                }
             case .qualifcations:
                 Picker("Qualification", selection: $newSearchJob.search.qualification) {
                     Text("Non précisé").tag("x")

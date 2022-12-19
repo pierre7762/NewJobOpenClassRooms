@@ -8,8 +8,6 @@
 import Foundation
 
 protocol URLEncodable {
-
-    /// Encode a URL with a base URL and parameters
     func encode(with baseURL: URL, and parameters: [(String, Any)]?) -> URL
 }
 

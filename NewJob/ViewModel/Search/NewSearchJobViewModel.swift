@@ -22,10 +22,15 @@ class NewSearchJobViewModel: ObservableObject {
     @Published var requestInProgress = false
     
     // MARK: var
-    let poleEmploiService = PoleEmploiService()
-    var apiGouvService = ApiGouvService()
+    var poleEmploiService: PoleEmploiProtocol
+    var apiGouvService: ApiGouvProtocol
     
     // MARK: functions
+    init(poleEmploiService: PoleEmploiProtocol = PoleEmploiService(), apiGouvService: ApiGouvProtocol = ApiGouvService()) {
+        self.poleEmploiService = poleEmploiService
+        self.apiGouvService = apiGouvService
+    }
+    
     func getOffersOnPoleEmploi() {
         requestInProgress.toggle()
         fetchPoleEmploiJobs()
@@ -34,32 +39,32 @@ class NewSearchJobViewModel: ObservableObject {
     
     func fetchCityCodeFromCityName(cityName: String) {
         citys = []
-            apiGouvService.fetchCityCode(cityName: cityName) { result in
-                DispatchQueue.main.async {
-                    switch result {
-                    case .success(let cityDatas):
-                        if cityDatas.count > 4 {
-                            for i in 0...3 {
-                                self.citys.append(City(name: cityDatas[i].nom, codeInsee: cityDatas[i].code, postCode: "", deptCode: cityDatas[i].codeDepartement))
-                            }
-                            if self.citySelected.elementsEqual(cityName) {
-                                self.showCitys = false
-                            } else {
-                                self.showCitys = true
-                            }
-                        } else {
-                            for item in cityDatas {
-                                self.citys.append(City(name: item.nom, codeInsee: item.code, postCode: "", deptCode: item.codeDepartement))
-                            }
+        apiGouvService.fetchCityCode(cityName: cityName) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let cityDatas):
+                    print("cityDatas.count : ", cityDatas.count)
+                    if cityDatas.count > 4 {
+                        for i in 0...3 {
+                            self.citys.append(City(name: cityDatas[i].nom, codeInsee: cityDatas[i].code, postCode: "", deptCode: cityDatas[i].codeDepartement))
                         }
-                    case .failure(let error):
-                        print(error)
-                        self.requestInProgress.toggle()
-                        self.showAlert = true
+                        if self.citySelected.elementsEqual(cityName) {
+                            self.showCitys = false
+                        } else {
+                            self.showCitys = true
+                        }
+                    } else {
+                        for item in cityDatas {
+                            self.citys.append(City(name: item.nom, codeInsee: item.code, postCode: "", deptCode: item.codeDepartement))
+                        }
                     }
+                case .failure(let error):
+                    print(error)
+                    self.requestInProgress.toggle()
+                    self.showAlert = true
                 }
             }
-        
+        }
     }
     
     func updateCodeInsee(codeInsee: String, name: String) {
@@ -70,7 +75,7 @@ class NewSearchJobViewModel: ObservableObject {
         showCitys = false
     }
     
-    private func fetchPoleEmploiJobs() {
+    func fetchPoleEmploiJobs() {
         poleEmploiService.getPoleEmploiToken { result in
             DispatchQueue.main.async {
                 switch result {
@@ -83,14 +88,14 @@ class NewSearchJobViewModel: ObservableObject {
                             case .success(let jobsObject):
                                 self.jobs = jobsObject.resultats
                                 self.showResult = true
-
+                                
                             case .failure(let error):
                                 print(error)
                                 self.showAlert = true
                             }
                         }
                     }
-
+                    
                 case .failure(let error):
                     self.requestInProgress.toggle()
                     print(error)

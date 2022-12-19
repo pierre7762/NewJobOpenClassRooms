@@ -16,7 +16,6 @@ struct Search {
     var qualification: String = "x"
     var contract: Int?
     var distance: Int = 50
-
 }
 
 

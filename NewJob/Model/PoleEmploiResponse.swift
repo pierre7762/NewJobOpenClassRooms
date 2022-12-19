@@ -74,7 +74,6 @@ struct LieuTravail: Codable {
     let latitude, longitude: Double?
     let codepostal: String?
     let commune: String?
-
 }
 
 // MARK: - OrigineOffre

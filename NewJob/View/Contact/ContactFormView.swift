@@ -21,18 +21,7 @@ struct ContactFormView: View {
                    LinearGradient(gradient: Gradient(colors: [.indigo,.cyan,.mint, .green]), startPoint: .topTrailing, endPoint: .bottomLeading)
                        .ignoresSafeArea()
                    VStack {
-                       HStack() {
-                           Spacer()
-                           Button {
-                               dismiss()
-                           } label: {
-                               Image(systemName: "xmark.circle.fill")
-                                   .font(.system(size: 30))
-                                   .foregroundColor(.white)
-                           }
-                           .cornerRadius(12)
-                       }
-                 
+                       DismissButtonView()
                        Form {
                            Section(header: Text(viewModel.title))  {
                                TextField("Nom" , text: $viewModel.contactName)
@@ -49,7 +38,7 @@ struct ContactFormView: View {
                            }
                        }
                        .cornerRadius(12)
-                       
+
                        HStack {
                            Spacer()
                            Button {

@@ -96,7 +96,7 @@ struct ActionsToBeTakenOnFavoriteJobView: View {
                                 Image(systemName: "plus.circle")
                             }
                             .sheet(isPresented: $vm.showingRelaunchSheet) {
-                                AddRelaunchView(pm: pm, candidacy: vm.favoriteJob?.candidacy)
+                                RelaunchFormView(pm: pm, candidacy: vm.favoriteJob?.candidacy)
                             }
                         }
                     }
@@ -107,7 +107,7 @@ struct ActionsToBeTakenOnFavoriteJobView: View {
                             if job.candidacy?.interview?.count != nil {
                                 List {
                                     ForEach(job.candidacy?.interview?.allObjects as! [Interview]) { interview in
-                                        NavigationLink(destination: InterviewDetailsView(pm: pm, interview: interview, vm: vm)) {
+                                        NavigationLink(destination: InterviewDetailsView(pm: pm, jobId: jobId, interview: interview, candidacy: job.candidacy!)) {
                                             Text("Du \(vm.converteDateToString(date: interview.date!))")
                                         }
                                     }
@@ -124,7 +124,7 @@ struct ActionsToBeTakenOnFavoriteJobView: View {
                                 Image(systemName: "plus.circle")
                             }
                             .sheet(isPresented: $vm.showingInterviewSheet) {
-                                AddInterviewView(pm: pm, candidacy: vm.favoriteJob?.candidacy)
+                                InterviewFormView(pm: pm, candidacy: vm.favoriteJob?.candidacy)
                             }
                         }
                     }
@@ -143,9 +143,7 @@ struct ActionsToBeTakenOnFavoriteJobView: View {
                         }
                     }
 
-                }
-                
-                
+                }  
             }
             .background(Color(white: 1.0))
             .cornerRadius(12)

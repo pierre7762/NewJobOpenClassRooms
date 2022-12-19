@@ -7,17 +7,22 @@
 
 import Foundation
 
-final class ApiGouvService {
+protocol ApiGouvProtocol {
+    func fetchCityCode(cityName: String, callback: @escaping (Result<CityGeoAPIResponse, NetworkErrors>) -> Void)
+}
+
+final class ApiGouvService: ApiGouvProtocol {
     // MARK: - Properties
-
+    
     var session: URLSession
+    private var task: URLSessionDataTask?
     private let apiConstant = ApiGouvAcess()
-
+    
     // MARK: - Initializer
     init(session: URLSession = URLSession(configuration: .default)) {
         self.session = session
     }
-
+    
     // MARK: - Methods
     func fetchCityCode(cityName: String, callback: @escaping (Result<CityGeoAPIResponse, NetworkErrors>) -> Void) {
         guard let baseURL: URL = .init(string: apiConstant.geoApiGouv + "/communes?") else { return }
@@ -26,24 +31,11 @@ final class ApiGouvService {
             ("fields", "nom,code,codeDepartement"),
             ("format", "json"),
         ])
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        print("request : ", request)
-        session.dataTask(with: request) { data, response, error in
-        
-            guard let data = data else {
-                callback(.failure(.noData))
-                return
-            }
-
-            guard let dataDecoded = try? JSONDecoder().decode(CityGeoAPIResponse.self, from: data) else {
-                callback(.failure(.undecodableData))
-                return
-            }
-            callback(.success(dataDecoded))
-        }
-        .resume()
+        NetworkLogger(url: url).show()
+        #if DEBUG
+        task?.cancel()
+        #endif
+        session.dataTask(with: url, callback: callback)
     }
     
 }

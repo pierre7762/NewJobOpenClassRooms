@@ -12,10 +12,6 @@ struct ContactDisplayable {
     var contactId: UUID
     var name: String
     var email: String?
-    var mailUnwrapped: String {
-        guard let mail = email else { return "" }
-        return mail
-    }
     var phoneNumber: String
     var functionInCompany: String
     var compagny: String
@@ -32,6 +28,5 @@ struct ContactDisplayable {
         compagny = contact.compagny ?? "Nom de l'entreprise"
         candidacy = contact.candidacy?.allObjects as! [Candidacy]
         relaunch = contact.relaunch?.allObjects as! [Relaunch]
-        
     }
 }

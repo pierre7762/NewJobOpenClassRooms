@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RelaunchPickerMeansView: View {
-    @ObservedObject  var vm: AddRelaunchViewModel
+    @ObservedObject  var vm: RelaunchFormViewModel
     
     var body: some View {
         HStack {
@@ -26,6 +26,6 @@ struct RelaunchPickerMeansView: View {
 
 struct RelaunchPickerMeansView_Previews: PreviewProvider {
     static var previews: some View {
-        RelaunchPickerMeansView(vm: AddRelaunchViewModel())
+        RelaunchPickerMeansView(vm: RelaunchFormViewModel())
     }
 }

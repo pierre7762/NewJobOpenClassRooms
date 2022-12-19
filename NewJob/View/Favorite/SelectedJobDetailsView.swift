@@ -74,15 +74,8 @@ struct SelectedJobDetailsView: View {
                 
                 
                 if (job.originOffers?.urlOrigin != nil) {
-                    Button {
-                        showWebView.toggle()
-                    } label: {
-                        Text("Lien vers l'annonce")
-                            .underline()
-                    }
-                    .sheet(isPresented: $showWebView) {
-                        WebView(url: URL(string: job.originOffers!.urlOrigin!)!)
-                    }
+                    Link("Lien vers l'annonce", destination: URL(string: job.originOffers!.urlOrigin!)!)
+                        .underline()
                 }
                 
                 Text("Description")

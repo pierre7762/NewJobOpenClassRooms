@@ -21,13 +21,6 @@ struct ContactInfoLineView: View {
                 .font(.system(size: 30))
             Text(text)
                 .foregroundColor(.black)
-//            onTapGesture {
-//                Link(text, destination: URL(string: vm.clickableString)!)
-////                let phone = "tel://"
-////                let phoneNumberformatted = phone + text
-////                guard let url = URL(string: phoneNumberformatted) else { return }
-////                UIApplication.shared.open(url)
-//            }
             Button(action: {
                             let phone = "mailto://"
                             let phoneNumberformatted = phone + "pierre.lemere@gmail.com"

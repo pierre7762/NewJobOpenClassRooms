@@ -7,34 +7,21 @@
 
 import SwiftUI
 
-struct AddRelaunchView: View {
+struct RelaunchFormView: View {
     let pm: PersistenceManager
-    @State var actualRelaunch: Relaunch?
+    @State var currentRelaunch: Relaunch?
     @State var candidacy: Candidacy?
     @State var showingDestinataireSheet: Bool = false
     @Environment(\.dismiss) var dismiss
-    @ObservedObject var vm: AddRelaunchViewModel = AddRelaunchViewModel()
+    @ObservedObject var vm: RelaunchFormViewModel = RelaunchFormViewModel()
     
     var body: some View {
         VStack {
             ZStack {
-                
                 LinearGradient(gradient: Gradient(colors: [.indigo,.cyan,.mint, .green]), startPoint: .topTrailing, endPoint: .bottomLeading)
                     .ignoresSafeArea()
                 VStack {
-                    HStack() {
-                        Spacer()
-                        Button {
-                            dismiss()
-                        } label: {
-                            Image(systemName: "xmark.circle.fill")
-                                .font(.system(size: 30))
-                                .foregroundColor(.white)
-                        }
-                        .padding()
-                        .cornerRadius(12)
-                    }
-                    
+                    DismissButtonView()
                     Form {
                         Section(header: Text("Relance")) {
                             RelaunchPickerDateView(vm: vm)
@@ -68,7 +55,7 @@ struct AddRelaunchView: View {
                     HStack {
                         Spacer()
                         Button {
-                            vm.createRelaunch(candidacyID: (candidacy?.id)!)
+                            vm.actionToDo(candidacyID: (candidacy?.id)!, relaunchId: currentRelaunch?.id)
                             dismiss()
                         } label: {
                             Text("Enregistrer")
@@ -93,12 +80,13 @@ struct AddRelaunchView: View {
         .onAppear() {
             vm.pm = pm
             vm.fetchCandidacyContactList(candidacyId: candidacy!.id!)
+            vm.initRelaunch(currentRelaunch: currentRelaunch)
         }
     }
 }
 
 struct AddRelaunchView_Previews: PreviewProvider {
     static var previews: some View {
-        AddRelaunchView(pm: PersistenceManager())
+        RelaunchFormView(pm: PersistenceManager())
     }
 }

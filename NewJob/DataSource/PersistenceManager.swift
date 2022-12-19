@@ -10,7 +10,7 @@ import CoreData
 
 class PersistenceManager: ObservableObject {
     // MARK: Properties
-//    static let shared = PersistenceManager()
+    //    static let shared = PersistenceManager()
     var viewContext: NSManagedObjectContext {
         return self.container.viewContext
     }
@@ -40,16 +40,14 @@ class PersistenceManager: ObservableObject {
     
     func saveData() {
         do {
-//            try viewContext.save()
             try self.container.viewContext.save()
         } catch let error {
             print("Error: \(error)")
         }
     }
     
-    // marks : SelectedJob
+    // MARK: SelectedJob
     func createSelectedJob(job: Resultat) {
-        
         let selectedJob = SelectedJob(context: viewContext)
         let workplace = Workplace(context: viewContext)
         workplace.city = job.lieuTravail.commune
@@ -79,65 +77,44 @@ class PersistenceManager: ObservableObject {
         selectedJob.workplace = workplace
         selectedJob.originOffers = originOffers
         selectedJob.salary = salary
-        
         saveData()
     }
     
     func fetchSelectedJobs(onlyInProgress: Bool) -> [SelectedJob] {
-        var jobs: [SelectedJob] = []
         let request = NSFetchRequest<SelectedJob>(entityName: "SelectedJob")
         let sortByCreationDate  = NSSortDescriptor(keyPath: \SelectedJob.creationDate, ascending: false)
         if onlyInProgress {
             request.predicate = NSPredicate(format: "candidacy.state == 'En cours'")
         }
         request.sortDescriptors = [sortByCreationDate]
-        do {
-            jobs = try viewContext.fetch(request)
-        } catch {
-            print(error.localizedDescription)
-        }
+        guard let jobs = try? viewContext.fetch(request) else {return []}
         return jobs
     }
     
     func fetchSelectedJobsWithCandidacy() -> [SelectedJob] {
-        var jobs: [SelectedJob] = []
         let request = NSFetchRequest<SelectedJob>(entityName: "SelectedJob")
         request.predicate = NSPredicate(format: "candidacy != nil")
         let sortByCreationDate  = NSSortDescriptor(keyPath: \SelectedJob.creationDate, ascending: false)
         request.sortDescriptors = [sortByCreationDate]
-        do {
-            jobs = try viewContext.fetch(request)
-        } catch {
-            print(error.localizedDescription)
-        }
+        guard let jobs = try? viewContext.fetch(request) else { return [] }
         return jobs
     }
-
+    
     func fetchSelectedJobsByState(candidacyState: String) -> [SelectedJob] {
-        var jobs: [SelectedJob] = []
         let request = NSFetchRequest<SelectedJob>(entityName: "SelectedJob")
         request.predicate = NSPredicate(format: "candidacy.state == %@", candidacyState)
         let sortByCreationDate  = NSSortDescriptor(keyPath: \SelectedJob.creationDate, ascending: false)
         request.sortDescriptors = [sortByCreationDate]
-        do {
-            jobs = try viewContext.fetch(request)
-        } catch {
-            print(error.localizedDescription)
-        }
+        guard let jobs = try? viewContext.fetch(request) else { return [] }
         return jobs
     }
     
     func fetchSelectedJobsWhithoutCandidacy() -> [SelectedJob] {
-        var jobs: [SelectedJob] = []
         let request = NSFetchRequest<SelectedJob>(entityName: "SelectedJob")
         request.predicate = NSPredicate(format: "candidacy == nil")
         let sortByCreationDate  = NSSortDescriptor(keyPath: \SelectedJob.creationDate, ascending: false)
         request.sortDescriptors = [sortByCreationDate]
-        do {
-            jobs = try viewContext.fetch(request)
-        } catch {
-            print(error.localizedDescription)
-        }
+        guard let jobs = try? viewContext.fetch(request) else { return [] }
         return jobs
     }
     
@@ -157,133 +134,77 @@ class PersistenceManager: ObservableObject {
     func checkIfIsFavoriteResultat(job: Resultat) -> Bool {
         let request = NSFetchRequest<SelectedJob>(entityName: "SelectedJob")
         var favorite: Bool = false
-        do {
-            let favoriteJobList = try viewContext.fetch(request)
-            favoriteJobList.forEach {
-                if $0.originOffers?.urlOrigin == job.origineOffre.urlOrigine {
-                    favorite = true
-                }
+        guard let favoriteJobList = try? viewContext.fetch(request) else {  return false }
+        favoriteJobList.forEach {
+            if $0.originOffers?.urlOrigin == job.origineOffre.urlOrigine {
+                favorite = true
             }
-        } catch {
-            print(error.localizedDescription)
         }
-        
         return favorite
     }
     
     func checkIfIsFavoriteSelectedJob(job: SelectedJob) -> Bool {
         let request = NSFetchRequest<SelectedJob>(entityName: "SelectedJob")
         var favorite: Bool = false
-        do {
-            let favoriteJobList = try viewContext.fetch(request)
-            favoriteJobList.forEach {
-                if $0.originOffers?.urlOrigin == job.originOffers?.urlOrigin {
-                    favorite = true
-                }
+        guard let favoriteJobList = try? viewContext.fetch(request) else { return false }
+        favoriteJobList.forEach {
+            if $0.originOffers?.urlOrigin == job.originOffers?.urlOrigin {
+                favorite = true
             }
-        } catch {
-            print(error.localizedDescription)
         }
-        
         return favorite
     }
     
     func removeSelectedJob(selectedJobId: String) {
-        var jobs: [SelectedJob] = []
         let request = NSFetchRequest<SelectedJob>(entityName: "SelectedJob")
         request.predicate = NSPredicate(format: "id == %@", selectedJobId)
-        do {
-            jobs = try viewContext.fetch(request)
-            guard let job = jobs.first else { return }
-            viewContext.delete(job)
-            saveData()
-        } catch {
-            print(error.localizedDescription)
-        }
+        guard let jobs = try? viewContext.fetch(request) else { return }
+        guard let job = jobs.first else { return }
+        viewContext.delete(job)
+        saveData()
     }
     
-    // marks : Candidacy
-//    func updateSelectedJobCandidacyDate(id: String, date: Date) {
-//        var jobs: [SelectedJob] = []
-//        let request = NSFetchRequest<SelectedJob>(entityName: "SelectedJob")
-//        request.predicate = NSPredicate(format: "id == %@", id)
-//        do {
-//            jobs = try viewContext.fetch(request)
-//            guard let job = jobs.first else { return }
-//            job.candidacy?.candidacyDate = date
-//            saveData()
-//            
-//        } catch {
-//            print(error.localizedDescription)
-//        }
-//    }
-    
+    // MARK: Candidacy
     func createCandidacy(candidacyMeans: String, candidacyDate: Date, comment: String, favoriteJobId: String) {
-        var jobs: [SelectedJob] = []
         let request = NSFetchRequest<SelectedJob>(entityName: "SelectedJob")
         request.predicate = NSPredicate(format: "id == %@", favoriteJobId)
-        do {
-            jobs = try viewContext.fetch(request)
-            guard let favoriteJob = jobs.first else { return }
-            let candidacy = Candidacy(context: viewContext)
-            candidacy.candidacyMeans = candidacyMeans
-            candidacy.candidacyDate = candidacyDate
-            candidacy.comment = comment
-            candidacy.selectedJob = favoriteJob
-            candidacy.id = UUID()
-            candidacy.state = "En cours"
-            
-            saveData()
-            
-        } catch {
-            print(error.localizedDescription)
-        }
+        guard let jobs = try? viewContext.fetch(request) else { return }
+        guard let favoriteJob = jobs.first else { return }
+        let candidacy = Candidacy(context: viewContext)
+        candidacy.candidacyMeans = candidacyMeans
+        candidacy.candidacyDate = candidacyDate
+        candidacy.comment = comment
+        candidacy.selectedJob = favoriteJob
+        candidacy.id = UUID()
+        candidacy.state = "En cours"
+        saveData()
     }
     
     func removeCandidacy(favoriteJobId: String) {
-        var jobs: [SelectedJob] = []
         let request = NSFetchRequest<SelectedJob>(entityName: "SelectedJob")
         request.predicate = NSPredicate(format: "id == %@", favoriteJobId)
-        do {
-            jobs = try viewContext.fetch(request)
-            guard let job = jobs.first else { return }
-            viewContext.delete(job.candidacy!)
-            saveData()
-            
-        } catch {
-            print(error.localizedDescription)
-        }
+        guard let jobs = try? viewContext.fetch(request) else { return }
+        guard let job = jobs.first else { return }
+        viewContext.delete(job.candidacy!)
+        saveData()
     }
     
     func updateSelectedJobCandidacy(jobId: String, candidacyDate: Date?, candidacyMeans: String?, comment: String?, state: String? ) {
-        var jobs: [SelectedJob] = []
         let request = NSFetchRequest<SelectedJob>(entityName: "SelectedJob")
         request.predicate = NSPredicate(format: "id == %@", jobId)
-        do {
-            jobs = try viewContext.fetch(request)
-            guard let job = jobs.first else { return }
-            job.candidacy?.candidacyDate = candidacyDate ?? job.candidacy?.candidacyDate
-            job.candidacy?.candidacyMeans = candidacyMeans ?? job.candidacy?.candidacyMeans
-            job.candidacy?.comment = comment ?? job.candidacy?.comment
-            job.candidacy?.state = state ?? job.candidacy?.state
-            
-            saveData()
-            
-        } catch {
-            print(error.localizedDescription)
-        }
+        guard let jobs = try? viewContext.fetch(request) else { return }
+        guard let job = jobs.first else { return }
+        job.candidacy?.candidacyDate = candidacyDate ?? job.candidacy?.candidacyDate
+        job.candidacy?.candidacyMeans = candidacyMeans ?? job.candidacy?.candidacyMeans
+        job.candidacy?.comment = comment ?? job.candidacy?.comment
+        job.candidacy?.state = state ?? job.candidacy?.state
+        saveData()
     }
     
     func fetchAllCandidacies() -> [Candidacy] {
-        var candidacies: [Candidacy] = []
         let request = NSFetchRequest<Candidacy>(entityName: "Candidacy")
-        do {
-            candidacies = try viewContext.fetch(request)
-            return candidacies
-        } catch {
-            print(error.localizedDescription)
-            return []
-        }
+        guard let candidacies = try? viewContext.fetch(request) else { return [] }
+        return candidacies
     }
     
     func fetchSelectedJobWhoHaveCandidacyMake(jobs: [SelectedJob]) -> [SelectedJob]{
@@ -293,13 +214,11 @@ class PersistenceManager: ObservableObject {
                 selectedJobWhoHaveCandidacyMake.append(job)
             }
         }
-        
         return selectedJobWhoHaveCandidacyMake
     }
     
-    // marks : Contact
+    // MARK: Contact
     func createContact(jobId: String, name: String, compagny: String, functionInCompany: String, contactMail: String, contactPhoneNumber: String) {
-        
         let newContact = Contact(context: viewContext)
         newContact.name = name
         newContact.id = UUID()
@@ -313,7 +232,6 @@ class PersistenceManager: ObservableObject {
             newContact.addToCandidacy(job!.candidacy!)
             job!.candidacy?.addToContact(newContact)
         }
-        
         saveData()
     }
     
@@ -346,111 +264,82 @@ class PersistenceManager: ObservableObject {
     func removeContact(contactId: UUID) {
         let request = NSFetchRequest<Contact>(entityName: "Contact")
         request.predicate = NSPredicate(format: "id == %@", contactId as CVarArg)
-        do {
-            let contacts = try viewContext.fetch(request)
-            guard let contact = contacts.first else { return }
-            viewContext.delete(contact)
-            saveData()
-
-        } catch {
-            print(error.localizedDescription)
-        }
+        guard let contacts = try? viewContext.fetch(request) else { return }
+        guard let contact = contacts.first else { return }
+        viewContext.delete(contact)
+        saveData()
     }
     
     func updateContact(contactId: UUID, name: String, compagny: String, functionInCompany: String, contactMail: String, contactPhoneNumber: String) {
-        var contacts: [Contact] = []
         let request = NSFetchRequest<Contact>(entityName: "Contact")
         request.predicate = NSPredicate(format: "id == %@", contactId as CVarArg)
-        do {
-            contacts = try viewContext.fetch(request)
-            guard let contact = contacts.first else { return }
-            contact.name = name
-            contact.compagny = compagny
-            contact.functionInCompany = functionInCompany
-            contact.email = contactMail
-            contact.phoneNumber = contactPhoneNumber
-            saveData()
-
-        } catch {
-            print(error.localizedDescription)
-        }
+        guard let contacts = try? viewContext.fetch(request) else { return }
+        guard let contact = contacts.first else { return }
+        contact.name = name
+        contact.compagny = compagny
+        contact.functionInCompany = functionInCompany
+        contact.email = contactMail
+        contact.phoneNumber = contactPhoneNumber
+        saveData()
     }
     
     func fetchContactWhoStartBy(name: String) -> [Contact]{
         let request = NSFetchRequest<Contact>(entityName: "Contact")
         request.predicate = NSPredicate(format: "name contains[c] %@", name)
-        do {
-            let contacts = try viewContext.fetch(request)
-            return contacts
-        } catch {
-            print(error.localizedDescription)
-            return []
-        }
+        guard let contacts = try? viewContext.fetch(request) else { return [] }
+        return contacts
     }
     
-    func fetchContactByName(name: String) throws -> Contact{
+    func fetchContactByName(name: String) throws -> Contact?{
         let request = NSFetchRequest<Contact>(entityName: "Contact")
         request.predicate = NSPredicate(format: "name == %@", name)
-        do {
-            let contacts = try viewContext.fetch(request)
-            print("contacts.first! : ", contacts.first!)
-            return contacts.first!
-        } catch {
-            print(error.localizedDescription)
-            throw error
-        }
+        guard let contact = try? viewContext.fetch(request).first else { return nil }
+        return contact
     }
     
-    func fetchCandidacyContactsList(candidacyID: UUID) throws -> [Contact]{
-        var candidacies: [Candidacy] = []
+    func fetchCandidacyContactsList(candidacyID: UUID) -> [Contact]{
         let request = NSFetchRequest<Candidacy>(entityName: "Candidacy")
         request.predicate = NSPredicate(format: "id == %@", candidacyID as CVarArg)
-        do {
-            candidacies = try viewContext.fetch(request)
-            let candidacy = candidacies.first
-            return candidacy?.contact?.allObjects as! [Contact]
-        } catch {
-            print(error.localizedDescription)
-            throw error
-        }
+        guard let candidacies = try? viewContext.fetch(request) else { return [] }
+        let candidacy = candidacies.first
+        return candidacy?.contact?.allObjects as! [Contact]
     }
     
     func fetchAllCandidaciesOfContact(contactId: UUID) -> [Candidacy]{
-        var contacts: [Contact] = []
         let request = NSFetchRequest<Contact>(entityName: "Contact")
         request.predicate = NSPredicate(format: "id == %@", contactId as CVarArg)
-        
-        do {
-            contacts = try viewContext.fetch(request)
-            let contact = contacts.first
-            return contact?.candidacy?.allObjects as! [Candidacy]
-        } catch  {
-            print(error.localizedDescription)
-            return []
-        }
+        guard let contacts = try?  viewContext.fetch(request) else { return []}
+        let contact = contacts.first
+        return contact?.candidacy?.allObjects as! [Candidacy]
     }
     
-    // marks : Relaunch
+    // MARK: Relaunch
     func createRelaunch(candidacyID: UUID, contact: Contact?, date: Date, comment: String, means: String) {
-        var candidacies: [Candidacy] = []
         let request = NSFetchRequest<Candidacy>(entityName: "Candidacy")
         request.predicate = NSPredicate(format: "id == %@", candidacyID as CVarArg)
+        guard let candidacies = try? viewContext.fetch(request) else { return }
+        let candidacy = candidacies.first
+        let relaunch = Relaunch(context: viewContext)
+        relaunch.id = UUID()
+        relaunch.contact = contact
+        relaunch.date = date
+        relaunch.comment = comment
+        relaunch.means = means
+        relaunch.candidacy = candidacy
+        saveData()
+    }
+    
+    func updateRelaunch(relaunchId: UUID, contact: Contact?, date: Date, comment: String, means: String) {
+        let request = NSFetchRequest<Relaunch>(entityName: "Relaunch")
+        request.predicate = NSPredicate(format: "id == %@", relaunchId as CVarArg)
         do {
-            candidacies = try viewContext.fetch(request)
-            let candidacy = candidacies.first
-            
-            let relaunch = Relaunch(context: viewContext)
-            relaunch.id = UUID()
+            let relaunches = try! viewContext.fetch(request)
+            guard let relaunch = relaunches.first else { return }
             relaunch.contact = contact
             relaunch.date = date
             relaunch.comment = comment
             relaunch.means = means
-            relaunch.candidacy = candidacy
-            
             saveData()
-            
-        } catch {
-            print(error.localizedDescription)
         }
     }
     
@@ -459,101 +348,84 @@ class PersistenceManager: ObservableObject {
         request.predicate = NSPredicate(format: "candidacy.id == %@", candidacyId as CVarArg)
         let sortDescriptor = NSSortDescriptor(key: #keyPath(Relaunch.date), ascending: ascendingDate)
         request.sortDescriptors = [sortDescriptor]
-        
-        do {
-            let relaunches = try viewContext.fetch(request)
-            return relaunches
-        } catch  {
-            print(error.localizedDescription)
-            return []
-        }
+        guard let relaunches = try? viewContext.fetch(request) else { return [] }
+        return relaunches
     }
     
     func removeRelaunch(relaunchId: UUID) {
-        var relaunches: [Relaunch] = []
         let request = NSFetchRequest<Relaunch>(entityName: "Relaunch")
         request.predicate = NSPredicate(format: "id == %@", relaunchId as CVarArg)
-        do {
-            relaunches = try viewContext.fetch(request)
-            guard let relaunch = relaunches.first else { return }
-            viewContext.delete(relaunch)
-            saveData()
-            
-        } catch {
-            print(error.localizedDescription)
-        }
+        guard let relaunches = try? viewContext.fetch(request) else { return }
+        guard let relaunch = relaunches.first else { return }
+        viewContext.delete(relaunch)
+        saveData()
     }
     
-    // marks : Interview
+    // MARK: Interview
     func createInterview(candidacyID: UUID, contact: Contact?, date: Date, comment: String) {
-        var candidacies: [Candidacy] = []
         let request = NSFetchRequest<Candidacy>(entityName: "Candidacy")
         request.predicate = NSPredicate(format: "id == %@", candidacyID as CVarArg)
-        do {
-            candidacies = try viewContext.fetch(request)
-            let candidacy = candidacies.first
-            
-            let interview = Interview(context: viewContext)
-            interview.id = UUID()
-            interview.date = date
-            interview.contact = contact
-            interview.comment = comment
-            interview.candidacy = candidacy
-            
-            saveData()
-        } catch {
-            print(error.localizedDescription)
-        }
+        guard let candidacies = try? viewContext.fetch(request) else { return }
+        let candidacy = candidacies.first
+        let interview = Interview(context: viewContext)
+        interview.id = UUID()
+        interview.date = date
+        interview.contact = contact
+        interview.comment = comment
+        interview.candidacy = candidacy
+        saveData()
     }
     
-    func fetchAllInterviews() -> [Interview] {
-        var interviews: [Interview] = []
-        let request = NSFetchRequest<Interview>(entityName: "Interview")
-        do {
-            interviews = try viewContext.fetch(request)
-            return interviews
-        } catch {
-            print(error.localizedDescription)
-            return []
-        }
-    }
-    
-    func removeInterview(interviewId: UUID) {
-        var interviews: [Interview] = []
+    func updateInterview(interviewId: UUID, contact: Contact?, date: Date, comment: String) {
         let request = NSFetchRequest<Interview>(entityName: "Interview")
         request.predicate = NSPredicate(format: "id == %@", interviewId as CVarArg)
         do {
-            interviews = try viewContext.fetch(request)
-            guard let interview = interviews.first else { return }
-            viewContext.delete(interview)
+            let interview = try viewContext.fetch(request).first
+            interview?.contact = contact
+            interview?.date = date
+            interview?.comment = comment
             saveData()
-            
         } catch {
             print(error.localizedDescription)
         }
     }
     
-    // marks : ActionsToBeTaken
+    func fetchInterviewWithId(interviewId: UUID) -> Interview {
+        let request = NSFetchRequest<Interview>(entityName: "Interview")
+        request.predicate = NSPredicate(format: "id == %@", interviewId as CVarArg)
+        let interview = try! viewContext.fetch(request).first
+        return interview!
+    }
+    
+    func fetchAllInterviews() -> [Interview] {
+        let request = NSFetchRequest<Interview>(entityName: "Interview")
+        guard let interviews = try?  viewContext.fetch(request) else { return [] }
+        return interviews
+    }
+    
+    func removeInterview(interviewId: UUID) {
+        let request = NSFetchRequest<Interview>(entityName: "Interview")
+        request.predicate = NSPredicate(format: "id == %@", interviewId as CVarArg)
+        guard let interviews = try? viewContext.fetch(request) else { return }
+        guard let interview = interviews.first else { return }
+        viewContext.delete(interview)
+        saveData()
+    }
+    
+    // MARK: ActionsToBeTaken
     func fetchAllInterviewFromCandidacyId(candidacyId: UUID, ascendingDate: Bool) -> [Interview] {
         let request = NSFetchRequest<Interview>(entityName: "Interview")
         request.predicate = NSPredicate(format: "candidacy.id == %@", candidacyId as CVarArg)
         let sortDescriptor = NSSortDescriptor(key: #keyPath(Interview.date), ascending: ascendingDate)
         request.sortDescriptors = [sortDescriptor]
-        
-        do {
-            let interviews = try viewContext.fetch(request)
-            return interviews
-        } catch  {
-            print(error.localizedDescription)
-            return []
-        }
+        guard let interviews = try? viewContext.fetch(request) else { return [] }
+        return interviews
     }
 }
 
 public extension NSManagedObject {
-    
-    //remove issue Multiple NSEntityDescriptions claim the NSManagedObject subclass
-    // find on : https://github.com/drewmccormack/ensembles/issues/275
+    // MARK: remove issue Multiple NSEntityDescriptions claim the NSManagedObject subclass
+    // MARK: find on : https://github.com/drewmccormack/ensembles/issues/275
     convenience init(context: NSManagedObjectContext) {
         let name = String(describing: type(of: self))
         let entity = NSEntityDescription.entity(forEntityName: name, in: context)!

@@ -45,7 +45,6 @@ struct FormNewSearchJob: View {
                             }
                         }
                     }
-                     
                 }
                 Section(header: Text("Infos"))  {
                     SearchJobPicker(searchJobPickerType: .experience, newSearchJob: vm)
@@ -53,7 +52,6 @@ struct FormNewSearchJob: View {
                 }
             }
             .cornerRadius(12)
-            
     }
 }
 

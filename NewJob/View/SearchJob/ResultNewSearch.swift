@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ResultNewSearch: View {
+@MainActor struct ResultNewSearch: View {
     let pm: PersistenceManager
     @ObservedObject var vm: NewSearchJobViewModel
     

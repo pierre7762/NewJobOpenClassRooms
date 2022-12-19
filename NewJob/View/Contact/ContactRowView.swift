@@ -16,7 +16,6 @@ struct ContactRowView: View {
                 .bold()
             Text(contact.compagny!)
                 .font(.subheadline)
-
         }
     }
 }

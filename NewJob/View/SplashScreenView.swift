@@ -9,9 +9,8 @@ import SwiftUI
 
 struct SplashScreenView: View {
     @State var isActive : Bool = false
-    @State private var size = 0.7
+    @State private var size = 0.4
     @State private var opacity = 0.4
-//    var pm: PersistenceManager
     
     var body: some View {
         if isActive {
@@ -20,7 +19,7 @@ struct SplashScreenView: View {
             ZStack {
                 VStack {
                     Image("logo")
-                        .font(.system(size: 80))
+                        .font(.system(size: UIScreen.main.bounds.size.width * 0.2))
                         .foregroundColor(.red)
                         .cornerRadius(12)
 
@@ -29,7 +28,7 @@ struct SplashScreenView: View {
                 .opacity(opacity)
                 .onAppear {
                     withAnimation(.easeIn(duration: 1.2)) {
-                        self.size = 0.9
+                        self.size = 0.7
                         self.opacity = 1.00
                     }
                 }

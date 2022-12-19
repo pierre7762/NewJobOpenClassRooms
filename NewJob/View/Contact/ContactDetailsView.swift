@@ -37,15 +37,17 @@ struct ContactDetailsView: View {
                                     Image(systemName: "phone.fill")
                                         .foregroundColor(.black)
                                         .font(.system(size: 30))
-                                    Link("\(vm.contact?.phoneNumber ?? "")", destination: URL(string: "tel:\(vm.contact?.phoneNumber ?? "")")!)
+                                    Text(vm.contact?.phoneNumber ?? "")
+                                        .textSelection(.enabled)
                                 }
                             }
-                            if vm.contact?.mailUnwrapped != ""{
+                            if vm.contact?.email != ""{
                                 HStack{
                                     Image(systemName: "mail")
                                         .foregroundColor(.black)
                                         .font(.system(size: 30))
-                                    Link("\(vm.contact?.mailUnwrapped ?? "")", destination: URL(string: "mailto:\(vm.contact?.mailUnwrapped ?? "")")!)
+                                    Text(vm.contact?.email ?? "")
+                                        .textSelection(.enabled)
                                 }
                             }
                         }

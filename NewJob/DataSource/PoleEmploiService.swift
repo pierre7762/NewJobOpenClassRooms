@@ -8,21 +8,26 @@
 import Foundation
 import SwiftUI
 
-final class PoleEmploiService {
+protocol PoleEmploiProtocol {
+    func getPoleEmploiToken(callback: @escaping (Result<PoleEmploiToken, NetworkErrors>) -> Void)
+    func getPoleEmploiJobs(search: Search,activeToken: String,callback: @escaping (Result<PoleEmploiResponse, NetworkErrors>) -> Void)
+}
 
+final class PoleEmploiService: PoleEmploiProtocol {
+    
     // MARK: - Properties
-
+    
     private let session: URLSession
+    private var task: URLSessionDataTask?
     private let apiConstant = ApiAccessInfo()
     private let apiGouv = ApiGouvService()
     var token = "";
-
+    
     // MARK: - Initializer
-
     init(session: URLSession = URLSession(configuration: .ephemeral)) {
         self.session = session
     }
-
+    
     // MARK: - Methods
     
     func getPoleEmploiToken(callback: @escaping (Result<PoleEmploiToken, NetworkErrors>) -> Void) {
@@ -70,7 +75,6 @@ final class PoleEmploiService {
     }
     
     func getPoleEmploiJobs(search: Search,activeToken: String,callback: @escaping (Result<PoleEmploiResponse, NetworkErrors>) -> Void) {
-//        print("token : ", activeToken)
         guard let baseURL: URL = .init(string: apiConstant.PoleEmploi.jobsBaseURL) else { return }
         let optionsArray = createOptionArray(search: search)
         
@@ -82,7 +86,7 @@ final class PoleEmploiService {
         session.dataTask(with: request) { data, response, error in
             if let httpResponse = response as? HTTPURLResponse {
                 if httpResponse.statusCode == 206 {
-//                    print("error !!! \(httpResponse.statusCode) : The server is delivering only part of the resource due to a range header sent by the client. The range header is used by tools like wget to enable resuming of interrupted downloads, or split a download into multiple simultaneous streams")
+                    //                    print("error !!! \(httpResponse.statusCode) : The server is delivering only part of the resource due to a range header sent by the client. The range header is used by tools like wget to enable resuming of interrupted downloads, or split a download into multiple simultaneous streams")
                 } else {
                     print("error !!! \(httpResponse.statusCode)")
                 }

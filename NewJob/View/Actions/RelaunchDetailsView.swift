@@ -11,7 +11,7 @@ struct RelaunchDetailsView: View {
     let pm: PersistenceManager
     let jobId: String?
     @State var relaunch: Relaunch
-    @ObservedObject var vm: RelaunchDetailsViewModel = RelaunchDetailsViewModel()
+    @StateObject var vm: RelaunchDetailsViewModel = RelaunchDetailsViewModel()
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @State private var showingAlert = false
     var body: some View {
@@ -76,6 +76,16 @@ struct RelaunchDetailsView: View {
             Color.white,
             for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
+        .toolbar {
+            Button {
+                vm.showingUpdateRelaunchSheet.toggle()
+            } label: {
+                Text("Modifier")
+            }
+            .sheet(isPresented: $vm.showingUpdateRelaunchSheet) {
+                RelaunchFormView(pm: pm, currentRelaunch: relaunch, candidacy: relaunch.candidacy)
+            }
+        }
     }
 }
 

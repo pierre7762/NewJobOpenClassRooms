@@ -9,9 +9,12 @@ import SwiftUI
 
 struct InterviewDetailsView: View {
     let pm: PersistenceManager
+    let jobId: String?
     @State var interview: Interview
-    @State var vm: ActionsToBeTakenOnFavoriteJobViewModel
+    @State var candidacy: Candidacy
+    @State var showingUpdateInterviewSheet: Bool = false
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @StateObject var vm: InterviewDetailsViewModel = InterviewDetailsViewModel()
     @State private var showingAlert = false
     var body: some View {
         ZStack{
@@ -25,7 +28,7 @@ struct InterviewDetailsView: View {
                         }
                         if interview.contact != nil {
                             Section(header: Text("Contact")) {
-                                NavigationLink(destination: ContactDetailsView(pm: pm, contact: ContactDisplayable(contact: interview.contact!, contactId: interview.contact!.id!), favoriteJobId: (vm.favoriteJob?.id)!)) {
+                                NavigationLink(destination: ContactDetailsView(pm: pm, contact: ContactDisplayable(contact: interview.contact!, contactId: interview.contact!.id!), favoriteJobId: jobId!)) {
                                     Text(interview.contact!.name ?? "Inconnu")
                                     if (interview.contact!.functionInCompany != nil) && interview.contact!.functionInCompany != "" {
                                         Text(" (\(interview.contact!.functionInCompany!))")
@@ -55,7 +58,7 @@ struct InterviewDetailsView: View {
                         .alert("Supprimer l'entretien ?", isPresented: $showingAlert) {
                             Button("Supprimer", role: .destructive) {
                                 presentationMode.wrappedValue.dismiss()
-                                vm.removeInterview(interviewId: interview.id!)
+                                vm.pm.removeInterview(interviewId: interview.id!)
                             }
                             Button("Annuler", role: .cancel) {}
                         }
@@ -63,16 +66,32 @@ struct InterviewDetailsView: View {
                 .padding()
             }
         }
+        .onAppear(){
+            vm.pm = pm
+        }
+        .onChange(of: showingUpdateInterviewSheet, perform: { newValue in
+            vm.loadInterviewDetails(interviewId: interview.id!)
+        })
         .navigationBarTitle(Text("Entretien"), displayMode:.inline)
         .toolbarBackground(
             Color.white,
             for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
+        .toolbar {
+            Button {
+                showingUpdateInterviewSheet.toggle()
+            } label: {
+                Text("Modifier")
+            }
+            .sheet(isPresented: $showingUpdateInterviewSheet) {
+                InterviewFormView(pm: pm, candidacy: candidacy, interview: interview)
+            }
+        }
     }
 }
 
 struct InterviewDetailsView_Previews: PreviewProvider {
     static var previews: some View {
-        InterviewDetailsView(pm: PersistenceManager(), interview: Interview(), vm: ActionsToBeTakenOnFavoriteJobViewModel())
+        InterviewDetailsView(pm: PersistenceManager(), jobId: "", interview: Interview(), candidacy: Candidacy(), vm: InterviewDetailsViewModel())
     }
 }

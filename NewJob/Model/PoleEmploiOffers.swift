@@ -9,5 +9,4 @@ import Foundation
 
 struct PoleEmploiOffers {
     var offersList: [Resultat] = []
-    
 }

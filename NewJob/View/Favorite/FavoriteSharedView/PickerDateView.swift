@@ -29,12 +29,6 @@ struct PickerDateView: View {
             .datePickerStyle(.compact)
             
         }
-//        DatePicker(
-//                "Envoyée le :",
-//                selection: $vm.createDateCandidacy,
-//                displayedComponents: [.date]
-//            )
-//        .datePickerStyle(.compact)
     }
 }
 

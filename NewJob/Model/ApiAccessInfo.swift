@@ -9,7 +9,6 @@ import Foundation
 
 struct ApiAccessInfo {
     let PoleEmploi = PoleEmploiAccess()
-   
 }
 
 struct PoleEmploiAccess {

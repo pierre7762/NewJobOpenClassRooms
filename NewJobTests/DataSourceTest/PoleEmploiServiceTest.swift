@@ -9,7 +9,8 @@ import XCTest
 @testable import NewJob
 
 final class PoleEmploiServiceTest: XCTestCase {
-
+    let urlToken = URL(string: "https://entreprise.pole-emploi.fr/connexion/oauth2/access_token?realm=/partenaire&grant_type=client_credentials&code=oktest&client_id=PAR_newjob_6416a72235b39868ab77ea25e02e64d43804df63b8fb491bc0c45aab9fdfe9ea&client_secret=e19e7aa3b4afe88c741015fbc5041a266d67a713d5b6fbc414ee2c2d8de4cff3&scope=o2dsoffre%20api_offresdemploiv2%20api_explorateurmetiersv1%20explojob%20application_PAR_newjob_6416a72235b39868ab77ea25e02e64d43804df63b8fb491bc0c45aab9fdfe9ea")
+    let urlPoleEmploi = URL(string: "https://api.emploi-store.fr/partenaire/offresdemploi/v2/offres/search?qualification=0&motsCles=Livreur&experience=2&commune=62041&distance=50&origineOffre=2")
     private let sessionConfiguration: URLSessionConfiguration = {
         let sessionConfiguration = URLSessionConfiguration.ephemeral
         sessionConfiguration.protocolClasses = [URLProtocolFake.self]
@@ -67,7 +68,7 @@ final class PoleEmploiServiceTest: XCTestCase {
     }
     
     func testsGetPoleEmploiJobs_WhenFakeSessionWithCorrectData_ThenShouldReturnSuccess() {
-        URLProtocolFake.fakeURLs = [FakeResponseData.poleEmploiSearchUrl: (FakeResponseData.correctDataPoleEmploiSearch, FakeResponseData.responseOK, nil)]
+        URLProtocolFake.fakeURLs = [urlPoleEmploi: (FakeResponseData.correctDataPoleEmploiSearch, FakeResponseData.responseOK, nil)]
         let fakeSession = URLSession(configuration: sessionConfiguration)
         let sut: PoleEmploiService = .init(session: fakeSession)
         var searchObject = Search()
@@ -77,15 +78,13 @@ final class PoleEmploiServiceTest: XCTestCase {
         searchObject.experience = "2"
         
         sut.getPoleEmploiJobs(search: searchObject, activeToken: "DVGtqtvaz") { result in
-            guard case .success(let success) = result else {
-                return
-            }
-            XCTAssertTrue(success.resultats[0].id == "4015584")
+            guard case .success(let success) = result else { return }
+            XCTAssertEqual(success.resultats.count, 2 )
         }
     }
     
-    func testsGetPoleEmploiJobs_WhenFakeSessionWithCorrectData_ThenShouldReturnError206() {
-        URLProtocolFake.fakeURLs = [FakeResponseData.poleEmploiSearchUrl: (FakeResponseData.correctDataPoleEmploiSearch, FakeResponseData.responseOK206, nil)]
+    func testsGetPoleEmploiJobs_WhenFakeSessionWithCorrectData_ThenShouldReturnSuccess206() {
+        URLProtocolFake.fakeURLs = [urlPoleEmploi: (FakeResponseData.correctDataPoleEmploiSearch, FakeResponseData.responseOK206, nil)]
         let fakeSession = URLSession(configuration: sessionConfiguration)
         let sut: PoleEmploiService = .init(session: fakeSession)
         var searchObject = Search()
@@ -95,15 +94,13 @@ final class PoleEmploiServiceTest: XCTestCase {
         searchObject.experience = "2"
         
         sut.getPoleEmploiJobs(search: searchObject, activeToken: "DVGtqtvaz") { result in
-            guard case .success(let success) = result else {
-                return
-            }
-            XCTAssertTrue(success.resultats[0].id == "4015584")
+            guard case .success(let success) = result else { return }
+            XCTAssertEqual(success.resultats.count, 2 )
         }
     }
     
-    func testsGetPoleEmploiJobs_WhenFakeSessionWithIncorrectData_ThenShouldReturnAnErrorUndecodableData(){
-        URLProtocolFake.fakeURLs = [FakeResponseData.poleEmploiSearchUrl: (nil, nil, FakeResponseData.error)]
+    func testsGetPoleEmploiJobs_WhenFakeSessionWithIncorrectData_ThenShouldReturnUndecodable() {
+        URLProtocolFake.fakeURLs = [urlPoleEmploi: (nil, FakeResponseData.responseKO, nil)]
         let fakeSession = URLSession(configuration: sessionConfiguration)
         let sut: PoleEmploiService = .init(session: fakeSession)
         var searchObject = Search()
@@ -114,41 +111,26 @@ final class PoleEmploiServiceTest: XCTestCase {
         
         sut.getPoleEmploiJobs(search: searchObject, activeToken: "DVGtqtvaz") { result in
             guard case .failure(let error) = result else { return }
-            XCTAssertTrue(error.description == "")
+            XCTAssertEqual(error, .undecodableData)
         }
     }
     
-    func testsGetPoleEmploiJobs_WhenFakeSessionWithErrorIsPassed_ThenShouldReturnAnErrorNoData() {
-//        URLProtocolFake.fakeURLs = [FakeResponseData.poleEmploiSearchUrl: (nil, FakeResponseData.responseOK, nil)]
-//        let fakeSession = URLSession(configuration: sessionConfiguration)
-//        let sut: PoleEmploiService = .init(session: fakeSession)
-//        var searchObject = Search()
-//        searchObject.jobTitle = "Livreur"
-//        searchObject.codeInsee = "62041"
-//        searchObject.qualification = "0"
-//        searchObject.experience = "2"
-//
-//        sut.getPoleEmploiJobs(search: searchObject, activeToken: "") { result in
-//            guard case .failure(let error) = result else { return }
-//            XCTAssertTrue(error == .noData)
-//        }
+    func testsGetPoleEmploiJobs_WhenFakeSessionWithIncorrectData_ThenShouldReturnNoData() {
+        URLProtocolFake.fakeURLs = [urlPoleEmploi: (nil, FakeResponseData.responseKO, FakeResponseData.error)]
+        let fakeSession = URLSession(configuration: sessionConfiguration)
+        let sut: PoleEmploiService = .init(session: fakeSession)
+        var searchObject = Search()
+        searchObject.jobTitle = "Livreur"
+        searchObject.codeInsee = "62041"
+        searchObject.qualification = "0"
+        searchObject.experience = "2"
+        
+        sut.getPoleEmploiJobs(search: searchObject, activeToken: "DVGtqtvaz") { result in
+            guard case .failure(let error) = result else { return }
+            XCTAssertEqual(error, .noData)
+        }
     }
     
-//    func testsGetPoleEmploiJobs_WhenFakeSessionWithIncorrectData_ThenShouldReturnAnErrorUndecodableData() {
-//        URLProtocolFake.fakeURLs = [FakeResponseData.tokenUrl: (FakeResponseData.incorrectData, FakeResponseData.responseOK, nil)]
-//        let fakeSession = URLSession(configuration: sessionConfiguration)
-//        let sut: PoleEmploiService = .init(session: fakeSession)
-//        var searchObject = Search()
-//        searchObject.jobTitle = "Livreur"
-//        searchObject.codeInsee = "62041"
-//        searchObject.qualification = "0"
-//        searchObject.experience = "2"
-//
-//        sut.getPoleEmploiJobs(search: searchObject, activeToken: "") { result in
-//            guard case .failure(let error) = result else { return }
-//            print(error)
-//            XCTAssertTrue(error == .undecodableData)
-//        }
-//    }
+   
 
 }
