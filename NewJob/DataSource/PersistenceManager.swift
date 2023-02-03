@@ -10,7 +10,6 @@ import CoreData
 
 class PersistenceManager: ObservableObject {
     // MARK: Properties
-    //    static let shared = PersistenceManager()
     var viewContext: NSManagedObjectContext {
         return self.container.viewContext
     }

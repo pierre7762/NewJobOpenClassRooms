@@ -18,10 +18,10 @@ struct SplashScreenView: View {
         } else {
             ZStack {
                 VStack {
-                    Image("logo")
-                        .font(.system(size: UIScreen.main.bounds.size.width * 0.2))
-                        .foregroundColor(.red)
-                        .cornerRadius(12)
+//                    Image("logo")
+//                        .font(.system(size: UIScreen.main.bounds.size.width * 0.2))
+//                        .foregroundColor(.red)
+//                        .cornerRadius(12)
 
                 }
                 .scaleEffect(size)

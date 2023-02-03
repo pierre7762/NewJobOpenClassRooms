@@ -9,6 +9,21 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>NewJobWatch.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
+		<key>WatchNewJob Watch App.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>4</integer>
+		</dict>
+		<key>WatchNewJob.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>3</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
@@ -18,6 +33,11 @@
 			<true/>
 		</dict>
 		<key>8F34034727885C9100FF8E66</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>8F8BD5A1298BC048006A9EAF</key>
 		<dict>
 			<key>primary</key>
 			<true/>

@@ -20,7 +20,6 @@ class PoleEmploiFakeService: PoleEmploiProtocol {
         self.jobResult = jobResult
     }
     
-    
     // function provenant de poleEmploi service grâce au protocol PoleEmploiProtocol
     func getPoleEmploiToken(callback: @escaping (Result<NewJob.PoleEmploiToken, NewJob.NetworkErrors>) -> Void) {
         callback(tokenResult)

@@ -10,7 +10,8 @@ import SwiftUI
 struct FavoriteJobOfferListView: View {
     let pm: PersistenceManager
     @ObservedObject var vm = FavoriteJobListViewModel()
-
+    @State var showManualJobAddView: Bool = false
+    
     var body: some View {
         ZStack {
             LinearGradient(gradient: Gradient(colors: [.indigo,.cyan,.mint, .green]), startPoint: .topTrailing, endPoint: .bottomLeading)
@@ -23,9 +24,23 @@ struct FavoriteJobOfferListView: View {
                         .scaleEffect(2)
                 } else {
                     Form {
+                        Button {
+                            showManualJobAddView.toggle()
+                        } label: {
+                            HStack{
+                                Image(systemName: "plus")
+                                Text("Candidature direct")
+                                    .lineLimit(1)
+                            }
+                        }
+                        .sheet(isPresented: $showManualJobAddView) {
+                            AddWorkManualView(pm: pm)
+                                }
                         if vm.jobsWithoutCandidacy.count > 0 {
                             Section(header: Text("Sans Candidatures")) {
+                               
                                 JobsInList(jobsList: vm.jobsWithoutCandidacy, pm: pm)
+                                
                             }
                         }
                         Section(header: Text("Candidatures")) {

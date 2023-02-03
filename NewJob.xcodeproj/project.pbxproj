@@ -26,6 +26,8 @@
 		8F609CFD28B8A4E500502A70 /* ContactDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F609CFC28B8A4E500502A70 /* ContactDetailsView.swift */; };
 		8F609D0128B8AA5E00502A70 /* ContactRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F609D0028B8AA5E00502A70 /* ContactRowView.swift */; };
 		8F643391278DF9570099DC74 /* PoleEmploiResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F643390278DF9570099DC74 /* PoleEmploiResponse.swift */; };
+		8F6AD091297EA69C00BC93A8 /* AddWorkManualView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F6AD090297EA69C00BC93A8 /* AddWorkManualView.swift */; };
+		8F6AD093297ED1FC00BC93A8 /* AddWorkManualViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F6AD092297ED1FC00BC93A8 /* AddWorkManualViewModel.swift */; };
 		8F6CEB3E2853669700D7A6E5 /* ContactFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F6CEB3D2853669700D7A6E5 /* ContactFormView.swift */; };
 		8F73728C27ABFB01008E2BE7 /* JobDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F73728B27ABFB01008E2BE7 /* JobDetailsViewModel.swift */; };
 		8F74632929268D47007E724B /* ActionsToBeTakenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F74632829268D47007E724B /* ActionsToBeTakenViewModel.swift */; };
@@ -39,6 +41,22 @@
 		8F89264F28C1EC030052917F /* ContactDisplayable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F89264E28C1EC030052917F /* ContactDisplayable.swift */; };
 		8F89265128C22CC10052917F /* ContactDisplayableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F89265028C22CC10052917F /* ContactDisplayableViewModel.swift */; };
 		8F8A0B0B27E37F3C00E4BDC7 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F8A0B0A27E37F3C00E4BDC7 /* City.swift */; };
+		8F8BD5D1298BC69C006A9EAF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8F8BD5D0298BC69C006A9EAF /* Assets.xcassets */; };
+		8F8BD5D4298BC69C006A9EAF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8F8BD5D3298BC69C006A9EAF /* Preview Assets.xcassets */; };
+		8F8BD5D8298BC703006A9EAF /* NewJob.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8F997B9F27FEF9FF007E060E /* NewJob.xcdatamodeld */; };
+		8F8BD5D9298BC706006A9EAF /* CandidacyResultType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F3644032927EAC90082D7FF /* CandidacyResultType.swift */; };
+		8F8BD5DA298BC70A006A9EAF /* SelectedJobWithNumberOfDAysFromCandidacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F74632C2927787A007E724B /* SelectedJobWithNumberOfDAysFromCandidacy.swift */; };
+		8F8BD5DB298BC70D006A9EAF /* ContactDisplayable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F89264E28C1EC030052917F /* ContactDisplayable.swift */; };
+		8F8BD5DD298BC718006A9EAF /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F8A0B0A27E37F3C00E4BDC7 /* City.swift */; };
+		8F8BD5DE298BC71A006A9EAF /* Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FF658C527C6224D0045D325 /* Search.swift */; };
+		8F8BD5DF298BC71D006A9EAF /* PoleEmploiOffers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F484651279ADAC6006AE1A9 /* PoleEmploiOffers.swift */; };
+		8F8BD5E0298BC720006A9EAF /* ApiAccessInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FC2374A27916CE60039869E /* ApiAccessInfo.swift */; };
+		8F8BD5E1298BC723006A9EAF /* ApiGouvResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FBB0FC427BFFE1900D13743 /* ApiGouvResponse.swift */; };
+		8F8BD5E2298BC725006A9EAF /* PoleEmploiResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F643390278DF9570099DC74 /* PoleEmploiResponse.swift */; };
+		8F8BD5E6298BC74B006A9EAF /* PersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FBB03142812816B00ADCF75 /* PersistenceManager.swift */; };
+		8F8BD5E9298BC95B006A9EAF /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F8BD5E7298BC765006A9EAF /* HomeView.swift */; };
+		8F8BD5EA298BC981006A9EAF /* NewJobApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F34034B27885C9100FF8E66 /* NewJobApp.swift */; };
+		8F8BD5EB298BC986006A9EAF /* SplashScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FD91747292FE25300C1583A /* SplashScreenView.swift */; };
 		8F8ECDAE27C774E700BE9662 /* WrappingStack in Frameworks */ = {isa = PBXBuildFile; productRef = 8F8ECDAD27C774E700BE9662 /* WrappingStack */; };
 		8F94917328F9BD09006D3B1B /* PickerDateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F94917228F9BD09006D3B1B /* PickerDateView.swift */; };
 		8F94917528F9BF4E006D3B1B /* PickerCandidacyMeansView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F94917428F9BF4E006D3B1B /* PickerCandidacyMeansView.swift */; };
@@ -145,6 +163,8 @@
 		8F609CFC28B8A4E500502A70 /* ContactDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactDetailsView.swift; sourceTree = "<group>"; };
 		8F609D0028B8AA5E00502A70 /* ContactRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactRowView.swift; sourceTree = "<group>"; };
 		8F643390278DF9570099DC74 /* PoleEmploiResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoleEmploiResponse.swift; sourceTree = "<group>"; };
+		8F6AD090297EA69C00BC93A8 /* AddWorkManualView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddWorkManualView.swift; sourceTree = "<group>"; };
+		8F6AD092297ED1FC00BC93A8 /* AddWorkManualViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddWorkManualViewModel.swift; sourceTree = "<group>"; };
 		8F6CEB3D2853669700D7A6E5 /* ContactFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactFormView.swift; sourceTree = "<group>"; };
 		8F73728B27ABFB01008E2BE7 /* JobDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobDetailsViewModel.swift; sourceTree = "<group>"; };
 		8F74632829268D47007E724B /* ActionsToBeTakenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionsToBeTakenViewModel.swift; sourceTree = "<group>"; };
@@ -158,6 +178,11 @@
 		8F89264E28C1EC030052917F /* ContactDisplayable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactDisplayable.swift; sourceTree = "<group>"; };
 		8F89265028C22CC10052917F /* ContactDisplayableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactDisplayableViewModel.swift; sourceTree = "<group>"; };
 		8F8A0B0A27E37F3C00E4BDC7 /* City.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
+		8F8BD5CA298BC69B006A9EAF /* WatchNewJob Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "WatchNewJob Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8F8BD5D0298BC69C006A9EAF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		8F8BD5D3298BC69C006A9EAF /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		8F8BD5E7298BC765006A9EAF /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		8F8BD5EC298CF128006A9EAF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8F94917228F9BD09006D3B1B /* PickerDateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerDateView.swift; sourceTree = "<group>"; };
 		8F94917428F9BF4E006D3B1B /* PickerCandidacyMeansView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerCandidacyMeansView.swift; sourceTree = "<group>"; };
 		8F94917628F9C4B1006D3B1B /* ContactCandidacyRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactCandidacyRow.swift; sourceTree = "<group>"; };
@@ -244,6 +269,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		8F8BD5C7298BC69B006A9EAF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -294,6 +326,7 @@
 				8F34034A27885C9100FF8E66 /* NewJob */,
 				8FDB89602947261900D65B42 /* Extension */,
 				8F162A9327FDCE70005FC07E /* NewJobTests */,
+				8F8BD5CB298BC69B006A9EAF /* WatchNewJob Watch App */,
 				8F34034927885C9100FF8E66 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -303,6 +336,7 @@
 			children = (
 				8F34034827885C9100FF8E66 /* NewJob.app */,
 				8F162A9227FDCE70005FC07E /* NewJobTests.xctest */,
+				8F8BD5CA298BC69B006A9EAF /* WatchNewJob Watch App.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -310,6 +344,7 @@
 		8F34034A27885C9100FF8E66 /* NewJob */ = {
 			isa = PBXGroup;
 			children = (
+				8F8BD5EC298CF128006A9EAF /* Info.plist */,
 				8FC2374327916A160039869E /* DataSource */,
 				8F64338E278DF6D60099DC74 /* Model */,
 				8F3403602788B16500FF8E66 /* View */,
@@ -389,6 +424,24 @@
 				8F189FB6290295C300D7424C /* Contact */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		8F8BD5CB298BC69B006A9EAF /* WatchNewJob Watch App */ = {
+			isa = PBXGroup;
+			children = (
+				8F8BD5D0298BC69C006A9EAF /* Assets.xcassets */,
+				8F8BD5D2298BC69C006A9EAF /* Preview Content */,
+				8F8BD5E7298BC765006A9EAF /* HomeView.swift */,
+			);
+			path = "WatchNewJob Watch App";
+			sourceTree = "<group>";
+		};
+		8F8BD5D2298BC69C006A9EAF /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				8F8BD5D3298BC69C006A9EAF /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 		8F94917128F9BCD4006D3B1B /* FavoriteSharedView */ = {
@@ -558,6 +611,7 @@
 				8FFA6AB82816E35600B177FE /* ActionsToBeTakenOnFavoriteJobView.swift */,
 				8FA96E37291E4D4600DAE741 /* InterviewFormView.swift */,
 				8FA96E3D291E615A00DAE741 /* InterviewDetailsView.swift */,
+				8F6AD090297EA69C00BC93A8 /* AddWorkManualView.swift */,
 			);
 			path = Favorite;
 			sourceTree = "<group>";
@@ -591,6 +645,7 @@
 				8FEA285627FF48E800DC6B7E /* FavoriteJobListViewModel.swift */,
 				8FFA6AB4281699B200B177FE /* SelectedJobDetailsViewModel.swift */,
 				8FFA6ABB2817006600B177FE /* ActionsToBeTakenOnFavoriteJobViewModel.swift */,
+				8F6AD092297ED1FC00BC93A8 /* AddWorkManualViewModel.swift */,
 			);
 			path = Favorite;
 			sourceTree = "<group>";
@@ -636,6 +691,23 @@
 			productReference = 8F34034827885C9100FF8E66 /* NewJob.app */;
 			productType = "com.apple.product-type.application";
 		};
+		8F8BD5C9298BC69B006A9EAF /* WatchNewJob Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8F8BD5D7298BC69C006A9EAF /* Build configuration list for PBXNativeTarget "WatchNewJob Watch App" */;
+			buildPhases = (
+				8F8BD5C6298BC69B006A9EAF /* Sources */,
+				8F8BD5C7298BC69B006A9EAF /* Frameworks */,
+				8F8BD5C8298BC69B006A9EAF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "WatchNewJob Watch App";
+			productName = "WatchNewJob Watch App";
+			productReference = 8F8BD5CA298BC69B006A9EAF /* WatchNewJob Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -643,7 +715,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1330;
+				LastSwiftUpdateCheck = 1420;
 				LastUpgradeCheck = 1320;
 				TargetAttributes = {
 					8F162A9127FDCE70005FC07E = {
@@ -652,6 +724,9 @@
 					};
 					8F34034727885C9100FF8E66 = {
 						CreatedOnToolsVersion = 13.2.1;
+					};
+					8F8BD5C9298BC69B006A9EAF = {
+						CreatedOnToolsVersion = 14.2;
 					};
 				};
 			};
@@ -673,6 +748,7 @@
 			targets = (
 				8F34034727885C9100FF8E66 /* NewJob */,
 				8F162A9127FDCE70005FC07E /* NewJobTests */,
+				8F8BD5C9298BC69B006A9EAF /* WatchNewJob Watch App */,
 			);
 		};
 /* End PBXProject section */
@@ -696,6 +772,15 @@
 				8FDB89682949C9CB00D65B42 /* apiGouvServiceResponseLong.json in Resources */,
 				8F34035327885C9200FF8E66 /* Preview Assets.xcassets in Resources */,
 				8F34035027885C9200FF8E66 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8F8BD5C8298BC69B006A9EAF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8F8BD5D4298BC69C006A9EAF /* Preview Assets.xcassets in Resources */,
+				8F8BD5D1298BC69C006A9EAF /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -762,6 +847,7 @@
 				8FBB0FC327BFFC6800D13743 /* ApiGouvService.swift in Sources */,
 				8F89264D28C1E76F0052917F /* ContactInfoLineView.swift in Sources */,
 				8F34034E27885C9100FF8E66 /* HomeView.swift in Sources */,
+				8F6AD091297EA69C00BC93A8 /* AddWorkManualView.swift in Sources */,
 				8FBB03152812816B00ADCF75 /* PersistenceManager.swift in Sources */,
 				8FF658C627C6224D0045D325 /* Search.swift in Sources */,
 				8F857F4C2864BCF000E1D9A5 /* HomeViewModel.swift in Sources */,
@@ -787,6 +873,7 @@
 				8FFA6AB72816E0B500B177FE /* SelectedJobMenuView.swift in Sources */,
 				8F7EC83127F70DC000CA5F0E /* FormNewSearchJob.swift in Sources */,
 				8F9CA0212788BA4800C11E94 /* ActionToBeTakenView.swift in Sources */,
+				8F6AD093297ED1FC00BC93A8 /* AddWorkManualViewModel.swift in Sources */,
 				8FD91748292FE25300C1583A /* SplashScreenView.swift in Sources */,
 				8FDB896429472B8B00D65B42 /* URLSession+GenericCall.swift in Sources */,
 				8F07884727BD0C33005BD159 /* NewSearchJobViewModel.swift in Sources */,
@@ -809,6 +896,27 @@
 				8FA96E3E291E615A00DAE741 /* InterviewDetailsView.swift in Sources */,
 				8F189FB8290295E500D7424C /* ContactDetailsViewModel.swift in Sources */,
 				8FDB89532943800600D65B42 /* DismissButtonView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8F8BD5C6298BC69B006A9EAF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8F8BD5EA298BC981006A9EAF /* NewJobApp.swift in Sources */,
+				8F8BD5E2298BC725006A9EAF /* PoleEmploiResponse.swift in Sources */,
+				8F8BD5DA298BC70A006A9EAF /* SelectedJobWithNumberOfDAysFromCandidacy.swift in Sources */,
+				8F8BD5DB298BC70D006A9EAF /* ContactDisplayable.swift in Sources */,
+				8F8BD5D9298BC706006A9EAF /* CandidacyResultType.swift in Sources */,
+				8F8BD5E6298BC74B006A9EAF /* PersistenceManager.swift in Sources */,
+				8F8BD5DE298BC71A006A9EAF /* Search.swift in Sources */,
+				8F8BD5EB298BC986006A9EAF /* SplashScreenView.swift in Sources */,
+				8F8BD5E1298BC723006A9EAF /* ApiGouvResponse.swift in Sources */,
+				8F8BD5E0298BC720006A9EAF /* ApiAccessInfo.swift in Sources */,
+				8F8BD5D8298BC703006A9EAF /* NewJob.xcdatamodeld in Sources */,
+				8F8BD5E9298BC95B006A9EAF /* HomeView.swift in Sources */,
+				8F8BD5DF298BC71D006A9EAF /* PoleEmploiOffers.swift in Sources */,
+				8F8BD5DD298BC718006A9EAF /* City.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -988,7 +1096,7 @@
 				DEVELOPMENT_TEAM = 3GJVGX425T;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_FILE = NewJob/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -1018,7 +1126,7 @@
 				DEVELOPMENT_TEAM = 3GJVGX425T;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_FILE = NewJob/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -1034,6 +1142,68 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		8F8BD5D5298BC69C006A9EAF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"WatchNewJob Watch App/Preview Content\"";
+				DEVELOPMENT_TEAM = 3GJVGX425T;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = WatchNewJob;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = .watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 9.1;
+			};
+			name = Debug;
+		};
+		8F8BD5D6298BC69C006A9EAF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"WatchNewJob Watch App/Preview Content\"";
+				DEVELOPMENT_TEAM = 3GJVGX425T;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = WatchNewJob;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = .watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 9.1;
 			};
 			name = Release;
 		};
@@ -1063,6 +1233,15 @@
 			buildConfigurations = (
 				8F34035727885C9200FF8E66 /* Debug */,
 				8F34035827885C9200FF8E66 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8F8BD5D7298BC69C006A9EAF /* Build configuration list for PBXNativeTarget "WatchNewJob Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8F8BD5D5298BC69C006A9EAF /* Debug */,
+				8F8BD5D6298BC69C006A9EAF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
